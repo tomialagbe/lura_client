@@ -14,13 +14,13 @@ class StringDecoder {
     final buffSize = buffer.buffer.lengthInBytes;
     final start = offset + 2;
     final end = offset + 2 + len;
-    Uint8List subl;
-    if (start + end <= buffSize) {
-      subl = buffer.buffer.asUint8List(start, end);
-    } else {
-      subl = buffer.buffer.asUint8List(start);
-    }
-    // final subl = buffer.buffer.asUint8List(offset + 2, offset + 2 + len);
+    // Uint8List subl;
+    // if (start + end <= buffSize) {
+    //   subl = buffer.buffer.asUint8List(start, end - start);
+    // } else {
+    //   subl = buffer.buffer.asUint8List(start);
+    // }
+    final subl = buffer.buffer.asUint8List(start, end - start);
     String s = utf8.decode(subl); // try allowMalformed if this fails
     debugPrint('StringDecoder, received: $s');
     decodedBytes = len + 2;
@@ -122,7 +122,9 @@ class DateTimeDecoder {
   DateTime decode(ByteData buffer, int offset) {
     var drift =
         (buffer.getInt8(offset + 11) * 60) + buffer.getInt8(offset + 12);
-    final subl = buffer.buffer.asUint8List(offset + 10, offset + 11);
+    final start = offset + 10;
+    final end = offset + 11;
+    final subl = buffer.buffer.asUint8List(start, end - start);
     String s = utf8.decode(subl);
     if (s == '+') {
       drift = drift * -1;

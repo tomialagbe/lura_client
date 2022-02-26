@@ -1,5 +1,7 @@
 import 'dart:typed_data';
 
+import 'package:flutter/foundation.dart';
+
 import 'constants.dart';
 import 'ipp_message.dart';
 import 'type_codec.dart';
@@ -32,12 +34,12 @@ class IppRequestDecoder {
       while (tag > 0x0f) {
         final stringDecoder = StringDecoder();
         String? name;
-        try {
-          name = stringDecoder.decode(byteData, offset);
-          offset += stringDecoder.decodedBytes;
-        } catch (err) {}
-        // final name = stringDecoder.decode(byteData, offset);
-        // offset += stringDecoder.decodedBytes;
+        // try {
+        //   name = stringDecoder.decode(byteData, offset);
+        //   offset += stringDecoder.decodedBytes;
+        // } catch (err) {}
+        name = stringDecoder.decode(byteData, offset);
+        offset += stringDecoder.decodedBytes;
 
         var val;
         switch (tag) {
@@ -89,7 +91,10 @@ class IppRequestDecoder {
       message.groups.add(group);
     }
 
-    decodedBytes = offset = start;
+    if (offset < end) {
+      message.data = byteData.buffer.asUint8List(offset, end - offset);
+    }
+    decodedBytes = offset - start;
     return message;
   }
 }
@@ -99,7 +104,7 @@ class IppResponseEncoder {
 
   Uint8List encode(IppMessage response) {
     final encLen = encodingLength(response);
-    final buffer = ByteData(encLen);
+    final buffer = ByteData(encLen + 100);   //TODO: FIX THIS, calculate correct encoding length
     var offset = 0;
     var oldOffset = offset;
 
@@ -123,7 +128,7 @@ class IppResponseEncoder {
           buffer.setInt8(offset++, attr.tag!);
 
           final str = StringEncoder();
-          str.encode(i != 0 ? '' : attr.name ?? '', buffer, offset);
+          str.encode(attr.name ?? '', buffer, offset);
           offset += str.encodedBytes;
 
           switch (attr.tag) {
@@ -148,12 +153,15 @@ class IppResponseEncoder {
               offset += tdateTime.encodedBytes;
               break;
             case IppConstants.TEXT_WITH_LANG:
-            case IppConstants.TEXT_WITHOUT_LANG:
+            case IppConstants.NAME_WITH_LANG:
               final langStr = LangStrEncoder();
               langStr.encode(val as LangStr, buffer, offset);
               offset += langStr.encodedBytes;
               break;
             default:
+              debugPrint('Encoding string: ${val as String}');
+              str.encode(val as String, buffer, offset);
+              offset += str.encodedBytes;
               break;
           }
         }
@@ -191,9 +199,10 @@ class IppResponseEncoder {
             case IppConstants.DATE_TIME:
               return len + DateTimeEncoder().encodingLength();
             case IppConstants.TEXT_WITH_LANG:
-            case IppConstants.TEXT_WITHOUT_LANG:
+            case IppConstants.NAME_WITH_LANG:
               return len + LangStrEncoder().encodingLength(val as LangStr);
             default:
+              debugPrint('Encoding length for ${val as String}');
               return len + StringEncoder().encodingLength(val as String);
           }
         });

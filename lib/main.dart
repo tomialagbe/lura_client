@@ -69,31 +69,12 @@ class _MyHomePageState extends State<MyHomePage> {
 
   Future startServer() async {
     try {
-      printer = Printer(name: 'Test Mobile Printer 3', port: 8089);
+      printer = Printer(name: 'LuraPrinter', port: 8089);
       printer?.start();
     } catch (err, st) {
       debugPrint(err.toString());
       debugPrint(st.toString());
     }
-    // try {
-    //   // Let's create our service !
-    //   BonsoirService service = BonsoirService(
-    //     name: 'Test Printing service',
-    //     // Put your service name here.
-    //     // type: '_ipp._tcp',
-    //     type: '_printer._tcp',
-    //     // Put your service type here. Syntax : _ServiceType._TransportProtocolName. (see http://wiki.ros.org/zeroconf/Tutorials/Understanding%20Zeroconf%20Service%20Types).
-    //     port: 631, // Put your service port here.
-    //   );
-    //   // And now we can broadcast it :
-    //   broadcast = BonsoirBroadcast(service: service);
-    //   await broadcast?.ready;
-    //   await broadcast?.start();
-    //   debugPrint('Started server');
-    // } catch (err, st) {
-    //   debugPrint(err.toString());
-    //   debugPrint(st.toString());
-    // }
   }
 
   @override
