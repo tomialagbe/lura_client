@@ -1,7 +1,10 @@
 import 'dart:io';
+import 'dart:typed_data';
 
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:mobile_printer/ipp/printer.dart';
+import 'package:uuid/uuid.dart';
 
 void main() {
   runApp(const MyApp());
@@ -74,11 +77,23 @@ class _MyHomePageState extends State<MyHomePage> {
           name:
               'LuraPrinter${Platform.isIOS ? 'iOS' : Platform.isAndroid ? 'Android' : ''}',
           port: 8089);
+      printer?.onPrintEnd = _onPrintEnd;
       printer?.start();
     } catch (err, st) {
       debugPrint(err.toString());
       debugPrint(st.toString());
     }
+  }
+
+  void _onPrintEnd(Uint8List data) async {
+    final uuid = const Uuid().v4();
+    final formData = FormData.fromMap({
+      'file': MultipartFile.fromBytes(data, filename: 'file'),
+      'uuid': uuid,
+    });
+    final response = await Dio()
+        .post('http://192.168.1.138:8080/receive', data: formData);
+    debugPrint('Received: ${response.statusCode}');
   }
 
   @override

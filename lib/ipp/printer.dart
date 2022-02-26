@@ -19,14 +19,13 @@ class Printer {
   DateTime started = DateTime.now().toUtc();
   List<PrintJob> jobs = [];
 
-  final StreamController<IppMessage> _operationStream = StreamController();
-  final StreamController<PrintJob> _jobStream = StreamController();
+  // final StreamController<IppMessage> _operationStream = StreamController();
+  // final StreamController<PrintJob> _jobStream = StreamController();
 
   int get jobId => _jobId;
 
-  Stream<IppMessage> get onOperation => _operationStream.stream;
-
-  Stream<PrintJob> get onJob => _jobStream.stream;
+  // Stream<IppMessage> get onOperation => _operationStream.stream;
+  // Stream<PrintJob> get onJob => _jobStream.stream;
 
   final String name;
   final bool zeroconf;
@@ -37,6 +36,8 @@ class Printer {
   BonsoirBroadcast? broadcast;
   HttpServer? httpServer;
 
+  Function(Uint8List)? onPrintEnd;
+
   Printer({
     required this.name,
     this.port = 631,
@@ -45,10 +46,6 @@ class Printer {
     this.uri,
   }) : state = IppConstants.PRINTER_STOPPED {
     _startServer();
-    // NetworkInterface.list(type: InternetAddressType.IPv4).then((value) {
-    //   uri = uri ?? 'ipp://${value[0].addresses[0].address}:${port!}/';
-    // });
-    // uri = uri ?? 'ipp://${Platform.localHostname}:${port!}/';
     _broadcastIppService();
   }
 
@@ -129,7 +126,7 @@ class Printer {
           message, IppConstants.OPERATION_ATTRIBUTES_TAG);
       uri ??= Utils.getFirstValueForName(attributes, 'printer-uri');
 
-      _operationStream.add(message);
+      // _operationStream.add(message);
       _routeMessage(message, request);
     }
 
@@ -231,7 +228,7 @@ class Printer {
 
   void add(PrintJob job) {
     jobs.add(job);
-    _jobStream.add(job);
+    // _jobStream.add(job);
   }
 
   PrintJob? getJob(int jobId) {
@@ -389,6 +386,7 @@ class Printer {
             ..attributes = attributes
         ]);
       });
+      onPrintEnd?.call(data);
     }
 
     final job = PrintJob(
