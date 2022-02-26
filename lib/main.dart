@@ -1,4 +1,5 @@
-import 'package:bonsoir/bonsoir.dart';
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:mobile_printer/ipp/printer.dart';
 
@@ -59,7 +60,6 @@ class _MyHomePageState extends State<MyHomePage> {
         ));
   }
 
-  // BonsoirBroadcast? broadcast;
   Printer? printer;
 
   Future stopServer() async {
@@ -69,7 +69,11 @@ class _MyHomePageState extends State<MyHomePage> {
 
   Future startServer() async {
     try {
-      printer = Printer(name: 'LuraPrinter', port: 8089);
+      // TODO: attach device model to printer name
+      printer = Printer(
+          name:
+              'LuraPrinter${Platform.isIOS ? 'iOS' : Platform.isAndroid ? 'Android' : ''}',
+          port: 8089);
       printer?.start();
     } catch (err, st) {
       debugPrint(err.toString());
@@ -79,8 +83,6 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   void dispose() {
-    // Then if you want to stop the broadcast :
-    // broadcast?.stop();
     super.dispose();
   }
 }

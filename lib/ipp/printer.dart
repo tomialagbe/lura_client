@@ -53,7 +53,6 @@ class Printer {
   }
 
   Future _startServer() async {
-    // httpServer = await HttpServer.bind(InternetAddress.loopbackIPv4, port!);
     httpServer = await HttpServer.bind('0.0.0.0', port!);
     httpServer?.listen((request) {
       handleHttpRequest(request);
@@ -105,7 +104,6 @@ class Printer {
       return;
     }
 
-    // StreamSubscription<Uint8List>? requestBodySubscription;
     Uint8List? body;
 
     void consumeAttrGroups(Uint8List bytes) {
@@ -131,7 +129,6 @@ class Printer {
           message, IppConstants.OPERATION_ATTRIBUTES_TAG);
       uri ??= Utils.getFirstValueForName(attributes, 'printer-uri');
 
-      // requestBodySubscription?.cancel();
       _operationStream.add(message);
       _routeMessage(message, request);
     }
@@ -140,13 +137,6 @@ class Printer {
     final bytes = builder.takeBytes();
     debugPrint('Printer-HttpRequest: Received ${bytes.length} bytes');
     consumeAttrGroups(bytes);
-
-    // requestBodySubscription = request.listen((Uint8List bytes) {
-    //   debugPrint('Printer-HttpRequest: Received ${bytes.length} bytes');
-    //   consumeAttrGroups(bytes);
-    // }, onError: (err, st) {
-    //   // TODO:
-    // });
   }
 
   void _routeMessage(IppMessage message, HttpRequest request) {
