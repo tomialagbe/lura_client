@@ -162,8 +162,10 @@ class PrintJob {
     Uint8List? decodedBytes;
     switch (compression ?? 'undefined') {
       case 'deflate':
-        decodedBytes =
-            Uint8List.fromList(const ZLibDecoder().decodeBytes(data!));
+        final deflate = Inflate(data!);
+        decodedBytes = Uint8List.fromList(deflate.getBytes());
+        // decodedBytes =
+        //     Uint8List.fromList(const ZLibDecoder().decodeBytes(data!));
         break;
       case 'gzip':
         decodedBytes = Uint8List.fromList(GZipDecoder().decodeBytes(data!));
