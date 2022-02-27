@@ -164,8 +164,6 @@ class PrintJob {
       case 'deflate':
         final deflate = Inflate(data!);
         decodedBytes = Uint8List.fromList(deflate.getBytes());
-        // decodedBytes =
-        //     Uint8List.fromList(const ZLibDecoder().decodeBytes(data!));
         break;
       case 'gzip':
         decodedBytes = Uint8List.fromList(GZipDecoder().decodeBytes(data!));

@@ -19,16 +19,9 @@ class Printer {
   DateTime started = DateTime.now().toUtc();
   List<PrintJob> jobs = [];
 
-  // final StreamController<IppMessage> _operationStream = StreamController();
-  // final StreamController<PrintJob> _jobStream = StreamController();
-
   int get jobId => _jobId;
 
-  // Stream<IppMessage> get onOperation => _operationStream.stream;
-  // Stream<PrintJob> get onJob => _jobStream.stream;
-
   final String name;
-  final bool zeroconf;
   final bool fallback;
   final int? port;
   String? uri;
@@ -41,7 +34,6 @@ class Printer {
   Printer({
     required this.name,
     this.port = 631,
-    this.zeroconf = true,
     this.fallback = true,
     this.uri,
   }) : state = IppConstants.PRINTER_STOPPED {
@@ -79,21 +71,13 @@ class Printer {
   }
 
   void handleHttpRequest(HttpRequest request) async {
-    // debugPrint(
-    //     'Handling HTTP request: ${request.method} - ${request.contentLength} bytes');
-    // debugPrint(
-    //     'Printer-HttpRequest: Request content type: ${request.headers.contentType?.mimeType} - ${request.headers.contentType?.charset}');
-
     if (request.method != 'POST') {
-      // debugPrint(
-      //     'Printer-HttpRequest: Received a non POST request. Returning a 405 response.');
       request.response.statusCode = HttpStatus.methodNotAllowed; // 405
       request.response.flush().then((_) {
         request.response.close();
       });
       return;
     } else if (request.headers.contentType?.mimeType != 'application/ipp') {
-      // debugPrint('Printer-HttpRequest: Request not application/ipp');
       request.response.statusCode = HttpStatus.badRequest; // 405
       request.response.flush().then((_) {
         request.response.close();
@@ -126,11 +110,11 @@ class Printer {
           message, IppConstants.OPERATION_ATTRIBUTES_TAG);
       uri ??= Utils.getFirstValueForName(attributes, 'printer-uri');
 
-      // _operationStream.add(message);
       _routeMessage(message, request);
     }
 
-    final builder = await request.fold(BytesBuilder(), (BytesBuilder builder, data) => builder..add(data));
+    final builder = await request.fold(
+        BytesBuilder(), (BytesBuilder builder, data) => builder..add(data));
     final bytes = builder.takeBytes();
     debugPrint('Printer-HttpRequest: Received ${bytes.length} bytes');
     consumeAttrGroups(bytes);
@@ -207,7 +191,6 @@ class Printer {
 
     request.response.statusCode = 200;
     request.response.headers.contentType = ContentType('application', 'ipp');
-    // request.response.headers.contentLength = encodedResponse.length;
     request.response.add(encodedResponse);
     request.response.flush().then((_) async {
       await request.response.close();
@@ -216,19 +199,18 @@ class Printer {
 
   void start() {
     state = IppConstants.PRINTER_IDLE;
-    print('printer $name changed state to idle');
+    debugPrint('printer $name changed state to idle');
   }
 
   void stop() {
     state = IppConstants.PRINTER_STOPPED;
-    print('printer $name changed state to stopped');
+    debugPrint('printer $name changed state to stopped');
     broadcast?.stop();
     httpServer?.close();
   }
 
   void add(PrintJob job) {
     jobs.add(job);
-    // _jobStream.add(job);
   }
 
   PrintJob? getJob(int jobId) {
@@ -375,8 +357,14 @@ class Printer {
     final once = FunctionCallRestricter(maxCalls: 1);
 
     void onError(dynamic err) {}
-    void onAbort(int statusCode) {}
     void onCancel() {}
+
+    void onAbort(int statusCode) {
+      once(() {
+        _sendResponse(request, requestMessage, statusCode: statusCode);
+      });
+    }
+
     void onEnd(Uint8List data, List<Attribute> attributes) {
       debugPrint('PRINT JOB ENDED: SENDING RESPONSE');
       once(() {
@@ -402,10 +390,6 @@ class Printer {
 
     /* TODO:
     var send = once(res.send)
-
-  job.on('abort', function (statusCode) {
-    send(statusCode)
-  })
 
   req.on('end', function () {
     send({

@@ -66,7 +66,6 @@ class _MyHomePageState extends State<MyHomePage> {
   Printer? printer;
 
   Future stopServer() async {
-    // broadcast?.stop();
     printer?.stop();
   }
 
