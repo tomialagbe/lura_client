@@ -1,10 +1,11 @@
 import 'package:mobile_printer/ipp/airprint.dart';
 import 'package:uuid/uuid.dart';
 
+// See https://wiki.debian.org/CUPSAirPrint
 Map<String, String> airPrintAttributes() => {
       'air': 'none',
       'note': '',
-      'pdl': 'image/urf',
+      'pdl': 'application/vnd.hp-PCL,image/jpeg,application/postscript,application/PCLm,image/urf',
       //application/vnd.hp-PCL,image/jpeg,application/PCLm,image/urf
       // 'pdl': ['image/urf'],
       'rp': 'ipp/print',
@@ -17,7 +18,7 @@ Map<String, String> airPrintAttributes() => {
       'product': '(Lura)',
       'qtotal': '1',
       'txtvers': '1',
-      'ty': '',
+      'ty': 'Lura',
       'usb_CMD': '',
       'usb_MDL': '',
       'usb_MFG': '',
@@ -30,7 +31,7 @@ Map<String, String> airPrintAttributes() => {
       'Transparent': 'F',
       'Binary': 'F',
       'TBCP': 'F',
-      'kind': 'document,photo',
+      'kind': 'document,envelope,photo',
       // document,envelope,photo
       // 'kind': ['document', 'photo'],
 

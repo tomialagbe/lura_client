@@ -19,10 +19,10 @@ final defaultProxyOptions = {
   //Deprecated Options
   "adminurl": "",
   "priority": 50,
-  "product": "(Lura)",
+  "product": "(StarTSP654II)",
   "qtotal": 1,
   "txtvers": 1,
-  "ty": "",
+  "ty": "StarTSP654II",
   "usb_CMD": "",
   "usb_MDL": "",
   "usb_MFG": "",
@@ -41,7 +41,7 @@ final defaultProxyOptions = {
   // 9.4 Printer Feature TXT Record Keys
   "Color": "T", // TODO
   "Duplex": "U",
-  "PaperMax": "legal-A4",
+  "PaperMax": "<legal-A4",
   "Staple": "U",
 
   //Deprecated features
