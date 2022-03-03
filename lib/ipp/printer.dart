@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:io';
 import 'dart:typed_data';
 import 'package:flutter/foundation.dart';
+import 'package:mobile_printer/ipp/airprint_attributes.dart';
 import 'package:mobile_printer/ipp/groups.dart';
 import 'package:mobile_printer/ipp/ipp_decoder.dart';
 import 'package:mobile_printer/ipp/status_codes.dart';
@@ -9,6 +10,7 @@ import 'package:mobile_printer/ipp/type_codec.dart';
 import 'package:mobile_printer/ipp/utils.dart';
 import 'package:mobile_printer/utils/function_call_restricter.dart';
 
+import 'airprint/airprint.dart';
 import 'constants.dart';
 import 'ipp_message.dart';
 import 'print_job.dart';
@@ -24,10 +26,12 @@ class Printer {
   final String name;
   final bool fallback;
   final int? port;
+  final bool useAirprint;
   String? uri;
   int state;
-  BonsoirBroadcast? broadcast;
+  List<BonsoirBroadcast> broadcasts = [];
   HttpServer? httpServer;
+  AirprintProxy? airprintProxy;
 
   Function(Uint8List)? onPrintEnd;
 
@@ -36,6 +40,7 @@ class Printer {
     this.port = 631,
     this.fallback = true,
     this.uri,
+    this.useAirprint = false,
   }) : state = IppConstants.PRINTER_STOPPED {
     _startServer();
     _broadcastIppService();
@@ -54,15 +59,21 @@ class Printer {
     try {
       BonsoirService service = BonsoirService(
         name: name,
-        type: '_ipp._tcp',
+        type: useAirprint ? '_ipp._tcp,_universal' : '_ipp._tcp',
         // Put your service type here. Syntax : _ServiceType._TransportProtocolName. (see http://wiki.ros.org/zeroconf/Tutorials/Understanding%20Zeroconf%20Service%20Types).
         port: port ?? 631, // Put your service port here.
+        attributes: useAirprint ? airPrintAttributes() : {},
       );
       // And now we can broadcast it :
-      broadcast = BonsoirBroadcast(service: service);
-      await broadcast?.ready;
-      await broadcast?.start();
+      final broadcast = BonsoirBroadcast(service: service);
+      await broadcast.ready;
+      await broadcast.start();
+      broadcasts.add(broadcast);
       debugPrint('Printer: Advertising printer $name to network on port $port');
+      // if (useAirprint) {
+      //   await Future.delayed(const Duration(seconds: 2));
+      //   airprintProxy = await startAirprintProxy(nameToLookFor: name);
+      // }
     } catch (err, st) {
       debugPrint(err.toString());
       debugPrint(st.toString());
@@ -124,7 +135,7 @@ class Printer {
     debugPrint(
         'IPP/${message.versionMajor}.${message.versionMinor} operation ${message.operationIdOrStatusCode} (request ${message.requestId})');
     debugPrint('Groups: ${message.groups}. Len: ${message.groups.length}');
-    debugPrint('VERSION: ${message.versionMajor}.${message.versionMinor}');
+    // debugPrint('VERSION: ${message.versionMajor}.${message.versionMinor}');
     // if (message.versionMajor != 1) {
     //   return _sendResponse(request, message,
     //       statusCode: IppConstants.SERVER_ERROR_VERSION_NOT_SUPPORTED);
@@ -205,8 +216,11 @@ class Printer {
   void stop() {
     state = IppConstants.PRINTER_STOPPED;
     debugPrint('printer $name changed state to stopped');
-    broadcast?.stop();
+    for (final broadcast in broadcasts) {
+      broadcast.stop();
+    }
     httpServer?.close();
+    airprintProxy?.stop();
   }
 
   void add(PrintJob job) {

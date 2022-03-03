@@ -33,7 +33,15 @@ dependencies:
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.2
-  bonsoir: ^1.0.1+2
+  bonsoir:
+    path: ../Bonsoir/bonsoir
+#  bonsoir: ^1.0.1+2
+  multicast_dns: ^0.3.2
+  dns:
+    path: ../dns
+#    git:
+#      url: git@github.com:tomialagbe/dns.git
+#      ref: 7ee5cd7de1827492730453d0b5f81b6370e19141
   archive: ^3.2.1
   uuid: ^3.0.6
   dio: ^4.0.4
