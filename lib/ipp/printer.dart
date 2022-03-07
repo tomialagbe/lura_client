@@ -47,6 +47,7 @@ class IppPrinter {
   }
 
   Future _startServer() async {
+    // test with shared=true
     httpServer = await HttpServer.bind('0.0.0.0', port!);
     httpServer?.listen((request) {
       handleHttpRequest(request);
