@@ -22,7 +22,7 @@ class StringDecoder {
     // }
     final subl = buffer.buffer.asUint8List(start, end - start);
     String s = utf8.decode(subl); // try allowMalformed if this fails
-    debugPrint('StringDecoder, received: $s');
+    // debugPrint('StringDecoder, received: $s');
     decodedBytes = len + 2;
     return s;
   }

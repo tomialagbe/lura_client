@@ -33,11 +33,20 @@ dependencies:
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.2
+  #  bonsoir:
+  #    path: ../Bonsoir/bonsoir
   bonsoir: ^1.0.1+2
+  multicast_dns: ^0.3.2
+  dns:
+    git:
+      url: git@github.com:tomialagbe/dns.git
+      ref: d3a7213a61a506640f01326e844bb9e0c11587de
   archive: ^3.2.1
   uuid: ^3.0.6
   dio: ^4.0.4
   qr_flutter: ^4.0.0
+  rxdart: ^0.27.3
+  tuple: ^2.0.0
 
 dev_dependencies:
   flutter_test:

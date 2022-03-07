@@ -8,6 +8,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "3.2.1"
+  args:
+    dependency: transitive
+    description:
+      name: args
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "2.3.0"
   async:
     dependency: transitive
     description:
@@ -85,6 +92,15 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "4.0.4"
+  dns:
+    dependency: "direct main"
+    description:
+      path: "."
+      ref: d3a7213a61a506640f01326e844bb9e0c11587de
+      resolved-ref: d3a7213a61a506640f01326e844bb9e0c11587de
+      url: "git@github.com:tomialagbe/dns.git"
+    source: git
+    version: "0.0.0"
   fake_async:
     dependency: transitive
     description:
@@ -92,6 +108,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.2.0"
+  fixnum:
+    dependency: transitive
+    description:
+      name: fixnum
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.0.0"
   flutter:
     dependency: "direct main"
     description: flutter
@@ -116,6 +139,15 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "4.0.0"
+  ip:
+    dependency: transitive
+    description:
+      path: "."
+      ref: f77ba4193968fb24a688c9b95fcc56ec12554dfc
+      resolved-ref: f77ba4193968fb24a688c9b95fcc56ec12554dfc
+      url: "git@github.com:tomialagbe/ip.git"
+    source: git
+    version: "0.0.0"
   lints:
     dependency: transitive
     description:
@@ -137,6 +169,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.7.0"
+  multicast_dns:
+    dependency: "direct main"
+    description:
+      name: multicast_dns
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.3.2"
   path:
     dependency: transitive
     description:
@@ -165,6 +204,29 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "4.0.0"
+  quiver:
+    dependency: transitive
+    description:
+      name: quiver
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "3.0.1+1"
+  raw:
+    dependency: transitive
+    description:
+      path: "."
+      ref: HEAD
+      resolved-ref: d0f55d5b591d18be10b1de761cd9fd79fb7995cf
+      url: "git@github.com:tomialagbe/raw.git"
+    source: git
+    version: "0.4.0"
+  rxdart:
+    dependency: "direct main"
+    description:
+      name: rxdart
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.27.3"
   sky_engine:
     dependency: transitive
     description: flutter
@@ -212,6 +274,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.4.3"
+  tuple:
+    dependency: "direct main"
+    description:
+      name: tuple
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "2.0.0"
   typed_data:
     dependency: transitive
     description:
@@ -219,6 +288,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.3.0"
+  universal_io:
+    dependency: transitive
+    description:
+      name: universal_io
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "2.0.4"
   uuid:
     dependency: "direct main"
     description:

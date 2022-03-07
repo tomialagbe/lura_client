@@ -35,6 +35,8 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  bool _enableAirprint = false;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -42,28 +44,51 @@ class _MyHomePageState extends State<MyHomePage> {
           title: Text(widget.title),
         ),
         body: Center(
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
             children: [
-              ElevatedButton(
-                child: Text('Start server'),
-                onPressed: () {
-                  startServer();
-                },
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text('Enable airprint'),
+                  const SizedBox(width: 5),
+                  Checkbox(
+                    value: _enableAirprint,
+
+                    onChanged: (val) {
+                      if (val != null) {
+                        setState(() {
+                          _enableAirprint = val;
+                        });
+                      }
+                    },
+                  )
+                ],
               ),
-              const SizedBox(width: 10),
-              ElevatedButton(
-                child: Text('Stop server'),
-                onPressed: () {
-                  stopServer();
-                },
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  ElevatedButton(
+                    child: Text('Start server'),
+                    onPressed: () {
+                      startServer();
+                    },
+                  ),
+                  const SizedBox(width: 10),
+                  ElevatedButton(
+                    child: Text('Stop server'),
+                    onPressed: () {
+                      stopServer();
+                    },
+                  ),
+                ],
               ),
             ],
           ),
         ));
   }
 
-  Printer? printer;
+  IppPrinter? printer;
 
   Future stopServer() async {
     printer?.stop();
@@ -72,7 +97,8 @@ class _MyHomePageState extends State<MyHomePage> {
   Future startServer() async {
     try {
       // TODO: attach device model to printer name
-      printer = Printer(
+      printer = IppPrinter(
+        useAirprint: _enableAirprint,
           name:
               'LuraPrinter${Platform.isIOS ? 'iOS' : Platform.isAndroid ? 'Android' : ''}',
           port: 8089);
@@ -90,8 +116,8 @@ class _MyHomePageState extends State<MyHomePage> {
       'file': MultipartFile.fromBytes(data, filename: 'file'),
       'uuid': uuid,
     });
-    final response = await Dio()
-        .post('http://192.168.1.138:8080/receive', data: formData);
+    final response =
+        await Dio().post('http://192.168.1.138:8080/receive', data: formData);
     debugPrint('Received: ${response.statusCode}');
   }
 
