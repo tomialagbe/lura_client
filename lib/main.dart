@@ -88,7 +88,7 @@ class _MyHomePageState extends State<MyHomePage> {
         ));
   }
 
-  Printer? printer;
+  IppPrinter? printer;
 
   Future stopServer() async {
     printer?.stop();
@@ -97,7 +97,7 @@ class _MyHomePageState extends State<MyHomePage> {
   Future startServer() async {
     try {
       // TODO: attach device model to printer name
-      printer = Printer(
+      printer = IppPrinter(
         useAirprint: _enableAirprint,
           name:
               'LuraPrinter${Platform.isIOS ? 'iOS' : Platform.isAndroid ? 'Android' : ''}',

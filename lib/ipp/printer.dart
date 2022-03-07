@@ -16,7 +16,7 @@ import 'ipp_message.dart';
 import 'print_job.dart';
 import 'package:bonsoir/bonsoir.dart';
 
-class Printer {
+class IppPrinter {
   int _jobId = 0;
   DateTime started = DateTime.now().toUtc();
   List<PrintJob> jobs = [];
@@ -35,7 +35,7 @@ class Printer {
 
   Function(Uint8List)? onPrintEnd;
 
-  Printer({
+  IppPrinter({
     required this.name,
     this.port = 631,
     this.fallback = true,
