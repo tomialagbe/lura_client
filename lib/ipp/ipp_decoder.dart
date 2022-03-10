@@ -104,7 +104,7 @@ class IppResponseEncoder {
 
   Uint8List encode(IppMessage response) {
     final encLen = encodingLength(response);
-    final buffer = ByteData(encLen + 100);   //TODO: FIX THIS, calculate correct encoding length
+    final buffer = ByteData(encLen + 500);   //TODO: FIX THIS, calculate correct encoding length
     var offset = 0;
     var oldOffset = offset;
 
