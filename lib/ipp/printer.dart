@@ -62,7 +62,8 @@ class IppPrinter {
         name: name,
         type: useAirprint ? '_ipp._tcp,_universal' : '_ipp._tcp',
         // Put your service type here. Syntax : _ServiceType._TransportProtocolName. (see http://wiki.ros.org/zeroconf/Tutorials/Understanding%20Zeroconf%20Service%20Types).
-        port: port ?? 631, // Put your service port here.
+        port: port ?? 631,
+        // Put your service port here.
         attributes: useAirprint ? airPrintAttributes() : {},
       );
       // And now we can broadcast it :
@@ -135,7 +136,7 @@ class IppPrinter {
   void _routeMessage(IppMessage message, HttpRequest request) {
     debugPrint(
         'IPP/${message.versionMajor}.${message.versionMinor} operation ${message.operationIdOrStatusCode} (request ${message.requestId})');
-    debugPrint('Groups: ${message.groups}. Len: ${message.groups.length}');
+    // debugPrint('Groups: ${message.groups}. Len: ${message.groups.length}');
     // debugPrint('VERSION: ${message.versionMajor}.${message.versionMinor}');
     // if (message.versionMajor != 1) {
     //   return _sendResponse(request, message,
@@ -154,8 +155,9 @@ class IppPrinter {
         return _handleGetPrinterAttributes(request, message);
       case IppConstants.GET_JOBS:
         debugPrint('Printer: received Get-Jobs message');
-        return _sendResponse(request, message,
-            statusCode: IppConstants.SUCCESSFUL_OK);
+        return _handleGetJobs(request, message);
+      // return _sendResponse(request, message,
+      //     statusCode: IppConstants.SUCCESSFUL_OK);
       case IppConstants.CANCEL_JOB:
         debugPrint('Printer: received Cancel-Job message');
         return _sendResponse(request, message,
@@ -165,8 +167,9 @@ class IppPrinter {
         return _sendResponse(request, message,
             statusCode: IppConstants.SUCCESSFUL_OK);
       default:
-        debugPrint('Printer: received unknown message');
-        break;
+        debugPrint('Printer: received unknown message $message');
+        return _sendResponse(request, message,
+            statusCode: IppConstants.SERVER_ERROR_OPERATION_NOT_SUPPORTED);
     }
   }
 
@@ -184,7 +187,7 @@ class IppPrinter {
 
     responseMessage
       ..versionMajor = 1
-      ..versionMinor = 1;
+      ..versionMinor = 0;
 
     responseMessage
       ..operationIdOrStatusCode = statusCode
@@ -196,10 +199,14 @@ class IppPrinter {
       responseMessage.groups.addAll(groups);
     }
 
-    debugPrint('Responding to request: ${requestMessage.requestId}');
+    if (requestMessage.operationIdOrStatusCode == IppConstants.GET_JOBS) {
+      debugPrint('Responding to GET_JOBS with ${responseMessage}');
+    }
+
+    // debugPrint('Responding to request: ${requestMessage.requestId}');
     final ippEncoder = IppResponseEncoder();
     final Uint8List encodedResponse = ippEncoder.encode(responseMessage);
-    debugPrint('Encoded response: ${encodedResponse.length}');
+    // debugPrint('Encoded response: ${encodedResponse.length}');
 
     request.response.statusCode = 200;
     request.response.headers.contentType = ContentType('application', 'ipp');
@@ -403,18 +410,88 @@ class IppPrinter {
         onEnd: onEnd);
     add(job);
 
-    /* TODO:
-    var send = once(res.send)
-
-  req.on('end', function () {
-    send({
-      tag: C.JOB_ATTRIBUTES_TAG,
-      attributes: job.attributes(['job-uri', 'job-id', 'job-state'])
-    })
-  })
-     */
-
     debugPrint('STARTING PRINT JOB $jobId');
     job.process();
+  }
+
+  void _handleGetJobs(HttpRequest request, IppMessage requestMessage) {
+    final attributes = Utils.getAttributesForGroup(
+        requestMessage, IppConstants.OPERATION_ATTRIBUTES_TAG);
+    final limit = Utils.getFirstValueForName(attributes, 'limit');
+    final which =
+        Utils.getFirstValueForName(attributes, 'which-jobs') ?? 'undefined';
+    List<int>? states;
+
+    switch (which) {
+      case 'completed':
+        states = [
+          IppConstants.JOB_COMPLETED,
+          IppConstants.JOB_CANCELED,
+          IppConstants.JOB_ABORTED
+        ];
+        break;
+      case 'not-completed':
+        states = [
+          IppConstants.JOB_PENDING,
+          IppConstants.JOB_PROCESSING,
+          IppConstants.JOB_PROCESSING_STOPPED,
+          IppConstants.JOB_PENDING_HELD
+        ];
+        break;
+      case 'undefined':
+        // all good
+        break;
+      default:
+        _sendResponse(
+          request,
+          requestMessage,
+          statusCode:
+              IppConstants.CLIENT_ERROR_ATTRIBUTES_OR_VALUES_NOT_SUPPORTED,
+          groups: [
+            AttributeGroup()
+              ..tag = IppConstants.JOB_ATTRIBUTES_TAG
+              ..attributes = [
+                Attribute.from(
+                    tag: IppConstants.UNSUPPORTED,
+                    name: 'which-jobs',
+                    value: [which]),
+              ]
+          ],
+        );
+        return;
+    }
+
+    final filteredJobs = states != null
+        ? jobs.where((job) => states!.contains(job.state)).toList()
+        : jobs;
+    final requested =
+        Utils.requestedAttributes(requestMessage) ?? ['job-uri', 'job-id'];
+
+    filteredJobs.sort((jobA, jobB) {
+      if (jobA.completedAt != null && jobB.completedAt == null) return -1;
+      if (jobA.completedAt == null && jobB.completedAt != null) return 1;
+      if (jobA.completedAt == null && jobB.completedAt == null) {
+        return jobB.id - jobA.id;
+      }
+      return jobB.completedAt!.compareTo(jobA.completedAt!);
+    });
+    debugPrint('LIMIT IS: $limit');
+    var limitInt = int.parse(limit!);
+    limitInt = limitInt > filteredJobs.length ? filteredJobs.length : limitInt;
+    final _groups = filteredJobs.sublist(0, limitInt).map((job) {
+      final attrs = job.attributes(requested);
+      return Groups.jobAttributesTag(attrs);
+    }).toList();
+
+    if (_groups.isNotEmpty) {
+      final group =
+          Groups.unsupportedAttributesTag(_groups[0].attributes, requested);
+      if (group.attributes.isNotEmpty) {
+        _groups.insert(0, group);
+      }
+    }
+
+    _sendResponse(request, requestMessage,
+        statusCode: IppConstants.SUCCESSFUL_OK, groups: _groups);
   }
 }

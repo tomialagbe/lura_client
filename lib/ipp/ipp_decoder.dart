@@ -105,6 +105,7 @@ class IppResponseEncoder {
   Uint8List encode(IppMessage response) {
     final encLen = encodingLength(response);
     final buffer = ByteData(encLen + 500);   //TODO: FIX THIS, calculate correct encoding length
+    // final buffer = ByteData(encLen);
     var offset = 0;
     var oldOffset = offset;
 
@@ -159,7 +160,7 @@ class IppResponseEncoder {
               offset += langStr.encodedBytes;
               break;
             default:
-              debugPrint('Encoding string: ${val as String}');
+              // debugPrint('Encoding string: ${val as String}');
               str.encode(val as String, buffer, offset);
               offset += str.encodedBytes;
               break;
@@ -202,7 +203,7 @@ class IppResponseEncoder {
             case IppConstants.NAME_WITH_LANG:
               return len + LangStrEncoder().encodingLength(val as LangStr);
             default:
-              debugPrint('Encoding length for ${val as String}');
+              // debugPrint('Encoding length for ${val as String}');
               return len + StringEncoder().encodingLength(val as String);
           }
         });

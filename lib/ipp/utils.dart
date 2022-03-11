@@ -121,11 +121,15 @@ abstract class Utils {
             return true;
           }
           return false;
-        }, orElse: () => Attribute());// return empty attribute  since we don't use return value
+        },
+            orElse: () =>
+                Attribute()); // return empty attribute  since we don't use return value
         return true;
       }
       return false;
-    }, orElse: () => AttributeGroup()); // return empty attribute group since we don't use return value
+    },
+        orElse: () =>
+            AttributeGroup()); // return empty attribute group since we don't use return value
     return result;
   }
 
@@ -176,7 +180,9 @@ abstract class Utils {
     }
 
     if (attribute != null) {
-      return attribute.value[0] as String;
+      return attribute.value[0] is num
+          ? '${(attribute.value[0] as int)}'
+          : attribute.value[0] as String;
     }
   }
 
@@ -185,5 +191,4 @@ abstract class Utils {
         HashSet<String>(equals: (i, j) => i.toString() == j.toString())
           ..addAll([...a, ...b]));
   }
-
 }

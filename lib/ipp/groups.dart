@@ -38,11 +38,19 @@ abstract class Groups {
       ..attributes = attributes;
   }
 
+  static AttributeGroup jobAttributesTag(List<Attribute> attributes) {
+    return AttributeGroup()
+        ..tag = IppConstants.JOB_ATTRIBUTES_TAG
+        ..attributes = attributes;
+  }
+
   static List<Attribute> _unsupportedAttributes(
       List<Attribute> attributes, List<String> requested) {
     final supported = attributes.map((attr) {
       return attr.name;
     });
+
+    requested = requested.where((r) => r != 'all').toList();
 
     if (requested.isEmpty) {
       return [];
@@ -53,6 +61,7 @@ abstract class Groups {
     return requested.where((name) {
       return !supported.contains(name);
     }).map((name) {
+      print('UNSUPPORTED REQUEST: $name');
       return Attribute.from(
           tag: IppConstants.UNSUPPORTED, name: name, value: ['unsupported']);
     }).toList();

@@ -173,6 +173,11 @@ class LangStr {
   final String value;
 
   LangStr({required this.lang, required this.value});
+
+  @override
+  String toString() {
+    return 'LangStr {lang: $lang, value: $value}';
+  }
 }
 
 class LangstrDecoder {
