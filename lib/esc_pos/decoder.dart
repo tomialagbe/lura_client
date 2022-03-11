@@ -15,6 +15,12 @@ class PrintToken {
   PrintToken.command(this.command) : isCommand = true;
 
   PrintToken.data(this.data, this.dataBytes) : isCommand = false;
+
+  Map toJson() => {
+    'isCommand': isCommand,
+    'fullCommand': command?.toJson(),
+    'data': dataBytes?.toList(),
+  };
 }
 
 class EscPosDecoder {
@@ -59,3 +65,4 @@ class EscPosDecoder {
     return commands.contains(byte);
   }
 }
+

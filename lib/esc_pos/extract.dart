@@ -16,6 +16,11 @@ class FullCommand {
   });
 
   int get lengthInBytes => command.length + (data?.length ?? 0);
+
+  Map toJson() => {
+    'commandBytes': command.toList(),
+    'commandDataBytes': data?.toList(),
+  };
 }
 
 FullCommand? getFullCommand(int command, ByteData buffer, int startOffset) {
@@ -51,11 +56,11 @@ FullCommand? getFullCommand(int command, ByteData buffer, int startOffset) {
   // we've found the command, now get the args
   final en = filtered.entries.firstWhere(
         (entry) => entry.key == matchingCommand,
-    orElse: () => const MapEntry(<int>[], 0),
+    orElse: () => MapEntry(<int>[], 0),
   );
 
   if (matchingCommand.isEmpty) {
-    debugPrint(
+    print(
         'Empty matching command for $command found at $currOffset with neighbouring bytes ${buffer.buffer.asUint8List(currOffset, 10).join(', ')}');
     return null;
   }
@@ -79,12 +84,12 @@ FullCommand? getFullCommand(int command, ByteData buffer, int startOffset) {
   Uint8List? dataBytes;
   if (dataLen != null && dataLen > 0) {
     try {
-      debugPrint(
+      print(
           'Attempting to extract data bytes of length: $dataLen.\nBuffer size: ${buffer.lengthInBytes}\nCurr Offset: $currOffset');
       // if (currOffset + dataLen <= buffer.lengthInBytes) {
       dataBytes = buffer.buffer.asUint8List(currOffset, dataLen);
     } catch (err) {
-      debugPrint(
+      print(
           'Failed to extract data bytes of length: $dataLen. ${err.toString()}');
       rethrow;
     }
@@ -92,7 +97,7 @@ FullCommand? getFullCommand(int command, ByteData buffer, int startOffset) {
     //   dataBytes = buffer.buffer.asUint8List(currOffset);
     // }
   }
-  debugPrint(
+  print(
       'Decoded: \nHeader: ${fullCommandBytes.join(', ')}\nData: ${dataBytes?.join(', ') ?? ''}\nData Len: ${dataBytes?.length ?? 0}\nCalculated Data Len: $dataLen\n\n');
   return FullCommand(
       command: Uint8List.fromList(fullCommandBytes), data: dataBytes);
