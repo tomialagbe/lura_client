@@ -1,6 +1,6 @@
 import 'dart:typed_data';
 
-import 'constants.dart';
+import 'ipp_constants.dart';
 import 'ipp_message.dart';
 import 'type_codec.dart';
 
