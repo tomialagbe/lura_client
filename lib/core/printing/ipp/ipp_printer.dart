@@ -4,10 +4,10 @@ import 'dart:typed_data';
 
 import 'package:bonsoir/bonsoir.dart';
 import 'package:flutter/foundation.dart';
-import 'package:mobile_printer/printing/printing.dart';
-import 'package:mobile_printer/utils/function_call_restricter.dart';
+import 'package:mobile_printer/core/utils/function_call_restricter.dart';
 import 'package:rxdart/rxdart.dart';
 
+import '../printing.dart';
 import 'airprint/airprint_attributes.dart';
 import 'groups.dart';
 import 'ipp_constants.dart';

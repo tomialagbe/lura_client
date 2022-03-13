@@ -2,9 +2,9 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter/foundation.dart';
-import 'package:mobile_printer/printing/printing.dart';
 import 'package:rxdart/rxdart.dart';
 
+import '../printing.dart';
 import 'esc_pos_decoder.dart';
 
 class EscPosPrinter implements Printer {
