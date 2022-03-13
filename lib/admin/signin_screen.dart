@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
+import 'package:mobile_printer/login_state.dart';
 import 'package:mobile_printer/ui/colors.dart';
 import 'package:mobile_printer/ui/typography.dart';
 import 'package:mobile_printer/ui/widgets/lura_text_field.dart';
 import 'package:responsive_builder/responsive_builder.dart';
+import 'package:provider/provider.dart';
 
 class SigninScreen extends StatefulWidget {
   const SigninScreen({Key? key}) : super(key: key);
@@ -153,6 +155,7 @@ class SigninForm extends StatelessWidget {
                 ),
                 child: ElevatedButton(
                   onPressed: () {
+                    context.read<LoginState>().loggedIn = true;
                     context.go('/');
                   },
                   child: Icon(Icons.arrow_forward),

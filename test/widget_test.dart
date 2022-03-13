@@ -14,7 +14,7 @@ import 'package:mobile_printer/main.dart';
 void main() {
   testWidgets('Counter increments smoke test', (WidgetTester tester) async {
     // Build our app and trigger a frame.
-    await tester.pumpWidget(const LuraApp());
+    // await tester.pumpWidget(const LuraApp());
 
     // Verify that our counter starts at 0.
     expect(find.text('0'), findsOneWidget);

@@ -2,6 +2,8 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:mobile_printer/login_state.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'app.dart';
 
@@ -16,7 +18,9 @@ Future<void> main() async {
       await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
       SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.light);
 
-      runApp(LuraApp());
+      final loginState = LoginState();
+      loginState.checkLoggedIn();
+      runApp(LuraApp(loginState: loginState));
     },
     (err, stackTrace) async {},
   );

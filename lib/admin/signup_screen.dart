@@ -152,9 +152,9 @@ class SignupForm extends StatelessWidget {
               ),
               const Gap(10),
               TextButton(
-                child: const Text('Sign up for Lura'),
+                child: const Text('Sign in'),
                 onPressed: () {
-                  context.go('/signup');
+                  context.go('/signin');
                 },
               ),
             ],

@@ -1,26 +1,39 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:go_router/go_router.dart';
 import 'package:mobile_printer/admin/signin_screen.dart';
 import 'package:mobile_printer/admin/signup_screen.dart';
-import 'package:mobile_printer/auth_service.dart';
 import 'package:provider/provider.dart';
 
+import 'admin/create_printer_screen.dart';
 import 'admin/main_screen.dart';
+import 'login_state.dart';
 
 GoRouter? router;
 
 GoRouter buildRouter(BuildContext context, bool isWeb) {
-  final authService = context.read<AuthenticationService>();
+  final loginState = context.read<LoginState>();
 
   router = router ??
       GoRouter(
+        // debugLogDiagnostics: kDebugMode,
+        urlPathStrategy: UrlPathStrategy.path,
+        refreshListenable: loginState,
         initialLocation: '/signin',
         routes: [
           GoRoute(
               path: '/',
+              name: 'root',
               builder: (ctx, state) {
                 return MainScreen();
               }),
+          GoRoute(
+            path: '/create_printer',
+            name: 'create_printer',
+            builder: (ctx, state) {
+              return CreatePrinterScreen();
+            },
+          ),
           GoRoute(
             path: '/signup',
             name: 'signup',
@@ -44,20 +57,19 @@ GoRouter buildRouter(BuildContext context, bool isWeb) {
           )
         ],
         redirect: (state) {
-          // final loggedIn = authService.isLoggedIn;
-          // final loggingIn = state.subloc == '/signin';
+          // final loginLoc = state.namedLocation('signin');
+          // final loggingIn = state.subloc == loginLoc;
           //
-          // if (!loggedIn) {
-          //   return '/signin';
-          // }
+          // final createAcctLoc = state.namedLocation('signup');
+          // final creatingAcct = state.subloc == createAcctLoc;
           //
-          // if (loggedIn && loggingIn) {
-          //   return '/';
-          // }
-
+          // final loggedIn = loginState.loggedIn;
+          // final rootLoc = state.namedLocation('root');
+          //
+          // if (!loggedIn && !loggingIn && !creatingAcct) return loginLoc;
+          // if (loggedIn && (loggingIn || creatingAcct)) return rootLoc;
           return null;
         },
-        refreshListenable: authService,
       );
   return router!;
 }

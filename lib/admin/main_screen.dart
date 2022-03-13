@@ -9,28 +9,44 @@ class MainScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      drawer: SideMenu(),
-      body: SafeArea(
-        child: ResponsiveBuilder(
-          builder: (context, sizingInfo) {
-            if (sizingInfo.isDesktop) {
-              return Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Expanded(child: SideMenu(), flex: 1),
-                  Expanded(
-                    child: PrintersScreen(),
-                    flex: 4,
-                  ),
-                ],
-              );
-            }
+    return ResponsiveBuilder(
+      builder: (context, sizingInfo) {
+        return Scaffold(
+          drawer: SideMenu(),
+          appBar: sizingInfo.isDesktop ? null : luraAppBar(context),
+          body: SafeArea(
+            child: Builder(
+              builder: (context) {
+                if (sizingInfo.isDesktop) {
+                  return Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Expanded(child: SideMenu(), flex: 1),
+                      Expanded(
+                        child: PrintersScreen(),
+                        flex: 4,
+                      ),
+                    ],
+                  );
+                }
 
-            return PrintersScreen();
-          },
-        ),
-      ),
+                return PrintersScreen();
+              },
+            ),
+          ),
+        );
+      },
     );
   }
+}
+
+PreferredSizeWidget luraAppBar(BuildContext context) {
+  return AppBar(
+    title: Image.asset(
+      'assets/images/lura_logo_icon_alt.png',
+      height: 50,
+    ),
+    // backgroundColor: Theme.of(context).drawerTheme.backgroundColor,
+    automaticallyImplyLeading: true,
+  );
 }

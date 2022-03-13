@@ -6,11 +6,20 @@ import 'colors.dart';
 class LuraTheme {
   static ThemeData get defaultTheme {
     return ThemeData(
+      appBarTheme: _appBarTheme,
       inputDecorationTheme: _inputDecorationTheme,
       elevatedButtonTheme: _elevatedButtonTheme,
       textButtonTheme: _textButtonTheme,
       scaffoldBackgroundColor: Colors.white,
       dividerTheme: _dividerTheme,
+    );
+  }
+
+  static AppBarTheme get _appBarTheme {
+    return const AppBarTheme(
+      backgroundColor: Colors.white,
+      elevation: 1,
+      iconTheme: IconThemeData(color: LuraColors.blue),
     );
   }
 
@@ -36,6 +45,20 @@ class LuraTheme {
         ),
         padding: const EdgeInsets.symmetric(vertical: 10),
         primary: LuraColors.blue,
+        minimumSize: const Size(80, 30),
+      ),
+    );
+  }
+
+  static ElevatedButtonThemeData get invertedElevatedButtonTheme {
+    return ElevatedButtonThemeData(
+      style: ElevatedButton.styleFrom(
+        elevation: 0,
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.all(Radius.circular(10)),
+        ),
+        padding: const EdgeInsets.symmetric(vertical: 10),
+        primary: Colors.white,
         minimumSize: const Size(80, 30),
       ),
     );
