@@ -4,6 +4,7 @@ import 'package:gap/gap.dart';
 import 'package:mobile_printer/ui/colors.dart';
 import 'package:mobile_printer/ui/theme.dart';
 import 'package:mobile_printer/ui/typography.dart';
+import 'package:responsive_builder/responsive_builder.dart';
 
 class PlatformSelector extends StatefulWidget {
   final Function(String)? onChange;
@@ -25,48 +26,59 @@ class _PlatformSelectorState extends State<PlatformSelector> {
 
   @override
   Widget build(BuildContext context) {
-    return Theme(
-      data: Theme.of(context)
-          .copyWith(elevatedButtonTheme: LuraTheme.invertedElevatedButtonTheme),
-      child: IntrinsicWidth(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            _PlatformSelectorButton(
-              icon: FontAwesomeIcons.apple,
-              label: 'iOS',
-              onTap: () {
-                setState(() {
-                  _currentValue = 'iOS';
-                });
-              },
-              selected: _currentValue == 'iOS',
-            ),
-            const Gap(10),
-            _PlatformSelectorButton(
-              icon: FontAwesomeIcons.android,
-              label: 'Android',
-              onTap: () {
-                setState(() {
-                  _currentValue = 'Android';
-                });
-              },
-              selected: _currentValue == 'Android',
-            ),
-            const Gap(10),
-            _PlatformSelectorButton(
-              icon: FontAwesomeIcons.windows,
-              label: 'Windows',
-              onTap: () {
-                setState(() {
-                  _currentValue = 'Windows';
-                });
-              },
-              selected: _currentValue == 'Windows',
-            ),
-          ],
-        ),
-      ),
+    return ResponsiveBuilder(
+      builder: (BuildContext context, SizingInformation sizingInformation) {
+        final isDesktop = sizingInformation.isDesktop;
+
+        final children = [
+          _PlatformSelectorButton(
+            icon: FontAwesomeIcons.apple,
+            label: 'iOS',
+            onTap: () {
+              setState(() {
+                _currentValue = 'iOS';
+              });
+            },
+            selected: _currentValue == 'iOS',
+            isDesktop: isDesktop,
+          ),
+          const Gap(10),
+          _PlatformSelectorButton(
+            icon: FontAwesomeIcons.android,
+            label: 'Android',
+            onTap: () {
+              setState(() {
+                _currentValue = 'Android';
+              });
+            },
+            selected: _currentValue == 'Android',
+            isDesktop: isDesktop,
+          ),
+          const Gap(10),
+          _PlatformSelectorButton(
+            icon: FontAwesomeIcons.windows,
+            label: 'Windows',
+            onTap: () {
+              setState(() {
+                _currentValue = 'Windows';
+              });
+            },
+            selected: _currentValue == 'Windows',
+            isDesktop: isDesktop,
+          ),
+        ];
+
+        return Theme(
+          data: Theme.of(context).copyWith(
+              elevatedButtonTheme: LuraTheme.invertedElevatedButtonTheme),
+          child: sizingInformation.isMobile
+              ? Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: children,
+              )
+              : Row(children: children),
+        );
+      },
     );
   }
 }
@@ -76,12 +88,14 @@ class _PlatformSelectorButton extends StatelessWidget {
   final String label;
   final VoidCallback? onTap;
   final bool selected;
+  final bool isDesktop;
 
   const _PlatformSelectorButton({
     Key? key,
     required this.icon,
     required this.label,
     this.selected = false,
+    this.isDesktop = false,
     this.onTap,
   }) : super(key: key);
 
@@ -92,6 +106,7 @@ class _PlatformSelectorButton extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.all(10),
         child: Stack(
+          alignment: Alignment.centerRight,
           children: [
             Row(
               mainAxisSize: MainAxisSize.max,
@@ -110,12 +125,12 @@ class _PlatformSelectorButton extends StatelessWidget {
                     fontWeight: FontWeight.w400,
                   ),
                 ),
-                const Gap(30)
+                const Gap(30),
               ],
             ),
             if (selected)
               const Align(
-                child: Icon(Icons.check, color: Colors.green),
+                child: Icon(Icons.check, color: LuraColors.blue),
                 alignment: Alignment.centerRight,
               ),
           ],

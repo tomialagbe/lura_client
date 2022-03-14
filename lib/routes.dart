@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:go_router/go_router.dart';
+import 'package:mobile_printer/admin/printers/printer_created_screen.dart';
 import 'package:mobile_printer/admin/signin_screen.dart';
 import 'package:mobile_printer/admin/signup_screen.dart';
 import 'package:provider/provider.dart';
@@ -32,6 +33,13 @@ GoRouter buildRouter(BuildContext context, bool isWeb) {
             name: 'create_printer',
             builder: (ctx, state) {
               return CreatePrinterScreen();
+            },
+          ),
+          GoRoute(
+            path: '/printer_created',
+            name: 'printer_created',
+            builder: (ctx, state) {
+              return PrinterCreatedScreen();
             },
           ),
           GoRoute(

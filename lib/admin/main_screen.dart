@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mobile_printer/admin/app_bars.dart';
 import 'package:mobile_printer/admin/side_menu.dart';
 import 'package:responsive_builder/responsive_builder.dart';
 
@@ -38,15 +39,4 @@ class MainScreen extends StatelessWidget {
       },
     );
   }
-}
-
-PreferredSizeWidget luraAppBar(BuildContext context) {
-  return AppBar(
-    title: Image.asset(
-      'assets/images/lura_logo_icon_alt.png',
-      height: 50,
-    ),
-    // backgroundColor: Theme.of(context).drawerTheme.backgroundColor,
-    automaticallyImplyLeading: true,
-  );
 }
