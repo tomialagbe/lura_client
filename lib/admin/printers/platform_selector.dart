@@ -68,16 +68,12 @@ class _PlatformSelectorState extends State<PlatformSelector> {
           ),
         ];
 
-        return Theme(
-          data: Theme.of(context).copyWith(
-              elevatedButtonTheme: LuraTheme.invertedElevatedButtonTheme),
-          child: sizingInformation.isMobile
-              ? Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: children,
-              )
-              : Row(children: children),
-        );
+        return sizingInformation.isMobile
+            ? Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: children,
+            )
+            : Row(children: children);
       },
     );
   }
@@ -115,13 +111,13 @@ class _PlatformSelectorButton extends StatelessWidget {
               children: [
                 Icon(
                   icon,
-                  color: LuraColors.blue,
+                  color: Colors.white,
                 ),
                 const Gap(10),
                 Text(
                   label,
                   style: LuraTextStyles.baseTextStyle.copyWith(
-                    color: LuraColors.blue,
+                    color: Colors.white,
                     fontWeight: FontWeight.w400,
                   ),
                 ),
@@ -130,7 +126,7 @@ class _PlatformSelectorButton extends StatelessWidget {
             ),
             if (selected)
               const Align(
-                child: Icon(Icons.check, color: LuraColors.blue),
+                child: Icon(Icons.check, color: Colors.white),
                 alignment: Alignment.centerRight,
               ),
           ],

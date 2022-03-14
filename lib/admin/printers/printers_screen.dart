@@ -58,7 +58,7 @@ class _CreatePrinterCard extends StatelessWidget {
                 onTap: onTap,
               ),
             ),
-            Positioned(
+            const Positioned(
               top: 5,
               right: -5,
               child: _CardPlusIcon(),

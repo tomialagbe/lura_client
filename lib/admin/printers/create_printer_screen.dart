@@ -16,14 +16,14 @@ class CreatePrinterScreen extends StatelessWidget {
     return ResponsiveBuilder(
       builder: (BuildContext context, SizingInformation sizingInformation) {
         return Scaffold(
-          backgroundColor: LuraColors.blue,
-          appBar: luraTransparentAppBar(),
+          appBar: luraAppBar(context),
           body: SafeArea(
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20),
               child: sizingInformation.isMobile
-                  ? SingleChildScrollView(child: buildColumn(context, sizingInformation))
-                  : buildColumn(context, sizingInformation),
+                  ? SingleChildScrollView(
+                      child: buildForm(context, sizingInformation))
+                  : buildForm(context, sizingInformation),
             ),
           ),
         );
@@ -31,7 +31,7 @@ class CreatePrinterScreen extends StatelessWidget {
     );
   }
 
-  Widget buildColumn(BuildContext context, SizingInformation sizingInformation) {
+  Widget buildForm(BuildContext context, SizingInformation sizingInformation) {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -41,7 +41,9 @@ class CreatePrinterScreen extends StatelessWidget {
         Text(
           'Create a printer',
           style: LuraTextStyles.baseTextStyle.copyWith(
-              color: Colors.white, fontSize: 36, fontWeight: FontWeight.w400),
+              color: LuraColors.blue,
+              fontSize: 36,
+              fontWeight: FontWeight.w400),
         ),
         const Gap(70),
         Form(
@@ -50,17 +52,16 @@ class CreatePrinterScreen extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               TextFormField(
-                style: const TextStyle(fontSize: 18, color: Colors.white),
+                style: const TextStyle(fontSize: 18, color: LuraColors.blue),
                 decoration: const InputDecoration(
-                  fillColor: Colors.white,
                   filled: false,
                   hintText: 'Printer name',
-                  hintStyle: TextStyle(color: Colors.white),
+                  hintStyle: TextStyle(color: LuraColors.blue),
                   enabledBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(color: Colors.white, width: 1),
+                    borderSide: BorderSide(color: LuraColors.blue, width: 1),
                   ),
                   border: UnderlineInputBorder(
-                    borderSide: BorderSide(color: Colors.white, width: 1),
+                    borderSide: BorderSide(color: LuraColors.blue, width: 1),
                   ),
                 ),
                 keyboardType: TextInputType.text,
@@ -69,20 +70,22 @@ class CreatePrinterScreen extends StatelessWidget {
               Text(
                 'On what platform does your POS run?',
                 style: LuraTextStyles.baseTextStyle.copyWith(
-                  color: Colors.white,
+                  color: LuraColors.blue,
                   fontSize: 24,
                   fontWeight: FontWeight.w400,
                 ),
               ),
               const Gap(20),
-              PlatformSelector(),
-              const Gap(40),
+              PlatformSelector(
+                onChange: (selectedPlatform) {},
+              ),
+              const Gap(60),
               Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
                   _SubmitButton(
                     onTap: () {
-                      context.go('/printer_created');
+                      context.push('/printer_created');
                     },
                   ),
                 ],
@@ -109,7 +112,7 @@ class _SubmitButton extends StatelessWidget {
             elevation: 0,
             shape: const CircleBorder(),
             padding: const EdgeInsets.all(20),
-            primary: Colors.white,
+            primary: LuraColors.blue,
           ),
         ),
       ),
@@ -117,7 +120,7 @@ class _SubmitButton extends StatelessWidget {
         onPressed: onTap,
         child: const Icon(
           Icons.arrow_forward,
-          color: LuraColors.blue,
+          color: Colors.white,
         ),
       ),
     );

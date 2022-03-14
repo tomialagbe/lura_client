@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:mobile_printer/core/utils/platform_helper.dart';
 
-PreferredSizeWidget luraAppBar(BuildContext context) {
+PreferredSizeWidget? luraAppBar(BuildContext context) {
+  if (PlatformHelper.isWeb) {
+    return null;
+  }
+
   return AppBar(
     title: Image.asset(
       'assets/images/lura_logo_icon_alt.png',
