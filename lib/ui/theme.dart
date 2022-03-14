@@ -59,6 +59,7 @@ class LuraTheme {
         ),
         padding: const EdgeInsets.symmetric(vertical: 10),
         primary: Colors.white,
+        splashFactory: InkRipple.splashFactory,
         minimumSize: const Size(80, 30),
       ),
     );

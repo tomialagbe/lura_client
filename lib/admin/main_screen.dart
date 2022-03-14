@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:mobile_printer/admin/side_menu.dart';
 import 'package:responsive_builder/responsive_builder.dart';
 
-import 'printers_screen.dart';
+import 'printers/printers_screen.dart';
 
 class MainScreen extends StatelessWidget {
   const MainScreen({Key? key}) : super(key: key);

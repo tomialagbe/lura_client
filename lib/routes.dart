@@ -5,7 +5,7 @@ import 'package:mobile_printer/admin/signin_screen.dart';
 import 'package:mobile_printer/admin/signup_screen.dart';
 import 'package:provider/provider.dart';
 
-import 'admin/create_printer_screen.dart';
+import 'admin/printers/create_printer_screen.dart';
 import 'admin/main_screen.dart';
 import 'login_state.dart';
 

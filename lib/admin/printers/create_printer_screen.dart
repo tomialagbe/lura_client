@@ -3,8 +3,9 @@ import 'package:gap/gap.dart';
 import 'package:mobile_printer/ui/colors.dart';
 import 'package:mobile_printer/ui/theme.dart';
 import 'package:mobile_printer/ui/typography.dart';
-import 'package:mobile_printer/ui/widgets/lura_text_field.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+
+import 'platform_selector.dart';
 
 class CreatePrinterScreen extends StatelessWidget {
   const CreatePrinterScreen({Key? key}) : super(key: key);
@@ -17,7 +18,7 @@ class CreatePrinterScreen extends StatelessWidget {
         backgroundColor: Colors.transparent,
         elevation: 0,
         automaticallyImplyLeading: true,
-        iconTheme: IconThemeData(color: Colors.white),
+        iconTheme: const IconThemeData(color: Colors.white),
       ),
       body: SafeArea(
         child: Padding(
@@ -37,10 +38,12 @@ class CreatePrinterScreen extends StatelessWidget {
               Expanded(
                 child: Form(
                   child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       TextFormField(
-                        style: const TextStyle(fontSize: 18),
+                        style:
+                            const TextStyle(fontSize: 18, color: Colors.white),
                         decoration: const InputDecoration(
                           fillColor: Colors.white,
                           filled: false,
@@ -66,11 +69,15 @@ class CreatePrinterScreen extends StatelessWidget {
                           fontWeight: FontWeight.w400,
                         ),
                       ),
+                      const Gap(20),
+                      PlatformSelector(),
                       const Gap(10),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: [
-                          _SubmitButton(),
+                          _SubmitButton(
+                            onTap: () {},
+                          ),
                         ],
                       ),
                     ],
@@ -86,7 +93,9 @@ class CreatePrinterScreen extends StatelessWidget {
 }
 
 class _SubmitButton extends StatelessWidget {
-  const _SubmitButton({Key? key}) : super(key: key);
+  final VoidCallback? onTap;
+
+  const _SubmitButton({Key? key, this.onTap}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -102,37 +111,11 @@ class _SubmitButton extends StatelessWidget {
         ),
       ),
       child: ElevatedButton(
-        onPressed: () {
-          // context.go('/');
-        },
-        child: Icon(
+        onPressed: () {},
+        child: const Icon(
           Icons.arrow_forward,
           color: LuraColors.blue,
         ),
-      ),
-    );
-  }
-}
-
-class _PlatformSelector extends StatelessWidget {
-  const _PlatformSelector({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Theme(
-      data: Theme.of(context)
-          .copyWith(elevatedButtonTheme: LuraTheme.invertedElevatedButtonTheme),
-      child: Column(
-        children: [
-          ElevatedButton(
-            onPressed: (){},
-            child: Row(
-              children: [
-                Text('iOS'),
-              ],
-            ),
-          )
-        ],
       ),
     );
   }
