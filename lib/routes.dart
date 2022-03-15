@@ -63,14 +63,47 @@ class LuraRouter {
             path: 'create-printer',
             name: 'create-printer',
             builder: (ctx, state) {
-              return CreatePrinterScreen();
+              return const CreatePrinterScreen();
             },
           ),
           GoRoute(
             path: 'printer-created',
             name: 'printer-created',
             builder: (ctx, state) {
-              return PrinterCreatedScreen();
+              return const PrinterCreatedScreen(forCreationComplete: true);
+            },
+          ),
+          GoRoute(
+            path: 'activate-printer',
+            name: 'activate-printer',
+            builder: (ctx, state) {
+              return const PrinterCreatedScreen(
+                forActivation: true,
+                forCreationComplete: false,
+              );
+            },
+          ),
+          GoRoute(
+            path: 'printer-actions',
+            name: 'printer-actions',
+            builder: (ctx, state) {
+              return const PrinterCreatedScreen(
+                forActivation: false,
+                forCreationComplete: false,
+                showReceiptButton: true,
+                hideActivationButton: true,
+              );
+            },
+          ),
+          GoRoute(
+            path: 'printer-actions-offline',
+            name: 'printer-actions-offline',
+            builder: (ctx, state) {
+              return const PrinterCreatedScreen(
+                forActivation: false,
+                forCreationComplete: false,
+                showReceiptButton: true,
+              );
             },
           ),
         ],
@@ -99,8 +132,26 @@ class LuraRouter {
       GoRoute(
         name: 'new-printer-created',
         path: '/new-printer-created',
-        redirect: (state) =>
-            state.namedLocation('printer-created', params: {'page': 'printers'}),
+        redirect: (state) => state
+            .namedLocation('printer-created', params: {'page': 'printers'}),
+      ),
+      GoRoute(
+        name: 'printer-activate',
+        path: '/printer-activate',
+        redirect: (state) => state
+            .namedLocation('activate-printer', params: {'page': 'printers'}),
+      ),
+      GoRoute(
+        name: 'mobile-printer-actions',
+        path: '/mobile-printer-actions',
+        redirect: (state) => state
+            .namedLocation('printer-actions', params: {'page': 'printers'}),
+      ),
+      GoRoute(
+        name: 'mobile-printer-actions-offline',
+        path: '/mobile-printer-actions-offline',
+        redirect: (state) => state.namedLocation('printer-actions-offline',
+            params: {'page': 'printers'}),
       ),
     ],
     errorPageBuilder: (context, state) {

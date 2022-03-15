@@ -25,7 +25,7 @@ class PrintersViewmodel extends ChangeNotifier {
   }
 
   Future addPrinter(String name, String platform) async {
-    final ps = PrintStation(name: name, platform: platform.toLowerCase());
+    final ps = PrintStation(name: name, platform: platform.toLowerCase(), unused: true);
     await printStationRepository.addPrintStation(ps);
     _loadPrinters();
   }

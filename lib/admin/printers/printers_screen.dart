@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:gap/gap.dart';
 import 'package:mobile_printer/core/models/print_station.dart';
+import 'package:mobile_printer/core/utils/platform_helper.dart';
 import 'package:mobile_printer/core/viewmodels/printers_viewmodel.dart';
 import 'package:mobile_printer/ui/colors.dart';
 import 'package:mobile_printer/ui/typography.dart';
@@ -103,18 +104,34 @@ class PrinterList extends StatelessWidget {
   Widget build(BuildContext context) {
     return ResponsiveBuilder(
       builder: (BuildContext context, SizingInformation sizingInformation) {
+        final listView = ListView.builder(
+          padding: const EdgeInsets.only(top: 20),
+          itemBuilder: (context, index) {
+            final printer = printers[index];
+            return _PrinterListItem(
+              printer: printer,
+              sizingInformation: sizingInformation,
+              onTap: () {
+                if (printer.unused) {
+                  context.goNamed('printer-activate');
+                } else {
+                  if (PlatformHelper.isWeb) {
+                    context.go('/receipts');
+                  } else {
+                    context.goNamed(printer.online
+                        ? 'mobile-printer-actions'
+                        : 'mobile-printer-actions-offline');
+                  }
+                }
+              },
+            );
+          },
+          itemCount: printers.length,
+          shrinkWrap: true,
+        );
+
         if (sizingInformation.isMobile) {
-          return ListView.builder(
-            padding: const EdgeInsets.only(top: 20),
-            itemBuilder: (context, index) {
-              return _PrinterListItem(
-                printer: printers[index],
-                sizingInformation: sizingInformation,
-              );
-            },
-            itemCount: printers.length,
-            shrinkWrap: true,
-          );
+          return listView;
         }
 
         return Center(
@@ -122,17 +139,7 @@ class PrinterList extends StatelessWidget {
             width: sizingInformation.screenSize.width * 0.6,
             height: double.infinity,
             child: Center(
-              child: ListView.builder(
-                padding: const EdgeInsets.only(top: 20),
-                itemBuilder: (context, index) {
-                  return _PrinterListItem(
-                    printer: printers[index],
-                    sizingInformation: sizingInformation,
-                  );
-                },
-                itemCount: printers.length,
-                shrinkWrap: true,
-              ),
+              child: listView,
             ),
           ),
         );
@@ -144,11 +151,13 @@ class PrinterList extends StatelessWidget {
 class _PrinterListItem extends StatelessWidget {
   final PrintStation printer;
   final SizingInformation sizingInformation;
+  final VoidCallback? onTap;
 
   const _PrinterListItem({
     Key? key,
     required this.printer,
     required this.sizingInformation,
+    this.onTap,
   }) : super(key: key);
 
   @override
@@ -176,7 +185,7 @@ class _PrinterListItem extends StatelessWidget {
             child: InkWell(
               splashColor: const Color(0xFFCED4DE),
               focusColor: const Color(0xFFCED4DE),
-              onTap: () {},
+              onTap: onTap,
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
@@ -184,7 +193,8 @@ class _PrinterListItem extends StatelessWidget {
                     child: Container(
                       height: double.infinity,
                       width: double.infinity,
-                      padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 10, horizontal: 20),
                       child: Row(
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
