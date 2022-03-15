@@ -34,6 +34,16 @@ class _MainScreenState extends State<MainScreen> {
   }
 
   @override
+  void didUpdateWidget(MainScreen oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (_selectedIndex != (_pageIndices[widget.page] ?? 0)) {
+      setState(() {
+        _selectedIndex = _pageIndices[widget.page] ?? 0;
+      });
+    }
+  }
+
+  @override
   void didChangeDependencies() {
     super.didChangeDependencies();
     setState(() {

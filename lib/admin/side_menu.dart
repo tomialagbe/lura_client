@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
@@ -33,6 +34,7 @@ class SideMenu extends StatelessWidget {
             active: currentPage == 0,
             press: () {
               context.go('/printers');
+              _closeDrawer(context);
             },
           ),
           DrawerListTile(
@@ -40,6 +42,7 @@ class SideMenu extends StatelessWidget {
             active: currentPage == 1,
             press: () {
               context.go('/receipts');
+              _closeDrawer(context);
             },
           ),
           const Divider(),
@@ -48,11 +51,16 @@ class SideMenu extends StatelessWidget {
             active: currentPage == 2,
             press: () {
               context.go('/feedback');
+              _closeDrawer(context);
             },
           ),
         ],
       ),
     );
+  }
+
+  void _closeDrawer(BuildContext context) {
+    if (!kIsWeb) Navigator.pop(context);
   }
 }
 
