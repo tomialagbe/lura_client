@@ -186,55 +186,48 @@ class _PrinterListItem extends StatelessWidget {
               splashColor: const Color(0xFFCED4DE),
               focusColor: const Color(0xFFCED4DE),
               onTap: onTap,
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Expanded(
-                    child: Container(
-                      height: double.infinity,
-                      width: double.infinity,
-                      padding: const EdgeInsets.symmetric(
-                          vertical: 10, horizontal: 20),
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Text(
-                                printer.name,
-                                style: textStyle,
-                              ),
-                              const Gap(10),
-                              _PlatformIcon(platform: printer.platform),
-                            ],
-                          ),
-                          Expanded(child: Container()),
-                          if (!printer.unused)
-                            Container(
-                              margin: const EdgeInsets.only(right: 5),
-                              decoration: BoxDecoration(
-                                color:
-                                    printer.online ? Colors.green : Colors.red,
-                                shape: BoxShape.circle,
-                              ),
-                              width: 10,
-                              height: 10,
-                            ),
-                          Text(
-                            printer.unused
-                                ? 'Unused'
-                                : printer.online
-                                    ? 'Online'
-                                    : 'Offline',
-                            style: textStyle.copyWith(fontSize: 14),
-                          ),
-                        ],
-                      ),
+              child: Container(
+                height: double.infinity,
+                width: double.infinity,
+                padding: const EdgeInsets.symmetric(
+                    vertical: 10, horizontal: 20),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
+                          printer.name,
+                          style: textStyle,
+                        ),
+                        const Gap(10),
+                        _PlatformIcon(platform: printer.platform),
+                      ],
                     ),
-                  ),
-                ],
+                    Expanded(child: Container()),
+                    if (!printer.unused)
+                      Container(
+                        margin: const EdgeInsets.only(right: 5),
+                        decoration: BoxDecoration(
+                          color:
+                              printer.online ? Colors.green : Colors.red,
+                          shape: BoxShape.circle,
+                        ),
+                        width: 10,
+                        height: 10,
+                      ),
+                    Text(
+                      printer.unused
+                          ? 'Unused'
+                          : printer.online
+                              ? 'Online'
+                              : 'Offline',
+                      style: textStyle.copyWith(fontSize: 14),
+                    ),
+                  ],
+                ),
               ),
             ),
           ),

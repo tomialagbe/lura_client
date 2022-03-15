@@ -5,10 +5,13 @@ import 'package:go_router/go_router.dart';
 import 'package:mobile_printer/admin/printers/printer_created_screen.dart';
 import 'package:mobile_printer/admin/signin_screen.dart';
 import 'package:mobile_printer/admin/signup_screen.dart';
+import 'package:mobile_printer/core/utils/platform_helper.dart';
 import 'package:provider/provider.dart';
 
 import 'admin/printers/create_printer_screen.dart';
 import 'admin/main_screen.dart';
+import 'admin/printers/printer-activation-screen.dart';
+import 'admin/printers/printer_standby_screen.dart';
 import 'login_state.dart';
 
 class LuraRouter {
@@ -106,6 +109,22 @@ class LuraRouter {
               );
             },
           ),
+          if (!PlatformHelper.isWeb) ...[
+            GoRoute(
+              name: 'printer-activation-screen',
+              path: 'printer-activation-screen',
+              builder: (ctx, state) {
+                return PrinterActivationScreen();
+              },
+            ),
+            GoRoute(
+              name: 'printer-standby-screen',
+              path: 'printer-standby-screen',
+              builder: (ctx, state) {
+                return PrinterStandbyScreen();
+              },
+            ),
+          ],
         ],
       ),
       GoRoute(
@@ -153,6 +172,20 @@ class LuraRouter {
         redirect: (state) => state.namedLocation('printer-actions-offline',
             params: {'page': 'printers'}),
       ),
+      if (!PlatformHelper.isWeb) ...[
+        GoRoute(
+          name: 'printer-activation',
+          path: '/printer-activation',
+          redirect: (state) => state.namedLocation('printer-activation-screen',
+              params: {'page': 'printers'}),
+        ),
+        GoRoute(
+          name: 'printer-standby',
+          path: '/printer-standby',
+          redirect: (state) => state.namedLocation('printer-standby-screen',
+              params: {'page': 'printers'}),
+        ),
+      ],
     ],
     errorPageBuilder: (context, state) {
       return MaterialPage(

@@ -136,7 +136,9 @@ class _ScreenContent extends StatelessWidget {
               },
             ),
             const Gap(10),
-            if (!hideActivationButton) _ActivateButton(onTap: () {}),
+            if (!hideActivationButton) _ActivateButton(onTap: () {
+              context.goNamed('printer-activation');
+            }),
           ],
         ),
       ),

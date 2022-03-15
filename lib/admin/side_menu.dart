@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
+import 'package:mobile_printer/ui/colors.dart';
 import 'package:mobile_printer/ui/typography.dart';
 
 class SideMenu extends StatelessWidget {
@@ -30,7 +31,7 @@ class SideMenu extends StatelessWidget {
           ),
           const Gap(40),
           DrawerListTile(
-            title: "Printers",
+            title: 'Printers',
             active: currentPage == 0,
             press: () {
               context.go('/printers');
@@ -38,7 +39,7 @@ class SideMenu extends StatelessWidget {
             },
           ),
           DrawerListTile(
-            title: "Receipts",
+            title: 'Receipts',
             active: currentPage == 1,
             press: () {
               context.go('/receipts');
@@ -47,7 +48,7 @@ class SideMenu extends StatelessWidget {
           ),
           const Divider(),
           DrawerListTile(
-            title: "Feedback",
+            title: 'Feedback',
             active: currentPage == 2,
             press: () {
               context.go('/feedback');
@@ -81,7 +82,7 @@ class DrawerListTile extends StatelessWidget {
     return ListTile(
       onTap: press,
       selected: active,
-      selectedColor: Colors.red,
+      selectedTileColor: LuraColors.inputColor,
       horizontalTitleGap: 0.0,
       title: Text(
         title,

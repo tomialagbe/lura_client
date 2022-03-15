@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:mobile_printer/core/viewmodels/receipts_viewmodel.dart';
 import 'package:mobile_printer/login_state.dart';
 import 'package:mobile_printer/ui/theme.dart';
 import 'package:provider/provider.dart';
@@ -22,6 +23,9 @@ class LuraApp extends StatelessWidget {
         ),
         ChangeNotifierProvider<PrintersViewmodel>(
           create: (ctx) => PrintersViewmodel(),
+        ),
+        ChangeNotifierProvider<ReceiptsViewmodel>(
+          create: (ctx) => ReceiptsViewmodel(),
         ),
         Provider<LuraRouter>(
           create: (ctx) => LuraRouter(loginState: loginState),
