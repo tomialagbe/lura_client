@@ -2,14 +2,38 @@ import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
 import 'package:mobile_printer/admin/app_bars.dart';
+import 'package:mobile_printer/core/viewmodels/printers_viewmodel.dart';
 import 'package:mobile_printer/ui/colors.dart';
 import 'package:mobile_printer/ui/typography.dart';
+import 'package:provider/src/provider.dart';
 import 'package:responsive_builder/responsive_builder.dart';
+import 'package:rxdart/rxdart.dart';
 
 import 'platform_selector.dart';
 
-class CreatePrinterScreen extends StatelessWidget {
+class CreatePrinterScreen extends StatefulWidget {
   const CreatePrinterScreen({Key? key}) : super(key: key);
+
+  @override
+  State<CreatePrinterScreen> createState() => _CreatePrinterScreenState();
+}
+
+class _CreatePrinterScreenState extends State<CreatePrinterScreen> {
+  static const _initialPlatform = 'windows';
+  String _selectedPlatform = _initialPlatform;
+
+  final _printerNameController = TextEditingController();
+  final _formCompleteStream = BehaviorSubject.seeded(false);
+
+  @override
+  void initState() {
+    super.initState();
+
+    _printerNameController.addListener(() {
+      _formCompleteStream
+          .add(_printerNameController.text.trim().isEmpty ? false : true);
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -52,11 +76,15 @@ class CreatePrinterScreen extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               TextFormField(
+                controller: _printerNameController,
                 style: const TextStyle(fontSize: 18, color: LuraColors.blue),
                 decoration: const InputDecoration(
                   filled: false,
                   hintText: 'Printer name',
-                  hintStyle: TextStyle(color: LuraColors.blue),
+                  hintStyle: TextStyle(
+                    color: LuraColors.blue,
+                    fontSize: 20,
+                  ),
                   enabledBorder: UnderlineInputBorder(
                     borderSide: BorderSide(color: LuraColors.blue, width: 1),
                   ),
@@ -64,6 +92,12 @@ class CreatePrinterScreen extends StatelessWidget {
                     borderSide: BorderSide(color: LuraColors.blue, width: 1),
                   ),
                 ),
+                validator: (name) {
+                  if (name == null || name.trim().isEmpty) {
+                    return 'The printer name is required';
+                  }
+                  return null;
+                },
                 keyboardType: TextInputType.text,
               ),
               const Gap(30),
@@ -71,21 +105,37 @@ class CreatePrinterScreen extends StatelessWidget {
                 'On what platform does your POS run?',
                 style: LuraTextStyles.baseTextStyle.copyWith(
                   color: LuraColors.blue,
-                  fontSize: 24,
+                  fontSize: 20,
                   fontWeight: FontWeight.w400,
                 ),
               ),
               const Gap(20),
               PlatformSelector(
-                onChange: (selectedPlatform) {},
+                initialValue: 'windows',
+                onChange: (selectedPlatform) {
+                  setState(() {
+                    _selectedPlatform = selectedPlatform;
+                  });
+                },
               ),
               const Gap(60),
               Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
-                  _SubmitButton(
-                    onTap: () {
-                      context.goNamed('new-printer-created');
+                  StreamBuilder<bool>(
+                    stream: _formCompleteStream,
+                    builder: (context, snapshot) {
+                      return _SubmitButton(
+                        onTap: (snapshot.data ?? false)
+                            ? () {
+                                debugPrint(_printerNameController.text.trim());
+                                context.read<PrintersViewmodel>().addPrinter(
+                                    _printerNameController.text.trim(),
+                                    _selectedPlatform);
+                                context.goNamed('new-printer-created');
+                              }
+                            : null,
+                      );
                     },
                   ),
                 ],

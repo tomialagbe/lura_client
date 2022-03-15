@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:gap/gap.dart';
+import 'package:go_router/go_router.dart';
 import 'package:mobile_printer/admin/app_bars.dart';
 import 'package:mobile_printer/core/utils/platform_helper.dart';
 import 'package:mobile_printer/ui/colors.dart';
@@ -31,8 +32,8 @@ class PrinterCreatedScreen extends StatelessWidget {
                         fontWeight: FontWeight.w400),
                   ),
                   if (!PlatformHelper.isWeb && PlatformHelper.isMobile)
-                    ..._mobileWidgets(),
-                  if (PlatformHelper.isWeb) ..._webWidgets()
+                    ..._mobileWidgets(context),
+                  if (PlatformHelper.isWeb) ..._webWidgets(context)
                 ],
               ),
             ),
@@ -42,7 +43,7 @@ class PrinterCreatedScreen extends StatelessWidget {
     );
   }
 
-  List<Widget> _mobileWidgets() {
+  List<Widget> _mobileWidgets(BuildContext context) {
     return [
       Expanded(child: Container()),
       Row(
@@ -59,7 +60,11 @@ class PrinterCreatedScreen extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            _ShowPrintersButton(onTap: () {}),
+            _ShowPrintersButton(
+              onTap: () {
+                context.pop();
+              },
+            ),
             const Gap(10),
             _ActivateButton(onTap: () {}),
           ],
@@ -68,7 +73,7 @@ class PrinterCreatedScreen extends StatelessWidget {
     ];
   }
 
-  List<Widget> _webWidgets() {
+  List<Widget> _webWidgets(BuildContext context) {
     return [];
   }
 }

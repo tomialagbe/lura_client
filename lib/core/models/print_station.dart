@@ -6,11 +6,11 @@ class PrintStation extends Equatable {
   final bool online;
   final bool unused;
 
-  PrintStation({
+  const PrintStation({
     required this.name,
     required this.platform,
     this.online = false,
-    required this.unused,
+    this.unused = false,
   });
 
   @override

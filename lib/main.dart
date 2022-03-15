@@ -6,6 +6,7 @@ import 'package:mobile_printer/login_state.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'app.dart';
+import 'locator.dart';
 
 Future<void> main() async {
   runZonedGuarded<Future<void>>(
@@ -20,6 +21,7 @@ Future<void> main() async {
 
       final loginState = LoginState(prefs: await SharedPreferences.getInstance());
       loginState.checkLoggedIn();
+      await setupLocator();
       runApp(LuraApp(loginState: loginState));
     },
     (err, stackTrace) async {},

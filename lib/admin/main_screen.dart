@@ -28,7 +28,17 @@ class _MainScreenState extends State<MainScreen> {
   @override
   void initState() {
     super.initState();
-    _selectedIndex = _pageIndices[widget.page] ?? 0;
+    setState(() {
+      _selectedIndex = _pageIndices[widget.page] ?? 0;
+    });
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    setState(() {
+      _selectedIndex = _pageIndices[widget.page] ?? 0;
+    });
   }
 
   @override
@@ -36,7 +46,7 @@ class _MainScreenState extends State<MainScreen> {
     return ResponsiveBuilder(
       builder: (context, sizingInfo) {
         return Scaffold(
-          drawer: SideMenu(),
+          drawer: SideMenu(currentPage: _selectedIndex),
           appBar: sizingInfo.isDesktop ? null : luraAppBar(context),
           body: SafeArea(
             child: Builder(
@@ -45,7 +55,9 @@ class _MainScreenState extends State<MainScreen> {
                   return Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Expanded(child: SideMenu(), flex: 1),
+                      Expanded(
+                          child: SideMenu(currentPage: _selectedIndex),
+                          flex: 1),
                       Expanded(
                         child: _ContentSlot(selectedIndex: _selectedIndex),
                         flex: 4,

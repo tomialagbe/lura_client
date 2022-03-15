@@ -1,68 +1,92 @@
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:gap/gap.dart';
+import 'package:mobile_printer/core/models/print_station.dart';
+import 'package:mobile_printer/core/viewmodels/printers_viewmodel.dart';
 import 'package:mobile_printer/ui/colors.dart';
 import 'package:mobile_printer/ui/typography.dart';
+import 'package:mobile_printer/ui/widgets/circular_icon_button.dart';
+import 'package:provider/provider.dart';
 import 'package:responsive_builder/responsive_builder.dart';
 import 'package:go_router/go_router.dart';
+
+import 'create_printer_card.dart';
 
 class PrintersScreen extends StatelessWidget {
   const PrintersScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    final printersViewmodel = context.watch<PrintersViewmodel>();
     return Padding(
-      padding: EdgeInsets.all(20),
+      padding: const EdgeInsets.all(20),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            'Printers',
-            style: LuraTextStyles.baseTextStyle.copyWith(
-              fontSize: 40,
-              color: LuraColors.blue,
-              fontWeight: FontWeight.w400,
-            ),
-          ),
-          Expanded(
-            child: Container(
-              width: double.infinity,
-              height: double.infinity,
-              alignment: Alignment.center,
-              child: _CreatePrinterCard(
-                onTap: () {
-                  context.pushNamed('new-printer');
-                },
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Text(
+                'Printers',
+                style: LuraTextStyles.baseTextStyle.copyWith(
+                  fontSize: 40,
+                  color: LuraColors.blue,
+                  fontWeight: FontWeight.w400,
+                ),
               ),
-            ),
+              const Expanded(child: SizedBox()),
+              _AddPrinterButton(onTap: () {
+                context.pushNamed('new-printer');
+              }),
+            ],
           ),
+          if (printersViewmodel.printers.isEmpty)
+            Expanded(
+              child: Container(
+                width: double.infinity,
+                height: double.infinity,
+                alignment: Alignment.center,
+                child: CreatePrinterCard(
+                  onTap: () {
+                    context.pushNamed('new-printer');
+                  },
+                ),
+              ),
+            )
+          else
+            Expanded(child: PrinterList(printers: printersViewmodel.printers)),
         ],
       ),
     );
   }
 }
 
-class _CreatePrinterCard extends StatelessWidget {
+class _AddPrinterButton extends StatelessWidget {
   final VoidCallback? onTap;
 
-  const _CreatePrinterCard({Key? key, this.onTap}) : super(key: key);
+  const _AddPrinterButton({Key? key, this.onTap}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return ResponsiveBuilder(
-      builder: (context, sizingInfo) {
-        return Stack(
+      builder: (context, sizingInformation) {
+        return Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Padding(
-              padding: const EdgeInsets.all(20.0),
-              child: _CardContent(
-                onTap: onTap,
+            CircularIconButton(
+              icon: const Icon(Icons.add, size: 25),
+              padding: const EdgeInsets.all(10),
+              onTap: onTap,
+            ),
+            if (sizingInformation.isDesktop)
+              Text(
+                'Add new',
+                style: LuraTextStyles.baseTextStyle.copyWith(
+                  color: LuraColors.blue,
+                  fontWeight: FontWeight.w400,
+                ),
               ),
-            ),
-            const Positioned(
-              top: 5,
-              right: -5,
-              child: _CardPlusIcon(),
-            ),
           ],
         );
       },
@@ -70,35 +94,137 @@ class _CreatePrinterCard extends StatelessWidget {
   }
 }
 
-class _CardContent extends StatelessWidget {
-  final VoidCallback? onTap;
+class PrinterList extends StatelessWidget {
+  final List<PrintStation> printers;
 
-  const _CardContent({Key? key, this.onTap}) : super(key: key);
+  const PrinterList({Key? key, required this.printers}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      elevation: 1,
-      color: Colors.white,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(10),
-        side: const BorderSide(color: Colors.black12),
-      ),
-      child: Material(
-        color: Colors.transparent,
-        clipBehavior: Clip.antiAlias,
-        borderRadius: BorderRadius.circular(10),
-        child: InkWell(
-          highlightColor: Colors.white70,
-          onTap: onTap,
-          child: Padding(
-            padding: const EdgeInsets.all(20),
-            child: Text(
-              'Create your first printer',
-              style: LuraTextStyles.baseTextStyle.copyWith(
-                color: Colors.black,
-                fontSize: 20,
-                fontWeight: FontWeight.w400,
+    return ResponsiveBuilder(
+      builder: (BuildContext context, SizingInformation sizingInformation) {
+        if (sizingInformation.isMobile) {
+          return ListView.builder(
+            padding: const EdgeInsets.only(top: 20),
+            itemBuilder: (context, index) {
+              return _PrinterListItem(
+                printer: printers[index],
+                sizingInformation: sizingInformation,
+              );
+            },
+            itemCount: printers.length,
+            shrinkWrap: true,
+          );
+        }
+
+        return Center(
+          child: SizedBox(
+            width: sizingInformation.screenSize.width * 0.6,
+            height: double.infinity,
+            child: Center(
+              child: ListView.builder(
+                padding: const EdgeInsets.only(top: 20),
+                itemBuilder: (context, index) {
+                  return _PrinterListItem(
+                    printer: printers[index],
+                    sizingInformation: sizingInformation,
+                  );
+                },
+                itemCount: printers.length,
+                shrinkWrap: true,
+              ),
+            ),
+          ),
+        );
+      },
+    );
+  }
+}
+
+class _PrinterListItem extends StatelessWidget {
+  final PrintStation printer;
+  final SizingInformation sizingInformation;
+
+  const _PrinterListItem({
+    Key? key,
+    required this.printer,
+    required this.sizingInformation,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    final textStyle = LuraTextStyles.baseTextStyle.copyWith(
+      color: const Color(0xFF000505),
+      fontSize: 20,
+      fontWeight: FontWeight.w400,
+    );
+
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 10),
+      child: SizedBox(
+        height: 120,
+        width: double.infinity,
+        child: Card(
+          elevation: 0,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(5),
+          ),
+          child: Material(
+            clipBehavior: Clip.antiAlias,
+            color: const Color(0xFFBFCDE0),
+            borderRadius: BorderRadius.circular(5),
+            child: InkWell(
+              splashColor: const Color(0xFFCED4DE),
+              focusColor: const Color(0xFFCED4DE),
+              onTap: () {},
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Expanded(
+                    child: Container(
+                      height: double.infinity,
+                      width: double.infinity,
+                      padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Text(
+                                printer.name,
+                                style: textStyle,
+                              ),
+                              const Gap(10),
+                              _PlatformIcon(platform: printer.platform),
+                            ],
+                          ),
+                          Expanded(child: Container()),
+                          if (!printer.unused)
+                            Container(
+                              margin: const EdgeInsets.only(right: 5),
+                              decoration: BoxDecoration(
+                                color:
+                                    printer.online ? Colors.green : Colors.red,
+                                shape: BoxShape.circle,
+                              ),
+                              width: 10,
+                              height: 10,
+                            ),
+                          Text(
+                            printer.unused
+                                ? 'Unused'
+                                : printer.online
+                                    ? 'Online'
+                                    : 'Offline',
+                            style: textStyle.copyWith(fontSize: 14),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ),
           ),
@@ -108,26 +234,29 @@ class _CardContent extends StatelessWidget {
   }
 }
 
-class _CardPlusIcon extends StatelessWidget {
-  const _CardPlusIcon({Key? key}) : super(key: key);
+class _PlatformIcon extends StatelessWidget {
+  final String platform;
+
+  const _PlatformIcon({Key? key, required this.platform}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Theme(
-      data: Theme.of(context).copyWith(
-        elevatedButtonTheme: ElevatedButtonThemeData(
-          style: ElevatedButton.styleFrom(
-            elevation: 0,
-            shape: const CircleBorder(),
-            padding: const EdgeInsets.all(5),
-            primary: LuraColors.blue,
-          ),
-        ),
-      ),
-      child: ElevatedButton(
-        onPressed: () {},
-        child: Icon(Icons.add),
-      ),
+    return Icon(
+      icon,
+      color: const Color(0xFF000505),
+      size: 18,
     );
+  }
+
+  IconData get icon {
+    switch (platform) {
+      case 'windows':
+        return FontAwesomeIcons.windows;
+      case 'ios':
+        return FontAwesomeIcons.apple;
+      case 'android':
+      default:
+        return FontAwesomeIcons.android;
+    }
   }
 }

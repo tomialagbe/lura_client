@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
+import 'package:go_router/go_router.dart';
 import 'package:mobile_printer/ui/typography.dart';
 
 class SideMenu extends StatelessWidget {
-  const SideMenu({Key? key}) : super(key: key);
+  final int currentPage;
+
+  const SideMenu({Key? key, required this.currentPage}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -27,16 +30,25 @@ class SideMenu extends StatelessWidget {
           const Gap(40),
           DrawerListTile(
             title: "Printers",
-            press: () {},
+            active: currentPage == 0,
+            press: () {
+              context.go('/printers');
+            },
           ),
           DrawerListTile(
             title: "Receipts",
-            press: () {},
+            active: currentPage == 1,
+            press: () {
+              context.go('/receipts');
+            },
           ),
           const Divider(),
           DrawerListTile(
             title: "Feedback",
-            press: () {},
+            active: currentPage == 2,
+            press: () {
+              context.go('/feedback');
+            },
           ),
         ],
       ),
@@ -49,16 +61,19 @@ class DrawerListTile extends StatelessWidget {
     Key? key,
     required this.title,
     required this.press,
+    this.active = false,
   }) : super(key: key);
 
   final String title;
-
   final VoidCallback press;
+  final bool active;
 
   @override
   Widget build(BuildContext context) {
     return ListTile(
       onTap: press,
+      selected: active,
+      selectedColor: Colors.red,
       horizontalTitleGap: 0.0,
       title: Text(
         title,

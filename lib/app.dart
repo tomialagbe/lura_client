@@ -4,6 +4,7 @@ import 'package:mobile_printer/login_state.dart';
 import 'package:mobile_printer/ui/theme.dart';
 import 'package:provider/provider.dart';
 
+import 'core/viewmodels/printers_viewmodel.dart';
 import 'routes.dart';
 
 class LuraApp extends StatelessWidget {
@@ -19,13 +20,15 @@ class LuraApp extends StatelessWidget {
           create: (_) => loginState,
           lazy: false,
         ),
+        ChangeNotifierProvider<PrintersViewmodel>(
+          create: (ctx) => PrintersViewmodel(),
+        ),
         Provider<LuraRouter>(
           create: (ctx) => LuraRouter(loginState: loginState),
           lazy: false,
         ),
       ],
       child: Builder(builder: (context) {
-        // final router = buildRouter(context, kIsWeb);
         final router = Provider.of<LuraRouter>(context, listen: false).router;
 
         return MaterialApp.router(

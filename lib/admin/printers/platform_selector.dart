@@ -7,21 +7,26 @@ import 'package:mobile_printer/ui/typography.dart';
 import 'package:responsive_builder/responsive_builder.dart';
 
 class PlatformSelector extends StatefulWidget {
+  final String initialValue;
   final Function(String)? onChange;
 
-  const PlatformSelector({Key? key, this.onChange}) : super(key: key);
+  const PlatformSelector({
+    Key? key,
+    this.onChange,
+    required this.initialValue,
+  }) : super(key: key);
 
   @override
   State<PlatformSelector> createState() => _PlatformSelectorState();
 }
 
 class _PlatformSelectorState extends State<PlatformSelector> {
-  String _currentValue = 'Windows';
+  String _currentValue = '';
 
   @override
   void initState() {
     super.initState();
-    widget.onChange?.call(_currentValue);
+    _currentValue = widget.initialValue;
   }
 
   @override
@@ -36,10 +41,10 @@ class _PlatformSelectorState extends State<PlatformSelector> {
             label: 'iOS',
             onTap: () {
               setState(() {
-                _currentValue = 'iOS';
+                _currentValue = 'ios';
               });
             },
-            selected: _currentValue == 'iOS',
+            selected: _currentValue == 'ios',
             isDesktop: isDesktop,
           ),
           const Gap(10),
@@ -48,10 +53,10 @@ class _PlatformSelectorState extends State<PlatformSelector> {
             label: 'Android',
             onTap: () {
               setState(() {
-                _currentValue = 'Android';
+                _currentValue = 'android';
               });
             },
-            selected: _currentValue == 'Android',
+            selected: _currentValue == 'android',
             isDesktop: isDesktop,
           ),
           const Gap(10),
@@ -60,19 +65,19 @@ class _PlatformSelectorState extends State<PlatformSelector> {
             label: 'Windows',
             onTap: () {
               setState(() {
-                _currentValue = 'Windows';
+                _currentValue = 'windows';
               });
             },
-            selected: _currentValue == 'Windows',
+            selected: _currentValue == 'windows',
             isDesktop: isDesktop,
           ),
         ];
 
         return sizingInformation.isMobile
             ? Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: children,
-            )
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: children,
+              )
             : Row(children: children);
       },
     );
