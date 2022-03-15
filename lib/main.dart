@@ -18,7 +18,7 @@ Future<void> main() async {
       await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
       SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.light);
 
-      final loginState = LoginState();
+      final loginState = LoginState(prefs: await SharedPreferences.getInstance());
       loginState.checkLoggedIn();
       runApp(LuraApp(loginState: loginState));
     },

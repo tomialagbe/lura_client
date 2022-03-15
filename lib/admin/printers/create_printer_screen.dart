@@ -85,7 +85,7 @@ class CreatePrinterScreen extends StatelessWidget {
                 children: [
                   _SubmitButton(
                     onTap: () {
-                      context.push('/printer_created');
+                      context.goNamed('new-printer-created');
                     },
                   ),
                 ],

@@ -15,10 +15,19 @@ class LuraApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider<LoginState>(create: (_) => loginState, lazy: false),
+        ChangeNotifierProvider<LoginState>(
+          create: (_) => loginState,
+          lazy: false,
+        ),
+        Provider<LuraRouter>(
+          create: (ctx) => LuraRouter(loginState: loginState),
+          lazy: false,
+        ),
       ],
       child: Builder(builder: (context) {
-        final router = buildRouter(context, kIsWeb);
+        // final router = buildRouter(context, kIsWeb);
+        final router = Provider.of<LuraRouter>(context, listen: false).router;
+
         return MaterialApp.router(
           routeInformationParser: router.routeInformationParser,
           routerDelegate: router.routerDelegate,

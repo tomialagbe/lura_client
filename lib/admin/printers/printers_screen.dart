@@ -30,7 +30,7 @@ class PrintersScreen extends StatelessWidget {
               alignment: Alignment.center,
               child: _CreatePrinterCard(
                 onTap: () {
-                  context.push('/create_printer');
+                  context.pushNamed('new-printer');
                 },
               ),
             ),

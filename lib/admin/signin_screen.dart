@@ -156,7 +156,6 @@ class SigninForm extends StatelessWidget {
                 child: ElevatedButton(
                   onPressed: () {
                     context.read<LoginState>().loggedIn = true;
-                    context.go('/');
                   },
                   child: Icon(Icons.arrow_forward),
                 ),

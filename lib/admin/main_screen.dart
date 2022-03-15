@@ -1,12 +1,35 @@
 import 'package:flutter/material.dart';
 import 'package:mobile_printer/admin/app_bars.dart';
+import 'package:mobile_printer/admin/feedback_screen.dart';
+import 'package:mobile_printer/admin/receipts_screen.dart';
 import 'package:mobile_printer/admin/side_menu.dart';
 import 'package:responsive_builder/responsive_builder.dart';
 
 import 'printers/printers_screen.dart';
 
-class MainScreen extends StatelessWidget {
-  const MainScreen({Key? key}) : super(key: key);
+class MainScreen extends StatefulWidget {
+  final String page;
+
+  const MainScreen({Key? key, required this.page}) : super(key: key);
+
+  @override
+  State<MainScreen> createState() => _MainScreenState();
+}
+
+class _MainScreenState extends State<MainScreen> {
+  int _selectedIndex = 0;
+
+  static const _pageIndices = {
+    'printers': 0,
+    'receipts': 1,
+    'feedback': 2,
+  };
+
+  @override
+  void initState() {
+    super.initState();
+    _selectedIndex = _pageIndices[widget.page] ?? 0;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -24,19 +47,37 @@ class MainScreen extends StatelessWidget {
                     children: [
                       Expanded(child: SideMenu(), flex: 1),
                       Expanded(
-                        child: PrintersScreen(),
+                        child: _ContentSlot(selectedIndex: _selectedIndex),
                         flex: 4,
                       ),
                     ],
                   );
                 }
 
-                return PrintersScreen();
+                return _ContentSlot(selectedIndex: _selectedIndex);
               },
             ),
           ),
         );
       },
+    );
+  }
+}
+
+class _ContentSlot extends StatelessWidget {
+  final int selectedIndex;
+
+  const _ContentSlot({Key? key, required this.selectedIndex}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return IndexedStack(
+      index: selectedIndex,
+      children: const [
+        PrintersScreen(),
+        ReceiptsScreen(),
+        FeedbackScreen(),
+      ],
     );
   }
 }
