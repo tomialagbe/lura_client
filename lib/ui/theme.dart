@@ -41,7 +41,7 @@ class LuraTheme {
       style: ElevatedButton.styleFrom(
         elevation: 0,
         shape: const RoundedRectangleBorder(
-          borderRadius: BorderRadius.all(Radius.circular(10)),
+          borderRadius: BorderRadius.all(Radius.circular(5)),
         ),
         padding: const EdgeInsets.symmetric(vertical: 10),
         primary: LuraColors.blue,

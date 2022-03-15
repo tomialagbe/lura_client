@@ -32,6 +32,7 @@ class LuraApp extends StatelessWidget {
         final router = Provider.of<LuraRouter>(context, listen: false).router;
 
         return MaterialApp.router(
+          debugShowCheckedModeBanner: false,
           routeInformationParser: router.routeInformationParser,
           routerDelegate: router.routerDelegate,
           title: 'Lura',

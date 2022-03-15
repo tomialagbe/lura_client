@@ -5,7 +5,7 @@ import 'package:mobile_printer/admin/app_bars.dart';
 import 'package:mobile_printer/core/viewmodels/printers_viewmodel.dart';
 import 'package:mobile_printer/ui/colors.dart';
 import 'package:mobile_printer/ui/typography.dart';
-import 'package:provider/src/provider.dart';
+import 'package:provider/provider.dart';
 import 'package:responsive_builder/responsive_builder.dart';
 import 'package:rxdart/rxdart.dart';
 
@@ -47,7 +47,10 @@ class _CreatePrinterScreenState extends State<CreatePrinterScreen> {
               child: sizingInformation.isMobile
                   ? SingleChildScrollView(
                       child: buildForm(context, sizingInformation))
-                  : buildForm(context, sizingInformation),
+                  : Container(
+                      constraints: const BoxConstraints(maxWidth: 700),
+                      child: buildForm(context, sizingInformation),
+                    ),
             ),
           ),
         );

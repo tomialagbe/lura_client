@@ -43,6 +43,7 @@ class _PlatformSelectorState extends State<PlatformSelector> {
               setState(() {
                 _currentValue = 'ios';
               });
+              widget.onChange?.call(_currentValue);
             },
             selected: _currentValue == 'ios',
             isDesktop: isDesktop,
@@ -55,6 +56,7 @@ class _PlatformSelectorState extends State<PlatformSelector> {
               setState(() {
                 _currentValue = 'android';
               });
+              widget.onChange?.call(_currentValue);
             },
             selected: _currentValue == 'android',
             isDesktop: isDesktop,
@@ -67,6 +69,7 @@ class _PlatformSelectorState extends State<PlatformSelector> {
               setState(() {
                 _currentValue = 'windows';
               });
+              widget.onChange?.call(_currentValue);
             },
             selected: _currentValue == 'windows',
             isDesktop: isDesktop,
