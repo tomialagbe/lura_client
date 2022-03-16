@@ -72,21 +72,55 @@ class _AnimatedIcon extends StatefulWidget {
   State<_AnimatedIcon> createState() => _AnimatedIconState();
 }
 
-class _AnimatedIconState extends State<_AnimatedIcon> {
+class _AnimatedIconState extends State<_AnimatedIcon>
+    with SingleTickerProviderStateMixin {
+  late final AnimationController _animationController;
+  late final Animation<double> _animation;
 
   @override
   void initState() {
     super.initState();
+
+    _animationController = AnimationController(
+        vsync: this, duration: const Duration(milliseconds: 300));
+    _animation = Tween<double>(begin: 0, end: -1).animate(_animationController)
+      ..addStatusListener((status) {
+        if (status == AnimationStatus.completed) {
+          _animationController.reverse();
+        } else if (status == AnimationStatus.dismissed) {
+          _animationController.forward();
+        }
+      });
+    _animationController.forward();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Transform.translate(
-      offset: Offset(0, 10),
-      child: const Icon(
-        FontAwesomeIcons.arrowDown,
-        color: LuraColors.blue,
-        size: 30,
+    return _BouncingArrow(animation: _animation);
+  }
+}
+
+class _BouncingArrow extends AnimatedWidget {
+  const _BouncingArrow({Key? key, required Animation<double> animation})
+      : super(key: key, listenable: animation);
+
+  @override
+  Widget build(BuildContext context) {
+    final animation = listenable as Animation<double>;
+    return SizedBox(
+      width: 100,
+      height: 100,
+      child: Stack(
+        children: [
+          Align(
+            alignment: Alignment(0, animation.value),
+            child: const Icon(
+              FontAwesomeIcons.arrowDown,
+              color: LuraColors.blue,
+              size: 30,
+            ),
+          ),
+        ],
       ),
     );
   }

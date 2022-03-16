@@ -1,16 +1,13 @@
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lura_client/admin/printers/printer_created_screen.dart';
 import 'package:lura_client/admin/signin_screen.dart';
 import 'package:lura_client/admin/signup_screen.dart';
 import 'package:lura_client/core/utils/platform_helper.dart';
-import 'package:provider/provider.dart';
 
 import 'admin/printers/create_printer_screen.dart';
 import 'admin/main_screen.dart';
-import 'admin/printers/printer-activation-screen.dart';
+import 'admin/printers/printer_activation_screen.dart';
 import 'admin/printers/printer_standby_screen.dart';
 import 'login_state.dart';
 
@@ -22,7 +19,6 @@ class LuraRouter {
   late final GoRouter router = GoRouter(
     urlPathStrategy: UrlPathStrategy.path,
     refreshListenable: loginState,
-    // initialLocation: '/signin',
     routes: [
       GoRoute(
         path: '/signup',
