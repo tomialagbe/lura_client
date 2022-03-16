@@ -124,7 +124,7 @@ class _ScreenContent extends StatelessWidget {
               WhiteButton(
                 text: 'Show receipts',
                 onTap: () {
-                  context.pop();
+                  context.go('/receipts');
                 },
               ),
               const Gap(10),

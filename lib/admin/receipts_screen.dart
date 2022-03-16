@@ -4,7 +4,7 @@ import 'package:lura_client/core/models/receipt.dart';
 import 'package:lura_client/core/viewmodels/receipts_viewmodel.dart';
 import 'package:lura_client/ui/colors.dart';
 import 'package:lura_client/ui/typography.dart';
-import 'package:provider/src/provider.dart';
+import 'package:provider/provider.dart';
 import 'package:responsive_builder/responsive_builder.dart';
 
 class ReceiptsScreen extends StatelessWidget {
@@ -96,7 +96,7 @@ class _ReceiptListItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final textStyle = LuraTextStyles.baseTextStyle.copyWith(
-      color: const Color(0xFF000505),
+      color: LuraColors.black,
       fontSize: 20,
       fontWeight: FontWeight.w400,
     );
@@ -112,11 +112,11 @@ class _ReceiptListItem extends StatelessWidget {
           ),
           child: Material(
             clipBehavior: Clip.antiAlias,
-            color: const Color(0xFFBFCDE0),
+            color: LuraColors.lightBlue,
             borderRadius: BorderRadius.circular(5),
             child: InkWell(
-              splashColor: const Color(0xFFCED4DE),
-              focusColor: const Color(0xFFCED4DE),
+              splashColor: LuraColors.lighterBlue,
+              focusColor: LuraColors.lighterBlue,
               onTap: onTap,
               child: Container(
                 height: double.infinity,

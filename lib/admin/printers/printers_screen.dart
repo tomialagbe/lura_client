@@ -163,7 +163,7 @@ class _PrinterListItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final textStyle = LuraTextStyles.baseTextStyle.copyWith(
-      color: const Color(0xFF000505),
+      color: LuraColors.black,
       fontSize: 20,
       fontWeight: FontWeight.w400,
     );
@@ -180,11 +180,11 @@ class _PrinterListItem extends StatelessWidget {
           ),
           child: Material(
             clipBehavior: Clip.antiAlias,
-            color: const Color(0xFFBFCDE0),
+            color: LuraColors.lightBlue,
             borderRadius: BorderRadius.circular(5),
             child: InkWell(
-              splashColor: const Color(0xFFCED4DE),
-              focusColor: const Color(0xFFCED4DE),
+              splashColor: LuraColors.lighterBlue ,
+              focusColor: LuraColors.lighterBlue,
               onTap: onTap,
               child: Container(
                 height: double.infinity,
@@ -246,7 +246,7 @@ class _PlatformIcon extends StatelessWidget {
   Widget build(BuildContext context) {
     return Icon(
       icon,
-      color: const Color(0xFF000505),
+      color: LuraColors.black,
       size: 18,
     );
   }
