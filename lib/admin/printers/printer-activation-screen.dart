@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
-import 'package:mobile_printer/admin/app_bars.dart';
-import 'package:mobile_printer/ui/colors.dart';
-import 'package:mobile_printer/ui/typography.dart';
-import 'package:mobile_printer/ui/widgets/circular_icon_button.dart';
+import 'package:lura_client/admin/app_bars.dart';
+import 'package:lura_client/ui/colors.dart';
+import 'package:lura_client/ui/typography.dart';
+import 'package:lura_client/ui/widgets/circular_icon_button.dart';
 
 class PrinterActivationScreen extends StatelessWidget {
   const PrinterActivationScreen({Key? key}) : super(key: key);

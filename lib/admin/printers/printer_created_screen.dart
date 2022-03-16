@@ -3,11 +3,11 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
-import 'package:mobile_printer/admin/app_bars.dart';
-import 'package:mobile_printer/core/utils/platform_helper.dart';
-import 'package:mobile_printer/ui/colors.dart';
-import 'package:mobile_printer/ui/typography.dart';
-import 'package:mobile_printer/ui/widgets/white_button.dart';
+import 'package:lura_client/admin/app_bars.dart';
+import 'package:lura_client/core/utils/platform_helper.dart';
+import 'package:lura_client/ui/colors.dart';
+import 'package:lura_client/ui/typography.dart';
+import 'package:lura_client/ui/widgets/white_button.dart';
 import 'package:responsive_builder/responsive_builder.dart';
 
 class PrinterCreatedScreen extends StatelessWidget {

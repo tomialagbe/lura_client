@@ -1,4 +1,4 @@
-import 'package:mobile_printer/core/models/print_station.dart';
+import 'package:lura_client/core/models/print_station.dart';
 
 class PrintStationRepository {
   final _tmpPrintStations = <PrintStation>[

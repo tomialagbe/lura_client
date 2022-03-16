@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
-import 'package:mobile_printer/ui/colors.dart';
-import 'package:mobile_printer/ui/typography.dart';
+import 'package:lura_client/ui/colors.dart';
+import 'package:lura_client/ui/typography.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 
 class PrinterStandbyScreen extends StatelessWidget {
@@ -65,15 +65,29 @@ class PrinterStandbyScreen extends StatelessWidget {
   }
 }
 
-class _AnimatedIcon extends StatelessWidget {
+class _AnimatedIcon extends StatefulWidget {
   const _AnimatedIcon({Key? key}) : super(key: key);
 
   @override
+  State<_AnimatedIcon> createState() => _AnimatedIconState();
+}
+
+class _AnimatedIconState extends State<_AnimatedIcon> {
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return const Icon(
-      FontAwesomeIcons.arrowDown,
-      color: LuraColors.blue,
-      size: 30,
+    return Transform.translate(
+      offset: Offset(0, 10),
+      child: const Icon(
+        FontAwesomeIcons.arrowDown,
+        color: LuraColors.blue,
+        size: 30,
+      ),
     );
   }
 }

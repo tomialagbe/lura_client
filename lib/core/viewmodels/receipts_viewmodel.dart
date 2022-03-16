@@ -1,5 +1,5 @@
 import 'package:flutter/cupertino.dart';
-import 'package:mobile_printer/core/models/receipt.dart';
+import 'package:lura_client/core/models/receipt.dart';
 
 class ReceiptsViewmodel extends ChangeNotifier {
   final List<Receipt> _receipts = [

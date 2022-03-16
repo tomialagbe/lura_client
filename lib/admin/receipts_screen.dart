@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
-import 'package:mobile_printer/core/models/receipt.dart';
-import 'package:mobile_printer/core/viewmodels/receipts_viewmodel.dart';
-import 'package:mobile_printer/ui/colors.dart';
-import 'package:mobile_printer/ui/typography.dart';
+import 'package:lura_client/core/models/receipt.dart';
+import 'package:lura_client/core/viewmodels/receipts_viewmodel.dart';
+import 'package:lura_client/ui/colors.dart';
+import 'package:lura_client/ui/typography.dart';
 import 'package:provider/src/provider.dart';
 import 'package:responsive_builder/responsive_builder.dart';
 

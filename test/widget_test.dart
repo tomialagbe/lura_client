@@ -7,9 +7,9 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mobile_printer/app.dart';
+import 'package:lura_client/app.dart';
 
-import 'package:mobile_printer/main.dart';
+import 'package:lura_client/main.dart';
 
 void main() {
   testWidgets('Counter increments smoke test', (WidgetTester tester) async {

@@ -1,8 +1,8 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:mobile_printer/core/viewmodels/receipts_viewmodel.dart';
-import 'package:mobile_printer/login_state.dart';
-import 'package:mobile_printer/ui/theme.dart';
+import 'package:lura_client/core/viewmodels/receipts_viewmodel.dart';
+import 'package:lura_client/login_state.dart';
+import 'package:lura_client/ui/theme.dart';
 import 'package:provider/provider.dart';
 
 import 'core/viewmodels/printers_viewmodel.dart';

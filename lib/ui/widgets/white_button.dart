@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:mobile_printer/ui/colors.dart';
-import 'package:mobile_printer/ui/typography.dart';
+import 'package:lura_client/ui/colors.dart';
+import 'package:lura_client/ui/typography.dart';
 
 class WhiteButton extends StatelessWidget {
   final VoidCallback? onTap;

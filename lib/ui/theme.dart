@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:mobile_printer/ui/typography.dart';
+import 'package:lura_client/ui/typography.dart';
 
 import 'colors.dart';
 

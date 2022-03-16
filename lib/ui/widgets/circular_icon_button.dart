@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:mobile_printer/ui/colors.dart';
+import 'package:lura_client/ui/colors.dart';
 
 class CircularIconButton extends StatelessWidget {
   final VoidCallback? onTap;
@@ -25,7 +25,7 @@ class CircularIconButton extends StatelessWidget {
             primary: LuraColors.blue,
           ),
         ),
-        iconTheme: IconThemeData(color: Colors.white),
+        iconTheme: const IconThemeData(color: Colors.white),
       ),
       child: ElevatedButton(
         onPressed: onTap,

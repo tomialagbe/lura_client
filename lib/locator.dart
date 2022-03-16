@@ -1,5 +1,5 @@
 import 'package:get_it/get_it.dart';
-import 'package:mobile_printer/core/repository/print_station_repository.dart';
+import 'package:lura_client/core/repository/print_station_repository.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'login_state.dart';

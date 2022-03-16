@@ -4,7 +4,7 @@ import 'dart:typed_data';
 
 import 'package:bonsoir/bonsoir.dart';
 import 'package:flutter/foundation.dart';
-import 'package:mobile_printer/core/utils/function_call_restricter.dart';
+import 'package:lura_client/core/utils/function_call_restricter.dart';
 import 'package:rxdart/rxdart.dart';
 
 import '../printing.dart';

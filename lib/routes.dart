@@ -2,10 +2,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:mobile_printer/admin/printers/printer_created_screen.dart';
-import 'package:mobile_printer/admin/signin_screen.dart';
-import 'package:mobile_printer/admin/signup_screen.dart';
-import 'package:mobile_printer/core/utils/platform_helper.dart';
+import 'package:lura_client/admin/printers/printer_created_screen.dart';
+import 'package:lura_client/admin/signin_screen.dart';
+import 'package:lura_client/admin/signup_screen.dart';
+import 'package:lura_client/core/utils/platform_helper.dart';
 import 'package:provider/provider.dart';
 
 import 'admin/printers/create_printer_screen.dart';

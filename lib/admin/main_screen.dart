@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:mobile_printer/admin/app_bars.dart';
-import 'package:mobile_printer/admin/feedback_screen.dart';
-import 'package:mobile_printer/admin/receipts_screen.dart';
-import 'package:mobile_printer/admin/side_menu.dart';
+import 'package:lura_client/admin/app_bars.dart';
+import 'package:lura_client/admin/feedback_screen.dart';
+import 'package:lura_client/admin/receipts_screen.dart';
+import 'package:lura_client/admin/side_menu.dart';
 import 'package:responsive_builder/responsive_builder.dart';
 
 import 'printers/printers_screen.dart';

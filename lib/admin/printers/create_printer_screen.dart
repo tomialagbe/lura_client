@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
-import 'package:mobile_printer/admin/app_bars.dart';
-import 'package:mobile_printer/core/viewmodels/printers_viewmodel.dart';
-import 'package:mobile_printer/ui/colors.dart';
-import 'package:mobile_printer/ui/typography.dart';
+import 'package:lura_client/admin/app_bars.dart';
+import 'package:lura_client/core/viewmodels/printers_viewmodel.dart';
+import 'package:lura_client/ui/colors.dart';
+import 'package:lura_client/ui/typography.dart';
 import 'package:provider/provider.dart';
 import 'package:responsive_builder/responsive_builder.dart';
 import 'package:rxdart/rxdart.dart';
@@ -131,7 +131,6 @@ class _CreatePrinterScreenState extends State<CreatePrinterScreen> {
                       return _SubmitButton(
                         onTap: (snapshot.data ?? false)
                             ? () {
-                                debugPrint(_printerNameController.text.trim());
                                 context.read<PrintersViewmodel>().addPrinter(
                                     _printerNameController.text.trim(),
                                     _selectedPlatform);

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:mobile_printer/core/utils/platform_helper.dart';
+import 'package:lura_client/core/utils/platform_helper.dart';
 
 PreferredSizeWidget? luraAppBar(BuildContext context) {
   if (PlatformHelper.isWeb) {
