@@ -220,9 +220,7 @@ class LuraRouter extends Cubit<String> {
         ),
       ],
     ],
-    debugLogDiagnostics: true,
     errorPageBuilder: (context, state) {
-
       return MaterialPage(
         child: Container(
           child: Text('TODO: Error page'),
