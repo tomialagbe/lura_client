@@ -98,6 +98,12 @@ class _AnimatedIconState extends State<_AnimatedIcon>
   Widget build(BuildContext context) {
     return _BouncingArrow(animation: _animation);
   }
+
+  @override
+  void dispose() {
+    _animationController.dispose();
+    super.dispose();
+  }
 }
 
 class _BouncingArrow extends AnimatedWidget {

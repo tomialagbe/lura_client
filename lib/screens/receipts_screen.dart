@@ -12,7 +12,7 @@ class ReceiptsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final receiptsViewmodel = context.watch<ReceiptsViewmodel>();
+    // final receiptsViewmodel = context.watch<ReceiptsViewmodel>();
     return Padding(
       padding: const EdgeInsets.all(20),
       child: Column(
@@ -33,7 +33,7 @@ class ReceiptsScreen extends StatelessWidget {
               const Expanded(child: SizedBox()),
             ],
           ),
-          Expanded(child: ReceiptList(receipts: receiptsViewmodel.receipts)),
+          Expanded(child: ReceiptList(receipts: [])),
         ],
       ),
     );

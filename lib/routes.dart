@@ -1,37 +1,74 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:lura_client/admin/printers/printer_created_screen.dart';
-import 'package:lura_client/admin/signin_screen.dart';
-import 'package:lura_client/admin/signup_screen.dart';
+import 'package:lura_client/core/authentication/bloc/authentication_bloc.dart';
+import 'package:lura_client/core/business/business_bloc.dart';
+import 'package:lura_client/core/business/model.dart';
 import 'package:lura_client/core/utils/platform_helper.dart';
+import 'package:lura_client/screens/authentication/bloc/login_screen_bloc.dart';
+import 'package:lura_client/screens/authentication/bloc/onboarding_screen_bloc.dart';
+import 'package:lura_client/screens/authentication/bloc/signup_screen_bloc.dart';
+import 'package:rxdart/rxdart.dart';
+import 'package:tuple/tuple.dart';
 
-import 'admin/printers/create_printer_screen.dart';
-import 'admin/main_screen.dart';
-import 'admin/printers/printer_activation_screen.dart';
-import 'admin/printers/printer_standby_screen.dart';
-import 'login_state.dart';
+import 'screens/authentication/onboarding_screen.dart';
+import 'screens/authentication/signin_screen.dart';
+import 'screens/main_screen.dart';
+import 'screens/printers/create_printer_screen.dart';
+import 'screens/printers/printer_activation_screen.dart';
+import 'screens/printers/printer_created_screen.dart';
+import 'screens/printers/printer_standby_screen.dart';
+import 'screens/authentication/signup_screen.dart';
 
-class LuraRouter {
-  final LoginState loginState;
+class LuraRouter extends Cubit<String> {
+  final AuthenticationBloc authenticationBloc;
+  final BusinessBloc businessBloc;
 
-  LuraRouter({required this.loginState});
+  LuraRouter({
+    required this.authenticationBloc,
+    required this.businessBloc,
+  }) : super('');
 
   late final GoRouter router = GoRouter(
     urlPathStrategy: UrlPathStrategy.path,
-    refreshListenable: loginState,
+    refreshListenable: GoRouterRefreshStream(
+      Rx.combineLatest2<AuthenticationState, Business?,
+          Tuple2<AuthenticationState, Business?>>(
+        authenticationBloc.stream,
+        businessBloc.stream,
+        (a, b) => Tuple2(a, b),
+      ),
+    ),
     routes: [
       GoRoute(
         path: '/signup',
         name: 'signup',
         builder: (ctx, state) {
-          return SignupScreen();
+          return BlocProvider(
+            create: (_) => SignupScreenBloc(),
+            child: const SignupScreen(),
+          );
         },
       ),
       GoRoute(
         path: '/signin',
         name: 'signin',
         builder: (ctx, state) {
-          return SigninScreen();
+          return BlocProvider(
+            create: (_) => LoginScreenBloc(),
+            child: const SigninScreen(),
+          );
+        },
+      ),
+      GoRoute(
+        path: '/onboarding',
+        name: 'onboarding',
+        builder: (ctx, state) {
+          return BlocProvider(
+            create: (context) => OnboardingScreenBloc(
+                businessBloc: context.read<BusinessBloc>()),
+            child: const OnboardingScreen(),
+          );
         },
       ),
       GoRoute(
@@ -183,7 +220,9 @@ class LuraRouter {
         ),
       ],
     ],
+    debugLogDiagnostics: true,
     errorPageBuilder: (context, state) {
+
       return MaterialPage(
         child: Container(
           child: Text('TODO: Error page'),
@@ -197,11 +236,24 @@ class LuraRouter {
       final createAcctLoc = state.namedLocation('signup');
       final creatingAcct = state.subloc == createAcctLoc;
 
-      final loggedIn = loginState.loggedIn;
+      final loggedIn = authenticationBloc.state !=
+          const AuthenticationState.unauthenticated();
+
       final rootLoc = state.namedLocation('root');
+      final onboardingLoc = state.namedLocation('onboarding');
+      final onboarding = state.subloc == onboardingLoc;
+
+      final onboarded = businessBloc.state != null &&
+          businessBloc.state != BusinessBloc.noBusiness;
 
       if (!loggedIn && !loggingIn && !creatingAcct) return loginLoc;
-      if (loggedIn && (loggingIn || creatingAcct)) return rootLoc;
+      if (loggedIn && !onboarded && !onboarding) {
+        return onboardingLoc;
+      }
+
+      if (loggedIn && onboarded && (loggingIn || creatingAcct || onboarding)) {
+        return rootLoc;
+      }
       return null;
     },
   );

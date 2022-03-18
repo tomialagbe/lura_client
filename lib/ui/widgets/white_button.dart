@@ -20,7 +20,7 @@ class WhiteButton extends StatelessWidget {
           style: ElevatedButton.styleFrom(
             elevation: 1,
             shape: const RoundedRectangleBorder(
-              borderRadius: BorderRadius.all(Radius.circular(10)),
+              borderRadius: BorderRadius.all(Radius.circular(5)),
               side: BorderSide(color: Colors.black12),
             ),
             padding: const EdgeInsets.symmetric(vertical: 10),

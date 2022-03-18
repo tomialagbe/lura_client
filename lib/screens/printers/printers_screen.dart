@@ -18,7 +18,7 @@ class PrintersScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final printersViewmodel = context.watch<PrintersViewmodel>();
+    // final printersViewmodel = context.watch<PrintersViewmodel>();
     return Padding(
       padding: const EdgeInsets.all(20),
       child: Column(
@@ -42,21 +42,21 @@ class PrintersScreen extends StatelessWidget {
               }),
             ],
           ),
-          if (printersViewmodel.printers.isEmpty)
-            Expanded(
-              child: Container(
-                width: double.infinity,
-                height: double.infinity,
-                alignment: Alignment.center,
-                child: CreatePrinterCard(
-                  onTap: () {
-                    context.pushNamed('new-printer');
-                  },
-                ),
+          // if (printersViewmodel.printers.isEmpty)
+          Expanded(
+            child: Container(
+              width: double.infinity,
+              height: double.infinity,
+              alignment: Alignment.center,
+              child: CreatePrinterCard(
+                onTap: () {
+                  context.pushNamed('new-printer');
+                },
               ),
-            )
-          else
-            Expanded(child: PrinterList(printers: printersViewmodel.printers)),
+            ),
+          ),
+          // else
+          //   Expanded(child: PrinterList(printers: printersViewmodel.printers)),
         ],
       ),
     );
@@ -183,14 +183,14 @@ class _PrinterListItem extends StatelessWidget {
             color: LuraColors.lightBlue,
             borderRadius: BorderRadius.circular(5),
             child: InkWell(
-              splashColor: LuraColors.lighterBlue ,
+              splashColor: LuraColors.lighterBlue,
               focusColor: LuraColors.lighterBlue,
               onTap: onTap,
               child: Container(
                 height: double.infinity,
                 width: double.infinity,
-                padding: const EdgeInsets.symmetric(
-                    vertical: 10, horizontal: 20),
+                padding:
+                    const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
@@ -211,8 +211,7 @@ class _PrinterListItem extends StatelessWidget {
                       Container(
                         margin: const EdgeInsets.only(right: 5),
                         decoration: BoxDecoration(
-                          color:
-                              printer.online ? Colors.green : Colors.red,
+                          color: printer.online ? Colors.green : Colors.red,
                           shape: BoxShape.circle,
                         ),
                         width: 10,

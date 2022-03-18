@@ -1,39 +1,41 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:lura_client/core/viewmodels/receipts_viewmodel.dart';
-import 'package:lura_client/login_state.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:lura_client/core/authentication/bloc/authentication_bloc.dart';
+import 'package:lura_client/core/business/business_bloc.dart';
 import 'package:lura_client/ui/theme.dart';
-import 'package:provider/provider.dart';
 
-import 'core/viewmodels/printers_viewmodel.dart';
 import 'routes.dart';
 
-class LuraApp extends StatelessWidget {
-  final LoginState loginState;
+class LuraApp extends StatefulWidget {
+  const LuraApp({Key? key}) : super(key: key);
 
-  const LuraApp({Key? key, required this.loginState}) : super(key: key);
+  @override
+  State<LuraApp> createState() => _LuraAppState();
+}
+
+class _LuraAppState extends State<LuraApp> {
+  final authBloc = AuthenticationBloc();
+  final businessBloc = BusinessBloc();
 
   @override
   Widget build(BuildContext context) {
-    return MultiProvider(
+    return MultiBlocProvider(
       providers: [
-        ChangeNotifierProvider<LoginState>(
-          create: (_) => loginState,
+        BlocProvider(
+          create: (_) => authBloc,
           lazy: false,
         ),
-        ChangeNotifierProvider<PrintersViewmodel>(
-          create: (ctx) => PrintersViewmodel(),
-        ),
-        ChangeNotifierProvider<ReceiptsViewmodel>(
-          create: (ctx) => ReceiptsViewmodel(),
-        ),
-        Provider<LuraRouter>(
-          create: (ctx) => LuraRouter(loginState: loginState),
+        BlocProvider(create: (_) => businessBloc),
+        BlocProvider(
+          create: (_) => LuraRouter(
+            authenticationBloc: authBloc,
+            businessBloc: businessBloc,
+          ),
           lazy: false,
         ),
       ],
       child: Builder(builder: (context) {
-        final router = Provider.of<LuraRouter>(context, listen: false).router;
+        final router = context.read<LuraRouter>().router;
 
         return MaterialApp.router(
           debugShowCheckedModeBanner: false,

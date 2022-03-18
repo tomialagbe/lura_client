@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:lura_client/admin/app_bars.dart';
-import 'package:lura_client/admin/feedback_screen.dart';
-import 'package:lura_client/admin/receipts_screen.dart';
-import 'package:lura_client/admin/side_menu.dart';
 import 'package:responsive_builder/responsive_builder.dart';
 
+import 'widgets/app_bars.dart';
+import 'feedback_screen.dart';
 import 'printers/printers_screen.dart';
+import 'receipts_screen.dart';
+import 'widgets/side_menu.dart';
 
 class MainScreen extends StatefulWidget {
   final String page;

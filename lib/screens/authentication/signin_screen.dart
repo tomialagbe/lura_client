@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
-import 'package:lura_client/login_state.dart';
 import 'package:lura_client/ui/colors.dart';
 import 'package:lura_client/ui/typography.dart';
+import 'package:lura_client/ui/widgets/alerts.dart';
+import 'package:lura_client/ui/widgets/circular_icon_button.dart';
 import 'package:lura_client/ui/widgets/lura_text_field.dart';
 import 'package:responsive_builder/responsive_builder.dart';
 import 'package:provider/provider.dart';
+
+import 'bloc/login_screen_bloc.dart';
 
 class SigninScreen extends StatefulWidget {
   const SigninScreen({Key? key}) : super(key: key);
@@ -18,6 +21,7 @@ class SigninScreen extends StatefulWidget {
 class _SigninScreenState extends State<SigninScreen> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
+  final _formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
@@ -31,15 +35,19 @@ class _SigninScreenState extends State<SigninScreen> {
                 child: SizedBox(
                   width: sizingInfo.screenSize.width / 2,
                   child: SigninForm(
-                      emailController: _emailController,
-                      passwordController: _passwordController),
+                    emailController: _emailController,
+                    passwordController: _passwordController,
+                    formKey: _formKey,
+                  ),
                 ),
               );
             }
 
             return _SigninMobile(
-                emailController: _emailController,
-                passwordController: _passwordController);
+              emailController: _emailController,
+              passwordController: _passwordController,
+              formKey: _formKey,
+            );
           },
         ),
       ),
@@ -48,11 +56,16 @@ class _SigninScreenState extends State<SigninScreen> {
 }
 
 class _SigninMobile extends StatelessWidget {
-  final TextEditingController? emailController;
-  final TextEditingController? passwordController;
+  final TextEditingController emailController;
+  final TextEditingController passwordController;
+  final GlobalKey<FormState> formKey;
 
-  const _SigninMobile({Key? key, this.emailController, this.passwordController})
-      : super(key: key);
+  const _SigninMobile({
+    Key? key,
+    required this.emailController,
+    required this.passwordController,
+    required this.formKey,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -67,6 +80,7 @@ class _SigninMobile extends StatelessWidget {
             SigninForm(
               emailController: emailController,
               passwordController: passwordController,
+              formKey: formKey,
             ),
           ],
         ),
@@ -76,15 +90,22 @@ class _SigninMobile extends StatelessWidget {
 }
 
 class SigninForm extends StatelessWidget {
-  final TextEditingController? emailController;
-  final TextEditingController? passwordController;
+  final TextEditingController emailController;
+  final TextEditingController passwordController;
+  final GlobalKey<FormState> formKey;
 
-  const SigninForm({Key? key, this.emailController, this.passwordController})
-      : super(key: key);
+  const SigninForm({
+    Key? key,
+    required this.emailController,
+    required this.passwordController,
+    required this.formKey,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    final loginScreenBloc = context.watch<LoginScreenBloc>();
     return Form(
+      key: formKey,
       child: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -102,6 +123,12 @@ class SigninForm extends StatelessWidget {
                 .copyWith(fontSize: 42, fontWeight: FontWeight.w400),
           ),
           const Gap(60),
+          if (loginScreenBloc.state.error != null)
+            Padding(
+              padding: const EdgeInsets.only(bottom: 20),
+              child: ErrorAlert(
+                  error: loginScreenBloc.state.error!, showRetry: false),
+            ),
           LuraTextField(
             hintText: 'Email',
             keyboardType: TextInputType.emailAddress,
@@ -142,23 +169,11 @@ class SigninForm extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
-              Theme(
-                data: Theme.of(context).copyWith(
-                  elevatedButtonTheme: ElevatedButtonThemeData(
-                    style: ElevatedButton.styleFrom(
-                      elevation: 0,
-                      shape: const CircleBorder(),
-                      padding: const EdgeInsets.all(20),
-                      primary: LuraColors.blue,
-                    ),
-                  ),
-                ),
-                child: ElevatedButton(
-                  onPressed: () {
-                    context.read<LoginState>().loggedIn = true;
-                  },
-                  child: Icon(Icons.arrow_forward),
-                ),
+              CircularIconButton(
+                icon: const Icon(Icons.arrow_forward),
+                onTap: loginScreenBloc.state.isSubmitting
+                    ? null
+                    : () => _onSubmit(context),
               ),
             ],
           ),
@@ -166,8 +181,39 @@ class SigninForm extends StatelessWidget {
       ),
     );
   }
+
+  void _onSubmit(BuildContext context) {
+    if (formKey.currentState?.validate() ?? false) {
+      final email = emailController.text.trim();
+      final password = passwordController.text.trim();
+      context.read<LoginScreenBloc>().login(email, password);
+    }
+  }
+
+  String? _validateEmail(String? email) {
+    if (email == null || email.trim().isEmpty) {
+      return 'Your email is required';
+    }
+
+    bool emailValid = RegExp(
+            r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
+        .hasMatch(email);
+    if (!emailValid) {
+      return 'Please enter a valid email';
+    }
+
+    return null;
+  }
+
+  String? _validatePassword(String? password) {
+    if (password == null || password.trim().isEmpty) {
+      return 'Your password is required';
+    }
+
+    if (password.length < 6) {
+      return 'Your password must be at least 6 characters long';
+    }
+
+    return null;
+  }
 }
-
-String? _validateEmail(String? input) {}
-
-String? _validatePassword(String? input) {}

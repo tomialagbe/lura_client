@@ -8,7 +8,7 @@
 PRODUCT_NAME = lura_client;
 
 // The application's bundle identifier
-PRODUCT_BUNDLE_IDENTIFIER = com.example.mobilePrinter
+PRODUCT_BUNDLE_IDENTIFIER = so.lura
 
 // The copyright displayed in application information
 PRODUCT_COPYRIGHT = Copyright © 2022 com.example. All rights reserved.

@@ -3,8 +3,8 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
-import 'package:lura_client/admin/app_bars.dart';
-import 'package:lura_client/core/utils/platform_helper.dart';
+import '../widgets/app_bars.dart';
+import '../../core/utils/platform_helper.dart';
 import 'package:lura_client/ui/colors.dart';
 import 'package:lura_client/ui/typography.dart';
 import 'package:lura_client/ui/widgets/white_button.dart';
@@ -77,7 +77,7 @@ class _ScreenContent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 20),
+      padding: const EdgeInsets.only(left: 20, right: 20, bottom: 20),
       child: Center(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -136,9 +136,10 @@ class _ScreenContent extends StatelessWidget {
               },
             ),
             const Gap(10),
-            if (!hideActivationButton) _ActivateButton(onTap: () {
-              context.goNamed('printer-activation');
-            }),
+            if (!hideActivationButton)
+              _ActivateButton(onTap: () {
+                context.goNamed('printer-activation');
+              }),
           ],
         ),
       ),

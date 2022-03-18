@@ -3,8 +3,13 @@ import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lura_client/ui/colors.dart';
 import 'package:lura_client/ui/typography.dart';
+import 'package:lura_client/ui/widgets/alerts.dart';
+import 'package:lura_client/ui/widgets/circular_icon_button.dart';
 import 'package:lura_client/ui/widgets/lura_text_field.dart';
 import 'package:responsive_builder/responsive_builder.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+
+import 'bloc/signup_screen_bloc.dart';
 
 class SignupScreen extends StatefulWidget {
   const SignupScreen({Key? key}) : super(key: key);
@@ -17,6 +22,7 @@ class _SignupScreenState extends State<SignupScreen> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   final _passwordConfirmController = TextEditingController();
+  final _formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
@@ -33,6 +39,7 @@ class _SignupScreenState extends State<SignupScreen> {
                     emailController: _emailController,
                     passwordController: _passwordController,
                     passwordConfirmController: _passwordConfirmController,
+                    formKey: _formKey,
                   ),
                 ),
               );
@@ -42,6 +49,7 @@ class _SignupScreenState extends State<SignupScreen> {
               emailController: _emailController,
               passwordController: _passwordController,
               passwordConfirmController: _passwordConfirmController,
+              formKey: _formKey,
             );
           },
         ),
@@ -51,15 +59,17 @@ class _SignupScreenState extends State<SignupScreen> {
 }
 
 class _SignupMobile extends StatelessWidget {
-  final TextEditingController? emailController;
-  final TextEditingController? passwordController;
-  final TextEditingController? passwordConfirmController;
+  final TextEditingController emailController;
+  final TextEditingController passwordController;
+  final TextEditingController passwordConfirmController;
+  final GlobalKey<FormState> formKey;
 
   const _SignupMobile({
     Key? key,
-    this.emailController,
-    this.passwordController,
-    this.passwordConfirmController,
+    required this.emailController,
+    required this.passwordController,
+    required this.passwordConfirmController,
+    required this.formKey,
   }) : super(key: key);
 
   @override
@@ -75,6 +85,8 @@ class _SignupMobile extends StatelessWidget {
             SignupForm(
               emailController: emailController,
               passwordController: passwordController,
+              passwordConfirmController: passwordConfirmController,
+              formKey: formKey,
             ),
           ],
         ),
@@ -84,20 +96,25 @@ class _SignupMobile extends StatelessWidget {
 }
 
 class SignupForm extends StatelessWidget {
-  final TextEditingController? emailController;
-  final TextEditingController? passwordController;
-  final TextEditingController? passwordConfirmController;
+  final TextEditingController emailController;
+  final TextEditingController passwordController;
+  final TextEditingController passwordConfirmController;
+  final GlobalKey<FormState> formKey;
 
-  const SignupForm(
-      {Key? key,
-      this.emailController,
-      this.passwordController,
-      this.passwordConfirmController})
-      : super(key: key);
+  SignupForm({
+    Key? key,
+    required this.emailController,
+    required this.passwordController,
+    required this.passwordConfirmController,
+    required this.formKey,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    final signupScreenBloc = context.watch<SignupScreenBloc>();
+
     return Form(
+      key: formKey,
       child: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -115,6 +132,12 @@ class SignupForm extends StatelessWidget {
                 .copyWith(fontSize: 42, fontWeight: FontWeight.w400),
           ),
           const Gap(60),
+          if (signupScreenBloc.state.error != null)
+            Padding(
+              padding: const EdgeInsets.only(bottom: 20),
+              child: ErrorAlert(
+                  error: signupScreenBloc.state.error!, showRetry: false),
+            ),
           LuraTextField(
             hintText: 'Email',
             keyboardType: TextInputType.emailAddress,
@@ -135,7 +158,7 @@ class SignupForm extends StatelessWidget {
             keyboardType: TextInputType.visiblePassword,
             obscureText: true,
             controller: passwordConfirmController,
-            textInputValidator: _validatePassword,
+            textInputValidator: _validateConfirmPassword,
           ),
           const Gap(20),
           Row(
@@ -163,23 +186,11 @@ class SignupForm extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
-              Theme(
-                data: Theme.of(context).copyWith(
-                  elevatedButtonTheme: ElevatedButtonThemeData(
-                    style: ElevatedButton.styleFrom(
-                      elevation: 0,
-                      shape: const CircleBorder(),
-                      padding: const EdgeInsets.all(20),
-                      primary: LuraColors.blue,
-                    ),
-                  ),
-                ),
-                child: ElevatedButton(
-                  onPressed: () {
-                    context.go('/');
-                  },
-                  child: Icon(Icons.arrow_forward),
-                ),
+              CircularIconButton(
+                icon: const Icon(Icons.arrow_forward),
+                onTap: signupScreenBloc.state.isSubmitting
+                    ? null
+                    : () => _onSubmit(context),
               ),
             ],
           ),
@@ -187,8 +198,54 @@ class SignupForm extends StatelessWidget {
       ),
     );
   }
+
+  void _onSubmit(BuildContext context) {
+    if (formKey.currentState?.validate() ?? false) {
+      final email = emailController.text.trim();
+      final password = passwordController.text.trim();
+      context.read<SignupScreenBloc>().signup(email, password);
+    }
+  }
+
+  String? _validateEmail(String? email) {
+    if (email == null || email.trim().isEmpty) {
+      return 'Your email is required';
+    }
+
+    bool emailValid = RegExp(
+            r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
+        .hasMatch(email);
+    if (!emailValid) {
+      return 'Please enter a valid email';
+    }
+
+    return null;
+  }
+
+  String? _password;
+
+  String? _validatePassword(String? password) {
+    if (password == null || password.trim().isEmpty) {
+      return 'Your password is required';
+    }
+
+    if (password.length < 6) {
+      return 'Your password must be at least 6 characters long';
+    }
+
+    _password = password;
+
+    return null;
+  }
+
+  String? _validateConfirmPassword(String? passwordConfirm) {
+    if (passwordConfirm == null || passwordConfirm.trim().isEmpty) {
+      return 'Your password is required';
+    }
+
+    if (passwordConfirm.length < 6 || passwordConfirm != _password) {
+      return 'The two passwords must match';
+    }
+    return null;
+  }
 }
-
-String? _validateEmail(String? input) {}
-
-String? _validatePassword(String? input) {}

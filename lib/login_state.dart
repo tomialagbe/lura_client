@@ -16,7 +16,7 @@ class LoginState extends ChangeNotifier {
 
   set loggedIn(bool value) {
     _loggedIn = value;
-    prefs.setBool(loggedInPrefKey, value);
+    // prefs.setBool(loggedInPrefKey, value);
     notifyListeners();
   }
 

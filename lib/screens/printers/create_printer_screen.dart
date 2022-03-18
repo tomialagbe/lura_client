@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
-import 'package:lura_client/admin/app_bars.dart';
+import '../widgets/app_bars.dart';
 import 'package:lura_client/core/viewmodels/printers_viewmodel.dart';
 import 'package:lura_client/ui/colors.dart';
 import 'package:lura_client/ui/typography.dart';
