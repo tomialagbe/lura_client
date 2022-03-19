@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:lura_client/ui/typography.dart';
+import 'package:responsive_builder/responsive_builder.dart';
 
 import '../colors.dart';
 
@@ -19,29 +20,36 @@ class AlertText extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final themeData = Theme.of(context);
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
-      decoration: BoxDecoration(
-        color: alertType.backgroundColor,
-        borderRadius: BorderRadius.circular(10),
-        border: Border.all(color: alertType.borderColor),
-      ),
-      child: Theme(
-        data: themeData.copyWith(
-          textTheme: themeData.textTheme.copyWith(
-            bodyText1: LuraTextStyles.baseTextStyle.copyWith(
-                fontSize: 16,
-                color: alertType.textColor,
-                fontWeight: FontWeight.w400),
-            bodyText2: LuraTextStyles.baseTextStyle.copyWith(
-                fontSize: 14,
-                color: alertType.textColor,
-                fontWeight: FontWeight.w400),
+    return ResponsiveBuilder(
+      builder: (BuildContext context, SizingInformation sizingInformation) {
+        final isDesktop =
+            sizingInformation.deviceScreenType == DeviceScreenType.desktop;
+        return Container(
+          width: isDesktop ? 400 : double.infinity,
+          padding: EdgeInsets.symmetric(
+              vertical: isDesktop ? 20 : 10, horizontal: 10),
+          decoration: BoxDecoration(
+            color: alertType.backgroundColor,
+            borderRadius: BorderRadius.circular(10),
+            border: Border.all(color: alertType.borderColor),
           ),
-        ),
-        child: child,
-      ),
+          child: Theme(
+            data: themeData.copyWith(
+              textTheme: themeData.textTheme.copyWith(
+                bodyText1: LuraTextStyles.baseTextStyle.copyWith(
+                    fontSize: 16,
+                    color: alertType.textColor,
+                    fontWeight: FontWeight.w400),
+                bodyText2: LuraTextStyles.baseTextStyle.copyWith(
+                    fontSize: 14,
+                    color: alertType.textColor,
+                    fontWeight: FontWeight.w400),
+              ),
+            ),
+            child: child,
+          ),
+        );
+      },
     );
   }
 }

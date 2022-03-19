@@ -8,6 +8,8 @@ import 'package:lura_client/core/utils/platform_helper.dart';
 import 'package:lura_client/screens/authentication/bloc/login_screen_bloc.dart';
 import 'package:lura_client/screens/authentication/bloc/onboarding_screen_bloc.dart';
 import 'package:lura_client/screens/authentication/bloc/signup_screen_bloc.dart';
+import 'package:lura_client/screens/printers/bloc/create_printer_screen_bloc.dart';
+import 'package:lura_client/screens/printers/bloc/printers_screen_bloc.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:tuple/tuple.dart';
 
@@ -99,7 +101,11 @@ class LuraRouter extends Cubit<String> {
             path: 'create-printer',
             name: 'create-printer',
             builder: (ctx, state) {
-              return const CreatePrinterScreen();
+              return BlocProvider(
+                create: (context) => CreatePrinterScreenBloc(
+                    printersScreenBloc: context.read<PrintersScreenBloc>()),
+                child: const CreatePrinterScreen(),
+              );
             },
           ),
           GoRoute(

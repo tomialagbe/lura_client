@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:gap/gap.dart';
-import 'package:lura_client/ui/colors.dart';
-import 'package:lura_client/ui/theme.dart';
 import 'package:lura_client/ui/typography.dart';
 import 'package:responsive_builder/responsive_builder.dart';
 

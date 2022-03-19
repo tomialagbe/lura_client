@@ -2,15 +2,18 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:gap/gap.dart';
 import 'package:lura_client/core/models/print_station.dart';
+import 'package:lura_client/core/printers/printer.dart';
 import 'package:lura_client/core/utils/platform_helper.dart';
-import 'package:lura_client/core/viewmodels/printers_viewmodel.dart';
 import 'package:lura_client/ui/colors.dart';
 import 'package:lura_client/ui/typography.dart';
+import 'package:lura_client/ui/widgets/alerts.dart';
 import 'package:lura_client/ui/widgets/circular_icon_button.dart';
+import 'package:lura_client/ui/widgets/loading_display.dart';
 import 'package:provider/provider.dart';
 import 'package:responsive_builder/responsive_builder.dart';
 import 'package:go_router/go_router.dart';
 
+import 'bloc/printers_screen_bloc.dart';
 import 'create_printer_card.dart';
 
 class PrintersScreen extends StatelessWidget {
@@ -18,7 +21,7 @@ class PrintersScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // final printersViewmodel = context.watch<PrintersViewmodel>();
+    final printersScreenBloc = context.watch<PrintersScreenBloc>();
     return Padding(
       padding: const EdgeInsets.all(20),
       child: Column(
@@ -42,21 +45,34 @@ class PrintersScreen extends StatelessWidget {
               }),
             ],
           ),
-          // if (printersViewmodel.printers.isEmpty)
-          Expanded(
-            child: Container(
-              width: double.infinity,
-              height: double.infinity,
-              alignment: Alignment.center,
-              child: CreatePrinterCard(
-                onTap: () {
-                  context.pushNamed('new-printer');
-                },
+          if (printersScreenBloc.state.loading)
+            const Expanded(child: Center(child: LoadingDisplay()))
+          else if (printersScreenBloc.state.loadError != null)
+            Expanded(
+              child: Center(
+                child: ErrorAlert(
+                  error: printersScreenBloc.state.loadError!,
+                  onTap: () => printersScreenBloc.loadPrinters(),
+                ),
               ),
+            )
+          else if (printersScreenBloc.state.printers.isEmpty)
+            Expanded(
+              child: Container(
+                width: double.infinity,
+                height: double.infinity,
+                alignment: Alignment.center,
+                child: CreatePrinterCard(
+                  onTap: () {
+                    context.pushNamed('new-printer');
+                  },
+                ),
+              ),
+            )
+          else
+            Expanded(
+              child: PrinterList(printers: printersScreenBloc.state.printers),
             ),
-          ),
-          // else
-          //   Expanded(child: PrinterList(printers: printersViewmodel.printers)),
         ],
       ),
     );
@@ -96,7 +112,7 @@ class _AddPrinterButton extends StatelessWidget {
 }
 
 class PrinterList extends StatelessWidget {
-  final List<PrintStation> printers;
+  final List<Printer> printers;
 
   const PrinterList({Key? key, required this.printers}) : super(key: key);
 
@@ -112,13 +128,13 @@ class PrinterList extends StatelessWidget {
               printer: printer,
               sizingInformation: sizingInformation,
               onTap: () {
-                if (printer.unused) {
+                if (printer.isUnused) {
                   context.goNamed('printer-activate');
                 } else {
                   if (PlatformHelper.isWeb) {
                     context.go('/receipts');
                   } else {
-                    context.goNamed(printer.online
+                    context.goNamed(printer.isOnline
                         ? 'mobile-printer-actions'
                         : 'mobile-printer-actions-offline');
                   }
@@ -149,7 +165,7 @@ class PrinterList extends StatelessWidget {
 }
 
 class _PrinterListItem extends StatelessWidget {
-  final PrintStation printer;
+  final Printer printer;
   final SizingInformation sizingInformation;
   final VoidCallback? onTap;
 
@@ -203,24 +219,24 @@ class _PrinterListItem extends StatelessWidget {
                           style: textStyle,
                         ),
                         const Gap(10),
-                        _PlatformIcon(platform: printer.platform),
+                        _PlatformIcon(platform: printer.osType),
                       ],
                     ),
                     Expanded(child: Container()),
-                    if (!printer.unused)
+                    if (!printer.isUnused)
                       Container(
                         margin: const EdgeInsets.only(right: 5),
                         decoration: BoxDecoration(
-                          color: printer.online ? Colors.green : Colors.red,
+                          color: printer.isOnline ? Colors.green : Colors.red,
                           shape: BoxShape.circle,
                         ),
                         width: 10,
                         height: 10,
                       ),
                     Text(
-                      printer.unused
+                      printer.isUnused
                           ? 'Unused'
-                          : printer.online
+                          : printer.isOnline
                               ? 'Online'
                               : 'Offline',
                       style: textStyle.copyWith(fontSize: 14),
@@ -237,7 +253,7 @@ class _PrinterListItem extends StatelessWidget {
 }
 
 class _PlatformIcon extends StatelessWidget {
-  final String platform;
+  final PrinterOsType platform;
 
   const _PlatformIcon({Key? key, required this.platform}) : super(key: key);
 
@@ -252,11 +268,11 @@ class _PlatformIcon extends StatelessWidget {
 
   IconData get icon {
     switch (platform) {
-      case 'windows':
+      case PrinterOsType.windows:
         return FontAwesomeIcons.windows;
-      case 'ios':
+      case PrinterOsType.iOS:
         return FontAwesomeIcons.apple;
-      case 'android':
+      case PrinterOsType.android:
       default:
         return FontAwesomeIcons.android;
     }

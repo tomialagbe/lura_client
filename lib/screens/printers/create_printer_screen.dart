@@ -1,39 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
+import 'package:lura_client/screens/printers/bloc/create_printer_screen_bloc.dart';
+import 'package:lura_client/ui/widgets/alerts.dart';
 import '../widgets/app_bars.dart';
-import 'package:lura_client/core/viewmodels/printers_viewmodel.dart';
 import 'package:lura_client/ui/colors.dart';
 import 'package:lura_client/ui/typography.dart';
-import 'package:provider/provider.dart';
 import 'package:responsive_builder/responsive_builder.dart';
 import 'package:rxdart/rxdart.dart';
 
 import 'platform_selector.dart';
 
-class CreatePrinterScreen extends StatefulWidget {
+class CreatePrinterScreen extends StatelessWidget {
   const CreatePrinterScreen({Key? key}) : super(key: key);
-
-  @override
-  State<CreatePrinterScreen> createState() => _CreatePrinterScreenState();
-}
-
-class _CreatePrinterScreenState extends State<CreatePrinterScreen> {
-  static const _initialPlatform = 'windows';
-  String _selectedPlatform = _initialPlatform;
-
-  final _printerNameController = TextEditingController();
-  final _formCompleteStream = BehaviorSubject.seeded(false);
-
-  @override
-  void initState() {
-    super.initState();
-
-    _printerNameController.addListener(() {
-      _formCompleteStream
-          .add(_printerNameController.text.trim().isEmpty ? false : true);
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -46,10 +26,12 @@ class _CreatePrinterScreenState extends State<CreatePrinterScreen> {
               padding: const EdgeInsets.symmetric(horizontal: 20),
               child: sizingInformation.isMobile
                   ? SingleChildScrollView(
-                      child: buildForm(context, sizingInformation))
+                      child: _CreatePrinterForm(
+                          sizingInformation: sizingInformation))
                   : Container(
                       constraints: const BoxConstraints(maxWidth: 700),
-                      child: buildForm(context, sizingInformation),
+                      child: _CreatePrinterForm(
+                          sizingInformation: sizingInformation),
                     ),
             ),
           ),
@@ -57,8 +39,45 @@ class _CreatePrinterScreenState extends State<CreatePrinterScreen> {
       },
     );
   }
+}
 
-  Widget buildForm(BuildContext context, SizingInformation sizingInformation) {
+class _CreatePrinterForm extends StatefulWidget {
+  final SizingInformation sizingInformation;
+
+  const _CreatePrinterForm({Key? key, required this.sizingInformation})
+      : super(key: key);
+
+  @override
+  _CreatePrinterFormState createState() => _CreatePrinterFormState();
+}
+
+class _CreatePrinterFormState extends State<_CreatePrinterForm> {
+  late SizingInformation sizingInformation;
+  final _printerNameController = TextEditingController();
+  final _formCompleteStream = BehaviorSubject.seeded(false);
+
+  static const _initialPlatform = 'windows';
+  String _selectedPlatform = _initialPlatform;
+
+  @override
+  void initState() {
+    super.initState();
+    sizingInformation = widget.sizingInformation;
+    _printerNameController.addListener(() {
+      _formCompleteStream
+          .add(_printerNameController.text.trim().isEmpty ? false : true);
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final createPrinterBloc = context.watch<CreatePrinterScreenBloc>();
+    if (createPrinterBloc.state.completed) {
+      WidgetsBinding.instance?.addPostFrameCallback((_) {
+        context.goNamed('new-printer-created');
+      });
+    }
+
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -117,10 +136,18 @@ class _CreatePrinterScreenState extends State<CreatePrinterScreen> {
                 initialValue: 'windows',
                 onChange: (selectedPlatform) {
                   setState(() {
-                    _selectedPlatform = selectedPlatform;
+                    _selectedPlatform = selectedPlatform.toLowerCase();
                   });
                 },
               ),
+              if (createPrinterBloc.state.error != null)
+                Padding(
+                  padding: const EdgeInsets.only(top: 20),
+                  child: ErrorAlert(
+                    error: createPrinterBloc.state.error!,
+                    showRetry: false,
+                  ),
+                ),
               const Gap(60),
               Row(
                 mainAxisAlignment: MainAxisAlignment.end,
@@ -128,13 +155,15 @@ class _CreatePrinterScreenState extends State<CreatePrinterScreen> {
                   StreamBuilder<bool>(
                     stream: _formCompleteStream,
                     builder: (context, snapshot) {
+                      final formComplete = snapshot.data ?? false;
+                      final isSubmitting = createPrinterBloc.state.isSubmitting;
                       return _SubmitButton(
-                        onTap: (snapshot.data ?? false)
+                        onTap: formComplete && !isSubmitting
                             ? () {
-                                context.read<PrintersViewmodel>().addPrinter(
-                                    _printerNameController.text.trim(),
-                                    _selectedPlatform);
-                                context.goNamed('new-printer-created');
+                                final name = _printerNameController.text.trim();
+                                createPrinterBloc.savePrinter(
+                                    name, _selectedPlatform.toLowerCase());
+                                // context.goNamed('new-printer-created');
                               }
                             : null,
                       );

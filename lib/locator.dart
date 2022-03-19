@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get_it/get_it.dart';
+import 'package:lura_client/core/printers/printers_repository.dart';
 import 'package:lura_client/core/repository/print_station_repository.dart';
 import 'package:lura_client/lura_config.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -37,6 +38,12 @@ Future setupLocator({required LuraConfig config}) async {
     () => BusinessRepository(
       apiClient: locator.get<ApiClient>(),
       sharedPreferences: sharedPrefs,
+    ),
+  );
+
+  locator.registerLazySingleton<PrintersRepository>(
+    () => PrintersRepository(
+      apiClient: locator.get<ApiClient>(),
     ),
   );
 }
