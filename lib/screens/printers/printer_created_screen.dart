@@ -95,59 +95,96 @@ class _ScreenContent extends StatelessWidget {
                   fontWeight: FontWeight.w400),
             ),
             if (!PlatformHelper.isWeb && PlatformHelper.isMobile)
-              ..._mobileWidgets(context),
-            if (PlatformHelper.isWeb) _webWidgets(context, sizingInformation)
+              _MobileContent(
+                forCreationComplete: forCreationComplete,
+                hideActivationButton: hideActivationButton,
+                showReceiptButton: showReceiptButton,
+              ),
+            if (PlatformHelper.isWeb)
+              _WebContent(sizingInformation: sizingInformation)
           ],
         ),
       ),
     );
   }
+}
 
-  List<Widget> _mobileWidgets(BuildContext context) {
-    return [
-      Expanded(child: Container()),
-      if (forCreationComplete) ...[
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [SvgPicture.asset('assets/images/check_mark.svg')],
-        ),
-        const Gap(30),
-        Text('Your printer has been created successfully', style: textStyle),
-      ],
-      Expanded(child: Container()),
-      SizedBox(
-        width: double.infinity,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            if (showReceiptButton) ...[
-              WhiteButton(
-                text: 'Show receipts',
-                onTap: () {
-                  context.go('/receipts');
-                },
-              ),
-              const Gap(10),
-            ],
-            WhiteButton(
-              text: 'Show all printers',
-              onTap: () {
-                context.pop();
-              },
+class _MobileContent extends StatelessWidget {
+  final bool forCreationComplete;
+  final bool showReceiptButton;
+  final bool hideActivationButton;
+
+  final textStyle = LuraTextStyles.baseTextStyle
+      .copyWith(color: LuraColors.blue, fontWeight: FontWeight.w400);
+
+  _MobileContent({
+    Key? key,
+    required this.forCreationComplete,
+    required this.showReceiptButton,
+    required this.hideActivationButton,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Expanded(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Expanded(child: Container()),
+          if (forCreationComplete) ...[
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [SvgPicture.asset('assets/images/check_mark.svg')],
             ),
-            const Gap(10),
-            if (!hideActivationButton)
-              _ActivateButton(onTap: () {
-                context.goNamed('printer-activation');
-              }),
+            const Gap(30),
+            Text('Your printer has been created successfully',
+                style: textStyle),
           ],
-        ),
+          Expanded(child: Container()),
+          SizedBox(
+            width: double.infinity,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                if (showReceiptButton) ...[
+                  WhiteButton(
+                    text: 'Show receipts',
+                    onTap: () {
+                      context.go('/receipts');
+                    },
+                  ),
+                  const Gap(10),
+                ],
+                WhiteButton(
+                  text: 'Show all printers',
+                  onTap: () {
+                    context.pop();
+                  },
+                ),
+                const Gap(10),
+                if (!hideActivationButton)
+                  _ActivateButton(onTap: () {
+                    context.goNamed('printer-activation');
+                  }),
+              ],
+            ),
+          ),
+        ],
       ),
-    ];
+    );
   }
+}
 
-  Widget _webWidgets(
-      BuildContext context, SizingInformation sizingInformation) {
+class _WebContent extends StatelessWidget {
+  final SizingInformation sizingInformation;
+  final textStyle = LuraTextStyles.baseTextStyle
+      .copyWith(color: LuraColors.blue, fontWeight: FontWeight.w400);
+
+  _WebContent({Key? key, required this.sizingInformation}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
     return Container(
       constraints: sizingInformation.isDesktop
           ? const BoxConstraints(maxWidth: 800)

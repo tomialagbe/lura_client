@@ -4,12 +4,15 @@ import 'package:go_router/go_router.dart';
 import 'package:lura_client/core/authentication/bloc/authentication_bloc.dart';
 import 'package:lura_client/core/business/business_bloc.dart';
 import 'package:lura_client/core/business/model.dart';
+import 'package:lura_client/core/printing/bloc/printer_emulation_bloc.dart';
 import 'package:lura_client/core/utils/platform_helper.dart';
 import 'package:lura_client/screens/authentication/bloc/login_screen_bloc.dart';
 import 'package:lura_client/screens/authentication/bloc/onboarding_screen_bloc.dart';
 import 'package:lura_client/screens/authentication/bloc/signup_screen_bloc.dart';
 import 'package:lura_client/screens/printers/bloc/create_printer_screen_bloc.dart';
+import 'package:lura_client/screens/printers/bloc/printer_activation_screen_bloc.dart';
 import 'package:lura_client/screens/printers/bloc/printers_screen_bloc.dart';
+import 'package:lura_client/screens/printers/bloc/selected_printer_bloc.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:tuple/tuple.dart';
 
@@ -103,7 +106,9 @@ class LuraRouter extends Cubit<String> {
             builder: (ctx, state) {
               return BlocProvider(
                 create: (context) => CreatePrinterScreenBloc(
-                    printersScreenBloc: context.read<PrintersScreenBloc>()),
+                  printersScreenBloc: context.read<PrintersScreenBloc>(),
+                  selectedPrinterBloc: context.read<SelectedPrinterBloc>(),
+                ),
                 child: const CreatePrinterScreen(),
               );
             },
@@ -153,7 +158,12 @@ class LuraRouter extends Cubit<String> {
               name: 'printer-activation-screen',
               path: 'printer-activation-screen',
               builder: (ctx, state) {
-                return PrinterActivationScreen();
+                return BlocProvider(
+                  create: (ctx) => PrinterActivationScreenBloc(
+                      selectedPrinterBloc: ctx.read<SelectedPrinterBloc>(),
+                      printerEmulationBloc: ctx.read<PrinterEmulationBloc>()),
+                  child: const PrinterActivationScreen(),
+                );
               },
             ),
             GoRoute(

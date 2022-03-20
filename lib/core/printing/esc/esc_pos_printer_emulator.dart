@@ -1,14 +1,15 @@
 import 'dart:async';
 import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:flutter/foundation.dart';
+import 'package:lura_client/core/printing/esc/models.dart';
 import 'package:rxdart/rxdart.dart';
 
 import '../printing.dart';
 import 'esc_pos_decoder.dart';
 
-class EscPosPrinter implements Printer {
-
+class EscPosPrinterEmulator implements PrinterEmulator {
   final String name;
   final int port;
   final BehaviorSubject<bool> _statusStream = BehaviorSubject.seeded(false);
@@ -16,7 +17,9 @@ class EscPosPrinter implements Printer {
   ServerSocket? _socket;
   StreamSubscription<Socket>? _clientConnSubscription;
 
-  EscPosPrinter({required this.name, this.port = 9100});
+  Function(List<PrintToken>)? onPrintEnd;
+
+  EscPosPrinterEmulator({required this.name, this.port = 9100});
 
   @override
   Stream<bool> isRunning() {
@@ -49,14 +52,15 @@ class EscPosPrinter implements Printer {
     debugPrint(data.join(', '));
     final parser = EscPosDecoder();
     final result = parser.decode(data);
-    for (final token in result) {
-      if (token.isCommand) {
-        final commandHeader = token.fullCommand!.commandBytes.join(', ');
-        final commandData = token.fullCommand?.dataBytes?.join(', ') ?? '';
-        debugPrint('Command is: \nHeader: $commandHeader\nData: $commandData\n');
-      } else {
-        debugPrint('Text is: ${token.dataBytes!}');
-      }
-    }
+    onPrintEnd?.call(result);
+    // for (final token in result) {
+    //   if (token.isCommand) {
+    //     final commandHeader = token.fullCommand!.commandBytes.join(', ');
+    //     final commandData = token.fullCommand?.dataBytes?.join(', ') ?? '';
+    //     debugPrint('Command is: \nHeader: $commandHeader\nData: $commandData\n');
+    //   } else {
+    //     debugPrint('Text is: ${token.dataBytes!}');
+    //   }
+    // }
   }
 }

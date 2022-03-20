@@ -1,4 +1,6 @@
-abstract class Printer {
+import 'dart:typed_data';
+
+abstract class PrinterEmulator {
   Future start();
 
   Future stop();

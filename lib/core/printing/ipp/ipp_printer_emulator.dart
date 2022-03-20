@@ -18,7 +18,7 @@ import 'status_codes.dart';
 import 'type_codec.dart';
 import 'utils.dart';
 
-class IppPrinter implements Printer {
+class IppPrinterEmulator implements PrinterEmulator {
   int _jobId = 0;
   DateTime started = DateTime.now().toUtc();
   List<PrintJob> jobs = [];
@@ -41,7 +41,7 @@ class IppPrinter implements Printer {
 
   Function(Uint8List)? onPrintEnd;
 
-  IppPrinter({
+  IppPrinterEmulator({
     required this.name,
     this.port = 631,
     this.fallback = true,
@@ -175,8 +175,8 @@ class IppPrinter implements Printer {
       case IppConstants.GET_JOBS:
         debugPrint('Printer: received Get-Jobs message');
         return _handleGetJobs(request, message);
-    // return _sendResponse(request, message,
-    //     statusCode: IppConstants.SUCCESSFUL_OK);
+      // return _sendResponse(request, message,
+      //     statusCode: IppConstants.SUCCESSFUL_OK);
       case IppConstants.CANCEL_JOB:
         debugPrint('Printer: received Cancel-Job message');
         return _sendResponse(request, message,
@@ -194,7 +194,7 @@ class IppPrinter implements Printer {
 
   void _sendResponse(HttpRequest request, IppMessage requestMessage,
       {int statusCode = IppConstants.SUCCESSFUL_OK,
-        List<AttributeGroup>? groups = const []}) {
+      List<AttributeGroup>? groups = const []}) {
     final responseMessage = IppMessage();
     // if (fallback &&
     //     requestMessage.versionMajor == 1 &&
@@ -443,14 +443,14 @@ class IppPrinter implements Printer {
         ];
         break;
       case 'undefined':
-      // all good
+        // all good
         break;
       default:
         _sendResponse(
           request,
           requestMessage,
           statusCode:
-          IppConstants.CLIENT_ERROR_ATTRIBUTES_OR_VALUES_NOT_SUPPORTED,
+              IppConstants.CLIENT_ERROR_ATTRIBUTES_OR_VALUES_NOT_SUPPORTED,
           groups: [
             AttributeGroup()
               ..tag = IppConstants.JOB_ATTRIBUTES_TAG
@@ -489,7 +489,7 @@ class IppPrinter implements Printer {
 
     if (_groups.isNotEmpty) {
       final group =
-      Groups.unsupportedAttributesTag(_groups[0].attributes, requested);
+          Groups.unsupportedAttributesTag(_groups[0].attributes, requested);
       if (group.attributes.isNotEmpty) {
         _groups.insert(0, group);
       }

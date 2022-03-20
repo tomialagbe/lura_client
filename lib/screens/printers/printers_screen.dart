@@ -4,6 +4,7 @@ import 'package:gap/gap.dart';
 import 'package:lura_client/core/models/print_station.dart';
 import 'package:lura_client/core/printers/printer.dart';
 import 'package:lura_client/core/utils/platform_helper.dart';
+import 'package:lura_client/screens/printers/bloc/selected_printer_bloc.dart';
 import 'package:lura_client/ui/colors.dart';
 import 'package:lura_client/ui/typography.dart';
 import 'package:lura_client/ui/widgets/alerts.dart';
@@ -128,11 +129,13 @@ class PrinterList extends StatelessWidget {
               printer: printer,
               sizingInformation: sizingInformation,
               onTap: () {
+                context.read<SelectedPrinterBloc>().setSelectedPrinter(printer);
                 if (printer.isUnused) {
                   context.goNamed('printer-activate');
                 } else {
                   if (PlatformHelper.isWeb) {
-                    context.go('/receipts');
+                    context.go(
+                        '/receipts'); // TODO: add path segment for printer id
                   } else {
                     context.goNamed(printer.isOnline
                         ? 'mobile-printer-actions'

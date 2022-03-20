@@ -2,9 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lura_client/core/authentication/bloc/authentication_bloc.dart';
 import 'package:lura_client/core/business/business_bloc.dart';
+import 'package:lura_client/core/printing/bloc/printer_emulation_bloc.dart';
 import 'package:lura_client/screens/printers/bloc/printers_screen_bloc.dart';
+import 'package:lura_client/screens/printers/bloc/selected_printer_bloc.dart';
 import 'package:lura_client/ui/theme.dart';
 
+import 'core/utils/platform_helper.dart';
 import 'routes.dart';
 
 class LuraApp extends StatefulWidget {
@@ -28,7 +31,19 @@ class _LuraAppState extends State<LuraApp> {
         ),
         BlocProvider(create: (_) => businessBloc),
         BlocProvider(
-            create: (_) => PrintersScreenBloc(businessBloc: businessBloc), lazy: false),
+          create: (_) => PrintersScreenBloc(businessBloc: businessBloc),
+          lazy: false,
+        ),
+        BlocProvider(
+          create: (_) => SelectedPrinterBloc(),
+          lazy: false,
+        ),
+        if (!PlatformHelper.isWeb)
+          BlocProvider(
+            create: (ctx) => PrinterEmulationBloc(
+                selectedPrinterBloc: ctx.read<SelectedPrinterBloc>()),
+            lazy: false,
+          ),
         BlocProvider(
           create: (_) => LuraRouter(
             authenticationBloc: authBloc,

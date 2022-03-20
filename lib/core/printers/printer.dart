@@ -48,6 +48,12 @@ class Printer {
     required this.isUnused,
   });
 
+  @override
+  String toString() {
+    return 'Printer {id: $id, name: $name, ownerBusinessId: $ownerBusinessId,'
+        ' isOnline: $isOnline, osType: $osType, isUnused: $isUnused}';
+  }
+
   factory Printer.fromJson(Map json) {
     return Printer(
       id: json['id'] as int,

@@ -13,14 +13,19 @@ class PrintersRepository {
     return printers;
   }
 
-  Future<bool> savePrinter(
+  Future<Printer> savePrinter(
       int businessId, String name, String osType) async {
     final reqBody = {
       'name': name,
       'osType': osType,
       'ownerBusinessId': businessId
     };
-    await apiClient.post('/printers', data: reqBody);
-    return true;
+    final resp = await apiClient.post('/printers', data: reqBody);
+    final created = Printer.fromJson(resp!.data);
+    return created;
+  }
+
+  Future sendPing(int printerId) async {
+    await apiClient.get('/printers/$printerId/ping');
   }
 }

@@ -38,7 +38,7 @@ class PrinterStandbyScreen extends StatelessWidget {
               ),
               const Expanded(child: SizedBox()),
               Text(
-                'Hi! Here\'s your receipt',
+                'Hi! Your receipt will show up here',
                 style: LuraTextStyles.baseTextStyle.copyWith(
                   fontWeight: FontWeight.w400,
                   color: LuraColors.blue,
@@ -46,16 +46,27 @@ class PrinterStandbyScreen extends StatelessWidget {
                 ),
               ),
               const Gap(20),
-              _AnimatedIcon(),
+              const _AnimatedIcon(),
               const Gap(20),
-              SizedBox(
-                child: QrImage(
-                  data: 'example.com',
-                  foregroundColor: LuraColors.blue,
-                ),
-                width: 200,
-                height: 200,
-              ),
+              // Text(
+              //   'Hi! Here\'s your receipt',
+              //   style: LuraTextStyles.baseTextStyle.copyWith(
+              //     fontWeight: FontWeight.w400,
+              //     color: LuraColors.blue,
+              //     fontSize: 20,
+              //   ),
+              // ),
+              // const Gap(20),
+              // _AnimatedIcon(),
+              // const Gap(20),
+              // SizedBox(
+              //   child: QrImage(
+              //     data: 'example.com',
+              //     foregroundColor: LuraColors.blue,
+              //   ),
+              //   width: 200,
+              //   height: 200,
+              // ),
               const Expanded(child: SizedBox()),
             ],
           ),

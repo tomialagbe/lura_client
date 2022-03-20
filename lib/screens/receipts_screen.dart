@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:lura_client/core/models/receipt.dart';
-import 'package:lura_client/core/viewmodels/receipts_viewmodel.dart';
 import 'package:lura_client/ui/colors.dart';
 import 'package:lura_client/ui/typography.dart';
 import 'package:provider/provider.dart';
