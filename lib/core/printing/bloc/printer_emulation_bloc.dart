@@ -117,6 +117,13 @@ class PrinterEmulationBloc extends Cubit<PrinterEmulationState> {
     emit(state.escPosStarted(escPosConnectionDetails));
   }
 
+  void stopEmulation() async {
+    _pingTimer?.cancel();
+    await _ippPrinterEmulator?.stop();
+    await _escPosPrinterEmulator?.stop();
+    emit(const PrinterEmulationState.stopped());
+  }
+
   Timer? _pingTimer;
 
   void enterStandbyMode() {
@@ -160,9 +167,7 @@ class PrinterEmulationBloc extends Cubit<PrinterEmulationState> {
         name: printer.name);
   }
 
-  void _handleIppPrintJob(Uint8List printData) async {
-
-  }
+  void _handleIppPrintJob(Uint8List printData) async {}
 
   void _handleEscPosPrintJob(List<PrintToken> tokens) async {}
 

@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
+import 'package:lura_client/core/printing/bloc/printer_emulation_bloc.dart';
 import 'package:lura_client/ui/colors.dart';
 import 'package:lura_client/ui/typography.dart';
 import 'package:qr_flutter/qr_flutter.dart';
@@ -31,6 +33,7 @@ class PrinterStandbyScreen extends StatelessWidget {
                           TextStyle(fontSize: 20, fontWeight: FontWeight.w400),
                     ),
                     onPressed: () {
+                      context.read<PrinterEmulationBloc>().stopEmulation();
                       context.pop();
                     },
                   ),
