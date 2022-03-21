@@ -32,14 +32,18 @@ class BusinessBloc extends Cubit<Business?> {
     try {
       final business = await businessRepository.getBusinessForUser();
       if (business == null) {
+        debugPrint('NO business');
         emit(noBusiness);
       } else {
+        debugPrint('Found business ${business.name}');
         emit(business);
       }
     } on ResponseException catch (rex) {
       // TODO: show error popup
+      debugPrint(rex.toString());
     } on TimeoutException catch (e) {
       // TODO: show error popup
+      debugPrint(e.toString());
     }
   }
 }

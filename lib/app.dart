@@ -29,7 +29,7 @@ class _LuraAppState extends State<LuraApp> {
           create: (_) => authBloc,
           lazy: false,
         ),
-        BlocProvider(create: (_) => businessBloc),
+        BlocProvider(create: (_) => businessBloc, lazy: false),
         BlocProvider(
           create: (_) => PrintersScreenBloc(businessBloc: businessBloc),
           lazy: false,

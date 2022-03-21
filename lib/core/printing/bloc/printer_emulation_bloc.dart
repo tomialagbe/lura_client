@@ -55,13 +55,15 @@ class PrinterEmulationState extends Equatable {
   final bool isConnecting;
   final IppConnectionDetails? ippConnectionDetails;
   final EscPosConnectionDetails? escPosConnectionDetails;
-  final String? currentJobId;
+  final String? currentJobUrl;
+
+  bool get hasJob => currentJobUrl != null;
 
   const PrinterEmulationState._({
     this.ippConnectionDetails,
     this.escPosConnectionDetails,
     this.isConnecting = true,
-    this.currentJobId,
+    this.currentJobUrl,
   });
 
   const PrinterEmulationState.stopped() : this._();
@@ -87,11 +89,18 @@ class PrinterEmulationState extends Equatable {
         isConnecting: ippConnectionDetails == null,
       );
 
-  PrinterEmulationState jobReceived(String jobId) => PrinterEmulationState._(
+  PrinterEmulationState jobReceived(String jobUrl) => PrinterEmulationState._(
         escPosConnectionDetails: escPosConnectionDetails,
         ippConnectionDetails: ippConnectionDetails,
         isConnecting: !allOnline,
-        currentJobId: jobId,
+        currentJobUrl: jobUrl,
+      );
+
+  PrinterEmulationState clearJob() => PrinterEmulationState._(
+        escPosConnectionDetails: escPosConnectionDetails,
+        ippConnectionDetails: ippConnectionDetails,
+        isConnecting: !allOnline,
+        currentJobUrl: null,
       );
 
   bool get allOnline =>
@@ -102,7 +111,7 @@ class PrinterEmulationState extends Equatable {
         ippConnectionDetails,
         escPosConnectionDetails,
         isConnecting,
-        currentJobId
+        currentJobUrl
       ];
 }
 
@@ -183,15 +192,27 @@ class PrinterEmulationBloc extends Cubit<PrinterEmulationState> {
 
   void _handleIppPrintJob(Uint8List printData) async {
     final printer = selectedPrinterBloc.state!;
-
+    emit(state.clearJob());
     final job =
         await printersRepository.createPrintJob(printer.id, 'POSTSCRIPT');
-    emit(state.jobReceived(job!.jobUuid));
-    // await printersRepository.
+    emit(state.jobReceived(job!.jobDownloadUrl));
+    printersRepository.uploadPostscriptPrintJob(
+      job.jobUuid,
+      job.jobDataUploadUrl,
+      printData,
+    ); // TODO: we need to make sure that this does not fail
   }
 
   void _handleEscPosPrintJob(List<PrintToken> tokens) async {
-
+    final printer = selectedPrinterBloc.state!;
+    emit(state.clearJob());
+    final job = await printersRepository.createPrintJob(printer.id, 'ESCPOS');
+    emit(state.jobReceived(job!.jobDownloadUrl));
+    printersRepository.uploadEscPrintJob(
+      job.jobUuid,
+      job.jobDataUploadUrl,
+      tokens,
+    ); // TODO: we need to make sure that this does not fail
   }
 
   Future<String> _getDeviceIp() async {

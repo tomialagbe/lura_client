@@ -11,6 +11,7 @@ import 'package:lura_client/screens/authentication/bloc/onboarding_screen_bloc.d
 import 'package:lura_client/screens/authentication/bloc/signup_screen_bloc.dart';
 import 'package:lura_client/screens/printers/bloc/create_printer_screen_bloc.dart';
 import 'package:lura_client/screens/printers/bloc/printer_activation_screen_bloc.dart';
+import 'package:lura_client/screens/printers/bloc/printer_standby_screen_bloc.dart';
 import 'package:lura_client/screens/printers/bloc/printers_screen_bloc.dart';
 import 'package:lura_client/screens/printers/bloc/selected_printer_bloc.dart';
 import 'package:rxdart/rxdart.dart';
@@ -41,7 +42,10 @@ class LuraRouter extends Cubit<String> {
           Tuple2<AuthenticationState, Business?>>(
         authenticationBloc.stream,
         businessBloc.stream,
-        (a, b) => Tuple2(a, b),
+        (a, b) {
+          debugPrint('ROUTER STREAM CHANGED');
+          return Tuple2(a, b);
+        },
       ),
     ),
     routes: [
@@ -170,7 +174,11 @@ class LuraRouter extends Cubit<String> {
               name: 'printer-standby-screen',
               path: 'printer-standby-screen',
               builder: (ctx, state) {
-                return PrinterStandbyScreen();
+                return BlocProvider(
+                  create: (ctx) => PrinterStandbyScreenBloc(
+                      printerEmulationBloc: ctx.read<PrinterEmulationBloc>()),
+                  child: const PrinterStandbyScreen(),
+                );
               },
             ),
           ],
@@ -260,7 +268,13 @@ class LuraRouter extends Cubit<String> {
       final onboarded = businessBloc.state != null &&
           businessBloc.state != BusinessBloc.noBusiness;
 
-      if (!loggedIn && !loggingIn && !creatingAcct) return loginLoc;
+      debugPrint(
+          'loggedIn: $loggedIn, loggingIn: $loggingIn, creatingAcct: $creatingAcct'
+          ', onboarded: $onboarded, onboarding: $onboarding');
+
+      if (!loggedIn && !loggingIn && !creatingAcct) {
+        return loginLoc;
+      }
       if (loggedIn && !onboarded && !onboarding) {
         return onboardingLoc;
       }
@@ -268,6 +282,7 @@ class LuraRouter extends Cubit<String> {
       if (loggedIn && onboarded && (loggingIn || creatingAcct || onboarding)) {
         return rootLoc;
       }
+
       return null;
     },
   );

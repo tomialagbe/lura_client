@@ -1,16 +1,23 @@
 import 'dart:async';
 
 import 'package:equatable/equatable.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lura_client/core/printing/bloc/printer_emulation_bloc.dart';
 
 class PrinterStandbyScreenState extends Equatable {
   final bool isWaiting;
+  final String? currentJobUrl;
 
-  const PrinterStandbyScreenState(this.isWaiting);
+  bool get hasJob => currentJobUrl != null;
+
+  const PrinterStandbyScreenState({required this.isWaiting, this.currentJobUrl});
 
   @override
-  List<Object?> get props => [isWaiting];
+  bool get stringify => true;
+
+  @override
+  List<Object?> get props => [isWaiting, currentJobUrl];
 }
 
 class PrinterStandbyScreenBloc extends Cubit<PrinterStandbyScreenState> {
@@ -19,9 +26,14 @@ class PrinterStandbyScreenBloc extends Cubit<PrinterStandbyScreenState> {
       _emulationStateSubscription;
 
   PrinterStandbyScreenBloc({required this.printerEmulationBloc})
-      : super(const PrinterStandbyScreenState(true)) {
+      : super(const PrinterStandbyScreenState(isWaiting: true)) {
     _emulationStateSubscription =
-        printerEmulationBloc.stream.listen((emulationState) {});
+        printerEmulationBloc.stream.listen((emulationState) {
+          final isWaiting = !emulationState.hasJob;
+          final newState = PrinterStandbyScreenState(isWaiting: isWaiting, currentJobUrl: emulationState.currentJobUrl);
+          debugPrint('Printer standby state changed to $newState');
+          emit(newState);
+        });
   }
 
   @override

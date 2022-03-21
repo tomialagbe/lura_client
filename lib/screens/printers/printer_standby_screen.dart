@@ -4,6 +4,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lura_client/core/printing/bloc/printer_emulation_bloc.dart';
+import 'package:lura_client/screens/printers/bloc/printer_standby_screen_bloc.dart';
 import 'package:lura_client/ui/colors.dart';
 import 'package:lura_client/ui/typography.dart';
 import 'package:qr_flutter/qr_flutter.dart';
@@ -13,6 +14,7 @@ class PrinterStandbyScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final screenBloc = context.watch<PrinterStandbyScreenBloc>();
     return Scaffold(
       body: SafeArea(
         child: Container(
@@ -41,7 +43,9 @@ class PrinterStandbyScreen extends StatelessWidget {
               ),
               const Expanded(child: SizedBox()),
               Text(
-                'Hi! Your receipt will show up here',
+                screenBloc.state.isWaiting
+                    ? 'Hi! Your receipt will show up here'
+                    : 'Hi! Here\'s your receipt',
                 style: LuraTextStyles.baseTextStyle.copyWith(
                   fontWeight: FontWeight.w400,
                   color: LuraColors.blue,
@@ -51,25 +55,15 @@ class PrinterStandbyScreen extends StatelessWidget {
               const Gap(20),
               const _AnimatedIcon(),
               const Gap(20),
-              // Text(
-              //   'Hi! Here\'s your receipt',
-              //   style: LuraTextStyles.baseTextStyle.copyWith(
-              //     fontWeight: FontWeight.w400,
-              //     color: LuraColors.blue,
-              //     fontSize: 20,
-              //   ),
-              // ),
-              // const Gap(20),
-              // _AnimatedIcon(),
-              // const Gap(20),
-              // SizedBox(
-              //   child: QrImage(
-              //     data: 'example.com',
-              //     foregroundColor: LuraColors.blue,
-              //   ),
-              //   width: 200,
-              //   height: 200,
-              // ),
+              if (screenBloc.state.hasJob)
+                SizedBox(
+                  child: QrImage(
+                    data: screenBloc.state.currentJobUrl!,
+                    foregroundColor: LuraColors.blue,
+                  ),
+                  width: 200,
+                  height: 200,
+                ),
               const Expanded(child: SizedBox()),
             ],
           ),
