@@ -90,6 +90,27 @@ class ApiClient {
     }
   }
 
+  Future<Response?> postUri(String uri,
+      {dynamic data,
+      Map<String, dynamic> headers = const <String, dynamic>{}}) async {
+    try {
+      final headersWithAccessToken =
+          await _enrichHeadersWithAuthToken(headers: headers);
+      final response = await dio.postUri(
+        Uri.parse(uri),
+        data: data,
+        options: Options(headers: headersWithAccessToken),
+      );
+      return response;
+    } on DioError catch (e) {
+      _handleDioError(e);
+      return null;
+    } catch (err) {
+      debugPrint(err.toString());
+      rethrow;
+    }
+  }
+
   Future<Response?> delete(
     String path, {
     Map<String, String> queryParams = const <String, String>{},
