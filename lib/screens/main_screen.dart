@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:lura_client/core/business/business_bloc.dart';
 import 'package:responsive_builder/responsive_builder.dart';
 
+import 'receipts/bloc/receipts_screen_bloc.dart';
 import 'widgets/app_bars.dart';
 import 'feedback_screen.dart';
 import 'printers/printers_screen.dart';
-import 'receipts_screen.dart';
+import 'receipts/receipts_screen.dart';
 import 'widgets/side_menu.dart';
 
 class MainScreen extends StatefulWidget {
@@ -93,12 +96,16 @@ class _ContentSlot extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final business = context.read<BusinessBloc>().state!;
     return IndexedStack(
       index: selectedIndex,
-      children: const [
-        PrintersScreen(),
-        ReceiptsScreen(),
-        FeedbackScreen(),
+      children: [
+        const PrintersScreen(),
+        BlocProvider(
+          create: (ctx) => ReceiptsScreenBloc(businessId: business.id),
+          child: const ReceiptsScreen(),
+        ),
+        const FeedbackScreen(),
       ],
     );
   }

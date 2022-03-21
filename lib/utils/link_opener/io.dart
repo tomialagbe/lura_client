@@ -1,0 +1,1 @@
+void openLinkInNewWindow(String link) {}

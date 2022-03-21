@@ -137,7 +137,7 @@ class ApiClient {
   }
 
   void _handleDioError(DioError e) {
-    // debugPrint(e.toString());
+    debugPrint(e.toString());
     switch (e.type) {
       case DioErrorType.response:
         throw ResponseException(

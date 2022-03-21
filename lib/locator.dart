@@ -1,15 +1,14 @@
 import 'package:dio/dio.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get_it/get_it.dart';
+import 'package:lura_client/core/print_jobs/print_job_repository.dart';
 import 'package:lura_client/core/printers/printers_repository.dart';
-import 'package:lura_client/core/repository/print_station_repository.dart';
 import 'package:lura_client/lura_config.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'core/api/api_client.dart';
 import 'core/authentication/authentication_repository.dart';
 import 'core/business/business_repository.dart';
-import 'login_state.dart';
 
 final locator = GetIt.instance;
 
@@ -43,6 +42,12 @@ Future setupLocator({required LuraConfig config}) async {
 
   locator.registerLazySingleton<PrintersRepository>(
     () => PrintersRepository(
+      apiClient: locator.get<ApiClient>(),
+    ),
+  );
+
+  locator.registerLazySingleton<PrintJobRepository>(
+    () => PrintJobRepository(
       apiClient: locator.get<ApiClient>(),
     ),
   );

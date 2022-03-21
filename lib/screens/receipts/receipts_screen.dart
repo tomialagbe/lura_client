@@ -1,17 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
-import 'package:lura_client/core/models/receipt.dart';
+import 'package:lura_client/core/print_jobs/print_job.dart';
+import 'package:lura_client/screens/receipts/bloc/receipts_screen_bloc.dart';
 import 'package:lura_client/ui/colors.dart';
 import 'package:lura_client/ui/typography.dart';
+import 'package:lura_client/ui/widgets/alerts.dart';
+import 'package:lura_client/ui/widgets/loading_display.dart';
+import 'package:lura_client/utils/link_opener/web.dart';
 import 'package:provider/provider.dart';
 import 'package:responsive_builder/responsive_builder.dart';
+import '../../utils/link_opener.dart' as linkOpener;
 
 class ReceiptsScreen extends StatelessWidget {
   const ReceiptsScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    // final receiptsViewmodel = context.watch<ReceiptsViewmodel>();
+    final screenBloc = context.watch<ReceiptsScreenBloc>();
     return Padding(
       padding: const EdgeInsets.all(20),
       child: Column(
@@ -32,7 +37,19 @@ class ReceiptsScreen extends StatelessWidget {
               const Expanded(child: SizedBox()),
             ],
           ),
-          Expanded(child: ReceiptList(receipts: [])),
+          if (screenBloc.state.loading)
+            const Expanded(child: Center(child: LoadingDisplay()))
+          else if (screenBloc.state.loadError != null)
+            Expanded(
+              child: Center(
+                child: ErrorAlert(
+                  error: screenBloc.state.loadError!,
+                  onTap: () => screenBloc.loadReceipts(),
+                ),
+              ),
+            )
+          else
+            Expanded(child: ReceiptList(receipts: screenBloc.state.receipts)),
         ],
       ),
     );
@@ -40,7 +57,7 @@ class ReceiptsScreen extends StatelessWidget {
 }
 
 class ReceiptList extends StatelessWidget {
-  final List<Receipt> receipts;
+  final List<PrintJob> receipts;
 
   const ReceiptList({Key? key, required this.receipts}) : super(key: key);
 
@@ -55,7 +72,9 @@ class ReceiptList extends StatelessWidget {
             return _ReceiptListItem(
               receipt: receipt,
               sizingInformation: sizingInformation,
-              onTap: () {},
+              onTap: () {
+                linkOpener.openLinkInNewWindow(receipt.downloadUrl);
+              },
             );
           },
           itemCount: receipts.length,
@@ -81,7 +100,7 @@ class ReceiptList extends StatelessWidget {
 }
 
 class _ReceiptListItem extends StatelessWidget {
-  final Receipt receipt;
+  final PrintJob receipt;
   final SizingInformation sizingInformation;
   final VoidCallback? onTap;
 
@@ -142,7 +161,7 @@ class _ReceiptListItem extends StatelessWidget {
                     ),
                     Expanded(child: Container()),
                     Text(
-                      receipt.dateCreated,
+                      receipt.createdAt,
                       style: textStyle.copyWith(fontSize: 14),
                     ),
                   ],

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:gap/gap.dart';
-import 'package:lura_client/core/models/print_station.dart';
 import 'package:lura_client/core/printers/printer.dart';
 import 'package:lura_client/core/utils/platform_helper.dart';
 import 'package:lura_client/screens/printers/bloc/selected_printer_bloc.dart';
