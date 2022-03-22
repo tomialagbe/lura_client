@@ -16,8 +16,20 @@ import 'package:go_router/go_router.dart';
 import 'bloc/printers_screen_bloc.dart';
 import 'create_printer_card.dart';
 
-class PrintersScreen extends StatelessWidget {
+class PrintersScreen extends StatefulWidget {
   const PrintersScreen({Key? key}) : super(key: key);
+
+  @override
+  State<PrintersScreen> createState() => _PrintersScreenState();
+}
+
+class _PrintersScreenState extends State<PrintersScreen> {
+
+  @override
+  void initState() {
+    super.initState();
+    context.read<PrintersScreenBloc>().loadPrinters();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -121,6 +133,7 @@ class PrinterList extends StatelessWidget {
     return ResponsiveBuilder(
       builder: (BuildContext context, SizingInformation sizingInformation) {
         final listView = ListView.builder(
+          physics: const BouncingScrollPhysics(),
           padding: const EdgeInsets.only(top: 20),
           itemBuilder: (context, index) {
             final printer = printers[index];

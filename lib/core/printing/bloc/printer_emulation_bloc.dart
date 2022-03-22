@@ -11,6 +11,7 @@ import 'package:lura_client/core/printing/ipp/ipp_printer_emulator.dart';
 import 'package:lura_client/core/utils/platform_helper.dart';
 import 'package:lura_client/locator.dart';
 import 'package:lura_client/screens/printers/bloc/selected_printer_bloc.dart';
+import 'package:quiver/async.dart';
 
 import '../esc/models.dart';
 
@@ -122,6 +123,10 @@ class PrinterEmulationBloc extends Cubit<PrinterEmulationState> {
   IppPrinterEmulator? _ippPrinterEmulator;
   EscPosPrinterEmulator? _escPosPrinterEmulator;
 
+  Timer? _pingTimer;
+  CountdownTimer? _jobTimer;
+  StreamSubscription<CountdownTimer>? _jobTimerSubscription;
+
   PrinterEmulationBloc({
     PrintersRepository? printersRepo,
     required this.selectedPrinterBloc,
@@ -146,8 +151,6 @@ class PrinterEmulationBloc extends Cubit<PrinterEmulationState> {
     await _escPosPrinterEmulator?.stop();
     emit(const PrinterEmulationState.stopped());
   }
-
-  Timer? _pingTimer;
 
   void enterStandbyMode() {
     if (selectedPrinterBloc.state == null) {
@@ -196,6 +199,7 @@ class PrinterEmulationBloc extends Cubit<PrinterEmulationState> {
     final job =
         await printersRepository.createPrintJob(printer.id, 'POSTSCRIPT');
     emit(state.jobReceived(job!.jobDownloadUrl));
+    _startJobTimer();
     printersRepository.uploadPostscriptPrintJob(
       job.jobUuid,
       job.jobDataUploadUrl,
@@ -208,11 +212,20 @@ class PrinterEmulationBloc extends Cubit<PrinterEmulationState> {
     emit(state.clearJob());
     final job = await printersRepository.createPrintJob(printer.id, 'ESCPOS');
     emit(state.jobReceived(job!.jobDownloadUrl));
+    _startJobTimer();
     printersRepository.uploadEscPrintJob(
       job.jobUuid,
       job.jobDataUploadUrl,
       tokens,
     ); // TODO: we need to make sure that this does not fail
+  }
+
+  void _startJobTimer() async {
+    _jobTimer =
+        CountdownTimer(const Duration(seconds: 30), const Duration(seconds: 1));
+    _jobTimerSubscription = _jobTimer?.listen((event) {}, onDone: () {
+      emit(state.clearJob());
+    });
   }
 
   Future<String> _getDeviceIp() async {
@@ -225,6 +238,8 @@ class PrinterEmulationBloc extends Cubit<PrinterEmulationState> {
   @override
   Future<void> close() async {
     _pingTimer?.cancel();
+    _jobTimerSubscription?.cancel();
+    _jobTimer?.cancel();
     await _ippPrinterEmulator?.stop();
     await _escPosPrinterEmulator?.stop();
     super.close();

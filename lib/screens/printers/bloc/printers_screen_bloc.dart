@@ -52,7 +52,6 @@ class PrintersScreenBloc extends Cubit<PrintersScreenState> {
     _businessStateSubscription = businessBloc.stream.listen((business) {
       if (business != null) {
         _business = business;
-        loadPrinters();
       }
     });
   }

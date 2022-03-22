@@ -6,10 +6,9 @@ import 'package:lura_client/ui/colors.dart';
 import 'package:lura_client/ui/typography.dart';
 import 'package:lura_client/ui/widgets/alerts.dart';
 import 'package:lura_client/ui/widgets/loading_display.dart';
-import 'package:lura_client/utils/link_opener/web.dart';
 import 'package:provider/provider.dart';
 import 'package:responsive_builder/responsive_builder.dart';
-import '../../utils/link_opener.dart' as linkOpener;
+import '../../utils/link_opener.dart' as link_opener;
 
 class ReceiptsScreen extends StatelessWidget {
   const ReceiptsScreen({Key? key}) : super(key: key);
@@ -66,6 +65,7 @@ class ReceiptList extends StatelessWidget {
     return ResponsiveBuilder(
       builder: (BuildContext context, SizingInformation sizingInformation) {
         final listView = ListView.builder(
+          physics: const BouncingScrollPhysics(),
           padding: const EdgeInsets.only(top: 20),
           itemBuilder: (context, index) {
             final receipt = receipts[index];
@@ -73,7 +73,7 @@ class ReceiptList extends StatelessWidget {
               receipt: receipt,
               sizingInformation: sizingInformation,
               onTap: () {
-                linkOpener.openLinkInNewWindow(receipt.downloadUrl);
+                link_opener.openLinkInNewWindow(receipt.downloadUrl);
               },
             );
           },
