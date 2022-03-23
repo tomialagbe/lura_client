@@ -8,64 +8,85 @@ import 'package:lura_client/screens/printers/bloc/printer_standby_screen_bloc.da
 import 'package:lura_client/ui/colors.dart';
 import 'package:lura_client/ui/typography.dart';
 import 'package:qr_flutter/qr_flutter.dart';
+import 'package:wakelock/wakelock.dart';
 
-class PrinterStandbyScreen extends StatelessWidget {
+class PrinterStandbyScreen extends StatefulWidget {
   const PrinterStandbyScreen({Key? key}) : super(key: key);
+
+  @override
+  State<PrinterStandbyScreen> createState() => _PrinterStandbyScreenState();
+}
+
+class _PrinterStandbyScreenState extends State<PrinterStandbyScreen> {
+
+  @override
+  void initState() {
+    super.initState();
+    Wakelock.enable();
+  }
 
   @override
   Widget build(BuildContext context) {
     final screenBloc = context.watch<PrinterStandbyScreenBloc>();
-    return Scaffold(
-      body: SafeArea(
-        child: Container(
-          width: double.infinity,
-          height: double.infinity,
-          alignment: Alignment.center,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  TextButton(
-                    child: const Text(
-                      'Exit',
-                      style:
-                          TextStyle(fontSize: 20, fontWeight: FontWeight.w400),
+    return WillPopScope(
+      onWillPop: () async {
+        context.read<PrinterEmulationBloc>().stopEmulation();
+        Wakelock.disable();
+        return true;
+      },
+      child: Scaffold(
+        body: SafeArea(
+          child: Container(
+            width: double.infinity,
+            height: double.infinity,
+            alignment: Alignment.center,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    TextButton(
+                      child: const Text(
+                        'Exit',
+                        style:
+                            TextStyle(fontSize: 20, fontWeight: FontWeight.w400),
+                      ),
+                      onPressed: () {
+                        context.read<PrinterEmulationBloc>().stopEmulation();
+                        Wakelock.disable();
+                        context.pop();
+                      },
                     ),
-                    onPressed: () {
-                      context.read<PrinterEmulationBloc>().stopEmulation();
-                      context.pop();
-                    },
-                  ),
-                ],
-              ),
-              const Expanded(child: SizedBox()),
-              Text(
-                screenBloc.state.isWaiting
-                    ? 'Hi! Your receipt will show up here'
-                    : 'Hi! Here\'s your receipt',
-                style: LuraTextStyles.baseTextStyle.copyWith(
-                  fontWeight: FontWeight.w400,
-                  color: LuraColors.blue,
-                  fontSize: 20,
+                  ],
                 ),
-              ),
-              const Gap(20),
-              const _AnimatedIcon(),
-              const Gap(20),
-              if (screenBloc.state.hasJob)
-                SizedBox(
-                  child: QrImage(
-                    data: screenBloc.state.currentJobUrl!,
-                    foregroundColor: LuraColors.blue,
+                const Expanded(child: SizedBox()),
+                Text(
+                  screenBloc.state.isWaiting
+                      ? 'Hi! Your receipt will show up here'
+                      : 'Hi! Here\'s your receipt',
+                  style: LuraTextStyles.baseTextStyle.copyWith(
+                    fontWeight: FontWeight.w400,
+                    color: LuraColors.blue,
+                    fontSize: 20,
                   ),
-                  width: 200,
-                  height: 200,
                 ),
-              const Expanded(child: SizedBox()),
-            ],
+                const Gap(20),
+                const _AnimatedIcon(),
+                const Gap(20),
+                if (screenBloc.state.hasJob)
+                  SizedBox(
+                    child: QrImage(
+                      data: screenBloc.state.currentJobUrl!,
+                      foregroundColor: LuraColors.blue,
+                    ),
+                    width: 200,
+                    height: 200,
+                  ),
+                const Expanded(child: SizedBox()),
+              ],
+            ),
           ),
         ),
       ),
