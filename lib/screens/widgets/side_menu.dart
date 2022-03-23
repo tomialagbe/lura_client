@@ -51,15 +51,15 @@ class SideMenu extends StatelessWidget {
                   _closeDrawer(context);
                 },
               ),
-              const Divider(),
-              DrawerListTile(
-                title: 'Feedback',
-                active: currentPage == 2,
-                press: () {
-                  context.go('/feedback');
-                  _closeDrawer(context);
-                },
-              ),
+              // const Divider(),
+              // DrawerListTile(
+              //   title: 'Feedback',
+              //   active: currentPage == 2,
+              //   press: () {
+              //     context.go('/feedback');
+              //     _closeDrawer(context);
+              //   },
+              // ),
             ],
           ),
           const Spacer(),
@@ -78,7 +78,7 @@ class SideMenu extends StatelessWidget {
   }
 
   void _closeDrawer(BuildContext context) {
-    if (!kIsWeb) Navigator.pop(context);
+    if (!kIsWeb) Navigator.maybePop(context);
   }
 }
 

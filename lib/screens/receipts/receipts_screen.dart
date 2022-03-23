@@ -73,7 +73,7 @@ class ReceiptList extends StatelessWidget {
               receipt: receipt,
               sizingInformation: sizingInformation,
               onTap: () {
-                link_opener.openLinkInNewWindow(receipt.downloadUrl);
+                link_opener.openLinkInNewWindow(context, receipt.downloadUrl);
               },
             );
           },

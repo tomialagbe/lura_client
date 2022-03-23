@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:equatable/equatable.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lura_client/core/printing/bloc/printer_emulation_bloc.dart';
 import 'package:lura_client/screens/printers/bloc/selected_printer_bloc.dart';
@@ -46,6 +47,7 @@ class PrinterActivationScreenBloc extends Cubit<PrinterActivationScreenState> {
 
   void activatePrinter() {
     if (selectedPrinterBloc.state == null) {
+      debugPrint('No selected printer');
       return;
     }
 

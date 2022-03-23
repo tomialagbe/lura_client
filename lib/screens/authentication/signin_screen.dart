@@ -33,7 +33,7 @@ class _SigninScreenState extends State<SigninScreen> {
             if (sizingInfo.deviceScreenType == DeviceScreenType.desktop) {
               return Center(
                 child: SizedBox(
-                  width: sizingInfo.screenSize.width / 2,
+                  width: 600,
                   child: SigninForm(
                     emailController: _emailController,
                     passwordController: _passwordController,

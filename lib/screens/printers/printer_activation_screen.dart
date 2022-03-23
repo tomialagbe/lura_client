@@ -16,62 +16,68 @@ class PrinterActivationScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final screenBloc = context.watch<PrinterActivationScreenBloc>();
-    return Scaffold(
-      appBar: luraAppBar(context),
-      body: SafeArea(
-        child: screenBloc.state.isLoading
-            ? const Center(
-                child: LoadingDisplay(),
-              )
-            : SingleChildScrollView(
-                child: Padding(
-                  padding:
-                      const EdgeInsets.only(left: 20, right: 20, bottom: 20),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      const Gap(20),
-                      Text(
-                        'Printer Activated',
-                        style: LuraTextStyles.baseTextStyle.copyWith(
-                            color: LuraColors.blue,
-                            fontSize: 36,
-                            fontWeight: FontWeight.w400),
-                      ),
-                      const Gap(20),
-                      const _PrinterDetails(),
-                      const Gap(20),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          Text(
-                            'Enter standby mode',
-                            style: LuraTextStyles.baseTextStyle.copyWith(
-                              fontWeight: FontWeight.w400,
+    return WillPopScope(
+      onWillPop: () async {
+        context.read<PrinterEmulationBloc>().stopEmulation();
+        return true;
+      },
+      child: Scaffold(
+        appBar: luraAppBar(context),
+        body: SafeArea(
+          child: screenBloc.state.isLoading
+              ? const Center(
+                  child: LoadingDisplay(),
+                )
+              : SingleChildScrollView(
+                  child: Padding(
+                    padding:
+                        const EdgeInsets.only(left: 20, right: 20, bottom: 20),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        const Gap(20),
+                        Text(
+                          'Printer Activated',
+                          style: LuraTextStyles.baseTextStyle.copyWith(
                               color: LuraColors.blue,
-                              fontSize: 20,
+                              fontSize: 36,
+                              fontWeight: FontWeight.w400),
+                        ),
+                        const Gap(20),
+                        const _PrinterDetails(),
+                        const Gap(20),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            Text(
+                              'Enter standby mode',
+                              style: LuraTextStyles.baseTextStyle.copyWith(
+                                fontWeight: FontWeight.w400,
+                                color: LuraColors.blue,
+                                fontSize: 20,
+                              ),
                             ),
-                          ),
-                          const Gap(20),
-                          CircularIconButton(
-                            icon: const Icon(
-                              Icons.arrow_forward,
-                              color: Colors.white,
+                            const Gap(20),
+                            CircularIconButton(
+                              icon: const Icon(
+                                Icons.arrow_forward,
+                                color: Colors.white,
+                              ),
+                              onTap: () {
+                                context
+                                    .read<PrinterEmulationBloc>()
+                                    .enterStandbyMode();
+                                context.goNamed('printer-standby');
+                              },
                             ),
-                            onTap: () {
-                              context
-                                  .read<PrinterEmulationBloc>()
-                                  .enterStandbyMode();
-                              context.goNamed('printer-standby');
-                            },
-                          ),
-                        ],
-                      ),
-                    ],
+                          ],
+                        ),
+                      ],
+                    ),
                   ),
                 ),
-              ),
+        ),
       ),
     );
   }
@@ -90,7 +96,7 @@ class _PrinterDetails extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       children: [
         Text(
-          'Ipp/Airprint',
+          'Ipp',
           style: LuraTextStyles.baseTextStyle.copyWith(
             fontWeight: FontWeight.w600,
             color: LuraColors.blue,
