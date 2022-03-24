@@ -120,3 +120,46 @@ class ErrorAlert extends StatelessWidget {
     );
   }
 }
+
+class InfoAlert extends StatelessWidget {
+  final String message;
+  final VoidCallback? onTap;
+  final bool showAction;
+  final String? actionText;
+
+  const InfoAlert(
+      {Key? key,
+      required this.message,
+      this.onTap,
+      this.showAction = false,
+      this.actionText})
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return AlertText(
+      alertType: AlertType.info,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Text(message),
+          const Gap(10),
+          if (showAction)
+            GestureDetector(
+              onTap: onTap,
+              child: RichText(
+                text: TextSpan(
+                  text: actionText ?? '',
+                  style: Theme.of(context)
+                      .textTheme
+                      .bodyText2
+                      ?.copyWith(color: LuraColors.infoText),
+                ),
+              ),
+            ),
+        ],
+      ),
+    );
+  }
+}

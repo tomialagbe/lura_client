@@ -57,56 +57,15 @@ class AuthenticationRepository {
     }
   }
 
-  // Future onBoardAnonymously() async {
-  //   _isOnboarding = true;
-  //   final credential = await firebaseAuth.signInAnonymously();
-  //   final resp = await apiClient
-  //       .post('/onboarding/anonymous?userId=${credential.user!.uid}');
-  //   if (resp!.statusCode != 201) {
-  //     _isOnboarding = false;
-  //     if (firebaseAuth.currentUser != null) {
-  //       await firebaseAuth.currentUser?.delete();
-  //     } else {
-  //       await firebaseAuth.signOut();
-  //     }
-  //     throw ResponseException(
-  //         statusCode: resp.statusCode!,
-  //         message: 'Failed to onboard anonymously');
-  //   }
-  //   _isOnboarding = false;
-  //   if (_tmpUser != null) {
-  //     _tmpUsers.add(_tmpUser!);
-  //   }
-  // }
-
-  // Future signUp({
-  //   required String email,
-  //   required String password,
-  // }) async {
-  //   try {
-  //     await firebaseAuth.signInAnonymously();
-  //     final reqBody = {
-  //       'displayName': displayName,
-  //       'email': email,
-  //       'password': password,
-  //     };
-  //     await apiClient.post('/onboarding/signup', data: reqBody);
-  //     _isOnboarding = false;
-  //     await firebaseAuth.signInWithEmailAndPassword(
-  //         email: email, password: password);
-  //   } on ResponseException catch (_) {
-  //     firebaseAuth.currentUser?.delete();
-  //     _isOnboarding = false;
-  //     throw const SignupFailedException();
-  //   } on TimeoutException catch (_) {
-  //     firebaseAuth.currentUser?.delete();
-  //     _isOnboarding = false;
-  //     throw const SignupFailedException();
-  //   } on firebase_auth.FirebaseAuthException catch (_) {
-  //     _isOnboarding = false;
-  //     throw const SignupFailedException();
-  //   }
-  // }
+  Future sendPasswordResetEmail(String to) async {
+    try {
+      return await firebaseAuth.sendPasswordResetEmail(email: to);
+    } on firebase_auth.FirebaseException catch (e) {
+      throw ResetPasswordException.fromCode(e.code);
+    } catch (_) {
+      throw const ResetPasswordException();
+    }
+  }
 
   Future logout() async {
     await firebaseAuth.signOut();

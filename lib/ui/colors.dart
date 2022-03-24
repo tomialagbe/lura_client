@@ -14,5 +14,5 @@ abstract class LuraColors {
 
   static const infoText = Color(0xFF006fa7);
   static const infoBorder = Color(0xFF77A8C0);
-  static const infoBackground = Color(0xFFADD8EC);
+  static const infoBackground = Color(0xFFBFCDE0);
 }

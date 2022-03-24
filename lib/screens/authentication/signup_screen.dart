@@ -165,16 +165,6 @@ class SignupForm extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               TextButton(
-                  onPressed: () {}, child: const Text('Forgot your password?')),
-              const Gap(10),
-              Container(
-                width: 2.5,
-                height: 2.5,
-                decoration: const BoxDecoration(
-                    shape: BoxShape.circle, color: LuraColors.blue),
-              ),
-              const Gap(10),
-              TextButton(
                 child: const Text('Sign in'),
                 onPressed: () {
                   context.go('/signin');

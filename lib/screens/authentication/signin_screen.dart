@@ -148,7 +148,11 @@ class SigninForm extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               TextButton(
-                  onPressed: () {}, child: const Text('Forgot your password?')),
+                onPressed: () {
+                  context.go('/forgot-password');
+                },
+                child: const Text('Forgot your password?'),
+              ),
               const Gap(10),
               Container(
                 width: 2.5,

@@ -44,3 +44,20 @@ class LoginFailedException implements Exception {
     }
   }
 }
+
+class ResetPasswordException implements Exception {
+  final String message;
+
+  const ResetPasswordException([this.message = 'An unknown error occurred']);
+
+  factory ResetPasswordException.fromCode(String code) {
+    switch (code) {
+      case 'invalid-email':
+        return const ResetPasswordException('Invalid email address');
+      case 'user-not-found':
+        return const ResetPasswordException('This user account does not exist');
+      default:
+        return const ResetPasswordException();
+    }
+  }
+}

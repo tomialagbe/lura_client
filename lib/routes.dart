@@ -6,6 +6,7 @@ import 'package:lura_client/core/business/business_bloc.dart';
 import 'package:lura_client/core/business/model.dart';
 import 'package:lura_client/core/printing/bloc/printer_emulation_bloc.dart';
 import 'package:lura_client/core/utils/platform_helper.dart';
+import 'package:lura_client/screens/authentication/bloc/forgot_password_screen_bloc.dart';
 import 'package:lura_client/screens/authentication/bloc/login_screen_bloc.dart';
 import 'package:lura_client/screens/authentication/bloc/onboarding_screen_bloc.dart';
 import 'package:lura_client/screens/authentication/bloc/signup_screen_bloc.dart';
@@ -17,6 +18,7 @@ import 'package:lura_client/screens/printers/bloc/selected_printer_bloc.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:tuple/tuple.dart';
 
+import 'screens/authentication/forgot_password_screen.dart';
 import 'screens/authentication/onboarding_screen.dart';
 import 'screens/authentication/signin_screen.dart';
 import 'screens/main_screen.dart';
@@ -84,7 +86,10 @@ class LuraRouter extends Cubit<String> {
         path: '/forgot-password',
         name: 'forgot-password',
         builder: (ctx, state) {
-          return Container();
+          return BlocProvider(
+            create: (_) => ForgotPasswordScreenBloc(),
+            child: const ForgotPasswordScreen(),
+          );
         },
       ),
       GoRoute(
@@ -258,6 +263,9 @@ class LuraRouter extends Cubit<String> {
       final createAcctLoc = state.namedLocation('signup');
       final creatingAcct = state.subloc == createAcctLoc;
 
+      final forgotPasswordLoc = state.namedLocation('forgot-password');
+      final resettingPassword = state.subloc == forgotPasswordLoc;
+
       final loggedIn = authenticationBloc.state !=
           const AuthenticationState.unauthenticated();
 
@@ -272,7 +280,7 @@ class LuraRouter extends Cubit<String> {
           'loggedIn: $loggedIn, loggingIn: $loggingIn, creatingAcct: $creatingAcct'
           ', onboarded: $onboarded, onboarding: $onboarding');
 
-      if (!loggedIn && !loggingIn && !creatingAcct) {
+      if (!loggedIn && !loggingIn && !creatingAcct && !resettingPassword) {
         return loginLoc;
       }
       if (loggedIn && !onboarded && !onboarding) {
