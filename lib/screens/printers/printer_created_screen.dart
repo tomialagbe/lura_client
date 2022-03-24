@@ -135,7 +135,7 @@ class _MobileContent extends StatelessWidget {
           if (forCreationComplete) ...[
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
-              children: [SvgPicture.asset('assets/images/check_mark.svg')],
+              children: [SvgPicture.asset('images/check_mark.svg')],
             ),
             const Gap(30),
             Text('Your printer has been created successfully',

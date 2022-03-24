@@ -14,7 +14,7 @@ class FeedbackScreen extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          SvgPicture.asset('assets/images/under_construction.svg'),
+          SvgPicture.asset('images/under_construction.svg'),
           const Gap(20),
           Text(
             'Coming soon',

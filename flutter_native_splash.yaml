@@ -19,11 +19,11 @@ flutter_native_splash:
 
   # The image parameter allows you to specify an image used in the splash screen.  It must be a
   # png file and should be sized for 4x pixel density.
-  image: assets/images/lura_logo_icon_alt.png
+  image: images/lura_logo_icon_alt.png
 
   # This property allows you to specify an image used as branding in the splash screen. It must be
   # a png file. Currently, it is only supported for Android and iOS.
-  #branding: assets/images/tyron-logo-black.png
+  #branding: images/tyron-logo-black.png
 
   # Specify your branding image for dark mode.
   #branding_dark: assets/dart_dark.png

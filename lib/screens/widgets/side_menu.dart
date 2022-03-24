@@ -30,7 +30,7 @@ class SideMenu extends StatelessWidget {
                   ),
                 ),
                 child: DrawerHeader(
-                  child: Image.asset("assets/images/lura_logo_icon_alt.png"),
+                  child: Image.asset('images/lura_logo_icon_alt.png'),
                   padding: const EdgeInsets.all(10),
                 ),
               ),

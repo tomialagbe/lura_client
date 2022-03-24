@@ -8,7 +8,7 @@ PreferredSizeWidget? luraAppBar(BuildContext context) {
 
   return AppBar(
     title: Image.asset(
-      'assets/images/lura_logo_icon_alt.png',
+      'images/lura_logo_icon_alt.png',
       height: 50,
     ),
     // backgroundColor: Theme.of(context).drawerTheme.backgroundColor,

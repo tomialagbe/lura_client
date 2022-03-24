@@ -111,7 +111,7 @@ class SigninForm extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Image.asset(
-            'assets/images/lura_logo_icon_alt.png',
+            'images/lura_logo_icon_alt.png',
             fit: BoxFit.cover,
             width: 100,
             height: 100,

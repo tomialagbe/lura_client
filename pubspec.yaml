@@ -92,8 +92,8 @@ flutter:
 
   # To add assets to your application, add an assets section, like this:
   assets:
-    - assets/google_fonts/
-    - assets/images/
+    - google_fonts/
+    - images/
     #   - images/a_dot_burr.jpeg
     #   - images/a_dot_ham.jpeg
 
@@ -111,15 +111,15 @@ flutter:
   fonts:
     - family: Quicksand
       fonts:
-        - asset: assets/google_fonts/Quicksand/Quicksand-Bold.ttf
+        - asset: google_fonts/Quicksand/Quicksand-Bold.ttf
           weight: 700
-        - asset: assets/google_fonts/Quicksand/Quicksand-Light.ttf
+        - asset: google_fonts/Quicksand/Quicksand-Light.ttf
           weight: 200
-        - asset: assets/google_fonts/Quicksand/Quicksand-Medium.ttf
+        - asset: google_fonts/Quicksand/Quicksand-Medium.ttf
           weight: 400
-        - asset: assets/google_fonts/Quicksand/Quicksand-Regular.ttf
+        - asset: google_fonts/Quicksand/Quicksand-Regular.ttf
           weight: 400
-        - asset: assets/google_fonts/Quicksand/Quicksand-Semibold.ttf
+        - asset: google_fonts/Quicksand/Quicksand-Semibold.ttf
           weight: 500
   #   - family: Trajan Pro
   #     fonts:
