@@ -229,7 +229,7 @@ class _PrinterListItem extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        Text(
+                        SelectableText(
                           printer.name,
                           style: textStyle,
                         ),
