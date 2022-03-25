@@ -97,17 +97,17 @@ class _ContentSlot extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final business = context.read<BusinessBloc>().state!;
-    /*return IndexedStack(
-      index: selectedIndex,
-      children: [
-        const PrintersScreen(),
-        BlocProvider(
-          create: (ctx) => ReceiptsScreenBloc(businessId: business.id),
-          child: const ReceiptsScreen(),
-        ),
-        const FeedbackScreen(),
-      ],
-    );*/
+    // return IndexedStack(
+    //   index: selectedIndex,
+    //   children: [
+    //     const PrintersScreen(),
+    //     BlocProvider(
+    //       create: (ctx) => ReceiptsScreenBloc(businessId: business.id),
+    //       child: const ReceiptsScreen(),
+    //     ),
+    //     const FeedbackScreen(),
+    //   ],
+    // );
     if (selectedIndex == 0) {
       return const PrintersScreen();
     } else if (selectedIndex == 1) {

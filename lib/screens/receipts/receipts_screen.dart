@@ -55,20 +55,27 @@ class ReceiptsScreen extends StatelessWidget {
   }
 }
 
-class ReceiptList extends StatelessWidget {
+class ReceiptList extends StatefulWidget {
   final List<PrintJob> receipts;
 
   const ReceiptList({Key? key, required this.receipts}) : super(key: key);
 
   @override
+  State<ReceiptList> createState() => _ReceiptListState();
+}
+
+class _ReceiptListState extends State<ReceiptList> {
+  final _scrollController = ScrollController();
+  @override
   Widget build(BuildContext context) {
     return ResponsiveBuilder(
       builder: (BuildContext context, SizingInformation sizingInformation) {
         final listView = ListView.builder(
+          controller: _scrollController,
           physics: const BouncingScrollPhysics(),
           padding: const EdgeInsets.only(top: 20),
           itemBuilder: (context, index) {
-            final receipt = receipts[index];
+            final receipt = widget.receipts[index];
             return _ReceiptListItem(
               receipt: receipt,
               sizingInformation: sizingInformation,
@@ -77,7 +84,7 @@ class ReceiptList extends StatelessWidget {
               },
             );
           },
-          itemCount: receipts.length,
+          itemCount: widget.receipts.length,
           shrinkWrap: true,
         );
 

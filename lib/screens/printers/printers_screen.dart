@@ -31,6 +31,7 @@ class _PrintersScreenState extends State<PrintersScreen> {
     context.read<PrintersScreenBloc>().loadPrinters();
   }
 
+
   @override
   Widget build(BuildContext context) {
     final printersScreenBloc = context.watch<PrintersScreenBloc>();
@@ -123,20 +124,27 @@ class _AddPrinterButton extends StatelessWidget {
   }
 }
 
-class PrinterList extends StatelessWidget {
+class PrinterList extends StatefulWidget {
   final List<Printer> printers;
 
   const PrinterList({Key? key, required this.printers}) : super(key: key);
 
   @override
+  State<PrinterList> createState() => _PrinterListState();
+}
+
+class _PrinterListState extends State<PrinterList> {
+  final _scrollController = ScrollController();
+  @override
   Widget build(BuildContext context) {
     return ResponsiveBuilder(
       builder: (BuildContext context, SizingInformation sizingInformation) {
         final listView = ListView.builder(
+          controller: _scrollController,
           physics: const BouncingScrollPhysics(),
           padding: const EdgeInsets.only(top: 20),
           itemBuilder: (context, index) {
-            final printer = printers[index];
+            final printer = widget.printers[index];
             return _PrinterListItem(
               printer: printer,
               sizingInformation: sizingInformation,
@@ -157,7 +165,7 @@ class PrinterList extends StatelessWidget {
               },
             );
           },
-          itemCount: printers.length,
+          itemCount: widget.printers.length,
           shrinkWrap: true,
         );
 
