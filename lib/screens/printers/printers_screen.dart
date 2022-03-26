@@ -24,13 +24,11 @@ class PrintersScreen extends StatefulWidget {
 }
 
 class _PrintersScreenState extends State<PrintersScreen> {
-
   @override
   void initState() {
     super.initState();
     context.read<PrintersScreenBloc>().loadPrinters();
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -104,8 +102,9 @@ class _AddPrinterButton extends StatelessWidget {
         return Row(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            CircularIconButton(
-              icon: const Icon(Icons.add, size: 25),
+            LuraCircularIconButton(
+              icon: Icons.add,
+              size: 25,
               padding: const EdgeInsets.all(10),
               onTap: onTap,
             ),
@@ -135,6 +134,7 @@ class PrinterList extends StatefulWidget {
 
 class _PrinterListState extends State<PrinterList> {
   final _scrollController = ScrollController();
+
   @override
   Widget build(BuildContext context) {
     return ResponsiveBuilder(

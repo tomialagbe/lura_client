@@ -12,6 +12,21 @@ class LuraTheme {
       textButtonTheme: _textButtonTheme,
       scaffoldBackgroundColor: Colors.white,
       dividerTheme: _dividerTheme,
+      textTheme: _textTheme,
+    );
+  }
+
+  static TextTheme get _textTheme {
+    return TextTheme(
+      headline1: LuraTextStyles.heading1,
+      headline2: LuraTextStyles.heading2,
+      headline3: LuraTextStyles.heading3,
+      headline4: LuraTextStyles.heading4,
+      headline5: LuraTextStyles.heading5,
+      bodyText1: LuraTextStyles.largeParagraph,
+      bodyText2: LuraTextStyles.paragraph,
+      subtitle1: LuraTextStyles.paragraphSmall,
+      subtitle2: LuraTextStyles.paragraphSmallest,
     );
   }
 
@@ -28,11 +43,21 @@ class LuraTheme {
       filled: true,
       fillColor: LuraColors.inputColor,
       border: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(8),
+        borderRadius: BorderRadius.circular(30),
         borderSide: BorderSide.none,
       ),
-      hintStyle: LuraTextStyles.baseTextStyle.copyWith(fontSize: 18),
-      contentPadding: const EdgeInsets.symmetric(horizontal: 10, vertical: 20),
+      focusedBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(30),
+        borderSide: const BorderSide(color: LuraColors.inputBorderBlue),
+      ),
+      errorBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(30),
+        borderSide: const BorderSide(color: LuraColors.inputBorderError),
+      ),
+      hoverColor: LuraColors.inputColor,
+      hintStyle: LuraTextStyles.paragraph
+          .copyWith(color: LuraColors.inputPlaceholderColor),
+      contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
     );
   }
 
@@ -45,21 +70,6 @@ class LuraTheme {
         ),
         padding: const EdgeInsets.symmetric(vertical: 10),
         primary: LuraColors.blue,
-        minimumSize: const Size(80, 30),
-      ),
-    );
-  }
-
-  static ElevatedButtonThemeData get invertedElevatedButtonTheme {
-    return ElevatedButtonThemeData(
-      style: ElevatedButton.styleFrom(
-        elevation: 0,
-        shape: const RoundedRectangleBorder(
-          borderRadius: BorderRadius.all(Radius.circular(10)),
-        ),
-        padding: const EdgeInsets.symmetric(vertical: 10),
-        primary: Colors.white,
-        splashFactory: InkRipple.splashFactory,
         minimumSize: const Size(80, 30),
       ),
     );

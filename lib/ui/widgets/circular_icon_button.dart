@@ -1,16 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:lura_client/ui/colors.dart';
 
-class CircularIconButton extends StatelessWidget {
+class LuraCircularIconButton extends StatelessWidget {
   final VoidCallback? onTap;
-  final Icon icon;
+  final IconData icon;
   final EdgeInsets? padding;
+  final double? size;
 
-  const CircularIconButton({
+  const LuraCircularIconButton({
     Key? key,
     this.onTap,
     required this.icon,
     this.padding,
+    this.size,
   }) : super(key: key);
 
   @override
@@ -29,7 +31,11 @@ class CircularIconButton extends StatelessWidget {
       ),
       child: ElevatedButton(
         onPressed: onTap,
-        child: icon,
+        child: Icon(
+          icon,
+          color: Colors.white,
+          size: size,
+        ),
       ),
     );
   }

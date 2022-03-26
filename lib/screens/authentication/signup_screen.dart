@@ -176,8 +176,8 @@ class SignupForm extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
-              CircularIconButton(
-                icon: const Icon(Icons.arrow_forward),
+              LuraCircularIconButton(
+                icon: Icons.arrow_forward,
                 onTap: signupScreenBloc.state.isSubmitting
                     ? null
                     : () => _onSubmit(context),

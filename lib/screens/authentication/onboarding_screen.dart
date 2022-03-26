@@ -121,11 +121,8 @@ class _OnboardingFormState extends State<_OnboardingForm> {
                           .watch<OnboardingScreenBloc>()
                           .state
                           .isSubmitting;
-                      return CircularIconButton(
-                        icon: const Icon(
-                          Icons.arrow_forward,
-                          color: Colors.white,
-                        ),
+                      return LuraCircularIconButton(
+                        icon: Icons.arrow_forward,
                         onTap:
                             isFormComplete && !isSubmitting ? _onSubmit : null,
                       );

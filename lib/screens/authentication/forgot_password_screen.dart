@@ -150,11 +150,8 @@ class _ForgotPasswordFormState extends State<_ForgotPasswordForm> {
                       final isFormComplete = (snapshot.data ?? false);
                       final isSubmitting = screenBloc.state.isSubmitting;
                       final isComplete = screenBloc.state.completed;
-                      return CircularIconButton(
-                        icon: const Icon(
-                          Icons.arrow_forward,
-                          color: Colors.white,
-                        ),
+                      return LuraCircularIconButton(
+                        icon: Icons.arrow_forward,
                         onTap: isFormComplete && !isSubmitting && !isComplete
                             ? _onSubmit
                             : null,

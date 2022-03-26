@@ -173,8 +173,8 @@ class SigninForm extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
-              CircularIconButton(
-                icon: const Icon(Icons.arrow_forward),
+              LuraCircularIconButton(
+                icon: Icons.arrow_forward,
                 onTap: loginScreenBloc.state.isSubmitting
                     ? null
                     : () => _onSubmit(context),
