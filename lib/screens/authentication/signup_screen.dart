@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
-import 'package:lura_client/ui/colors.dart';
 import 'package:lura_client/ui/typography.dart';
 import 'package:lura_client/ui/widgets/alerts.dart';
 import 'package:lura_client/ui/widgets/circular_icon_button.dart';
@@ -95,6 +94,7 @@ class _SignupMobile extends StatelessWidget {
   }
 }
 
+// ignore: must_be_immutable
 class SignupForm extends StatelessWidget {
   final TextEditingController emailController;
   final TextEditingController passwordController;

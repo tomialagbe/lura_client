@@ -19,8 +19,8 @@ List<WidgetbookUseCase> alertUsecases() {
   return [
     WidgetbookUseCase(
       name: 'Success alert',
-      builder: (_) => Padding(
-        padding: const EdgeInsets.all(20),
+      builder: (_) => const Padding(
+        padding: EdgeInsets.all(20),
         child: LuraSuccessAlert(
             title: 'Congratulations!',
             message: 'The printer has just been created.'),
@@ -28,8 +28,8 @@ List<WidgetbookUseCase> alertUsecases() {
     ),
     WidgetbookUseCase(
       name: 'Info alert',
-      builder: (_) => Padding(
-        padding: const EdgeInsets.all(20),
+      builder: (_) => const Padding(
+        padding: EdgeInsets.all(20),
         child: LuraInfoAlert(
             title: 'Did you know?',
             message: 'Lura works with all POS software'),
@@ -37,8 +37,8 @@ List<WidgetbookUseCase> alertUsecases() {
     ),
     WidgetbookUseCase(
       name: 'Warning alert',
-      builder: (_) => Padding(
-        padding: const EdgeInsets.all(20),
+      builder: (_) => const Padding(
+        padding: EdgeInsets.all(20),
         child: LuraWarningAlert(
             title: 'Warning', message: 'Be careful before you do this.'),
       ),

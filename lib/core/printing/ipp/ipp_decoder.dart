@@ -39,6 +39,7 @@ class IppRequestDecoder {
         name = stringDecoder.decode(byteData, offset);
         offset += stringDecoder.decodedBytes;
 
+        // ignore: prefer_typing_uninitialized_variables
         var val;
         switch (tag) {
           case IppConstants.INTEGER:
@@ -73,7 +74,7 @@ class IppRequestDecoder {
         }
 
         final attr = Attribute();
-        if (name == null || name.isEmpty) {
+        if (name.isEmpty) {
           attr.value.add(val);
         } else {
           attr

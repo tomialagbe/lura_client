@@ -60,7 +60,6 @@ abstract class Groups {
     return requested.where((name) {
       return !supported.contains(name);
     }).map((name) {
-      print('UNSUPPORTED REQUEST: $name');
       return Attribute.from(
           tag: IppConstants.UNSUPPORTED, name: name, value: ['unsupported']);
     }).toList();

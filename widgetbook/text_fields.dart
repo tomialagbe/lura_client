@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:lura_client/ui/colors.dart';
-import 'package:lura_client/ui/widgets/circular_icon_button.dart';
 import 'package:lura_client/ui/widgets/lura_text_field.dart';
 import 'package:widgetbook/widgetbook.dart';
 
@@ -21,7 +20,7 @@ List<WidgetbookUseCase> textFormFields() {
   return [
     WidgetbookUseCase(
       name: 'Basic',
-      builder: (_) => _wrapForm(LuraTextField()),
+      builder: (_) => _wrapForm(const LuraTextField()),
     ),
     WidgetbookUseCase(
       name: 'With hint',

@@ -1,7 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lura_client/core/authentication/authentication_repository.dart';
-import 'package:lura_client/core/authentication/bloc/authentication_bloc.dart';
 import 'package:lura_client/core/authentication/exceptions.dart';
 import 'package:lura_client/locator.dart';
 

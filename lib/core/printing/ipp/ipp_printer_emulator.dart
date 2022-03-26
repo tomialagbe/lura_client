@@ -245,6 +245,7 @@ class IppPrinterEmulator implements PrinterEmulator {
         return jobs[i];
       }
     }
+    return null;
   }
 
   List<Attribute> _attributes(List<String>? filter) {

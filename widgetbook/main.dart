@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:lura_client/ui/theme.dart';
-import 'package:lura_client/ui/typography.dart';
 import 'package:widgetbook/widgetbook.dart';
 
 import 'alerts_category.dart';

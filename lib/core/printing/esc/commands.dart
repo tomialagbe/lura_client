@@ -357,6 +357,7 @@ final variableArgCommands = <List<int>, DataLenGenerator>{
   const [GS, 0x76, 0x30]: (ByteData buffer, int offset) {
     const argLen = 5;
     final argBytes = buffer.buffer.asUint8List(offset, argLen);
+    // ignore: unused_local_variable
     final m = argBytes[0],
         xL = argBytes[1],
         xH = argBytes[2],

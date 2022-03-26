@@ -8,6 +8,7 @@ class StringDecoder {
 
   String decode(ByteData buffer, int offset) {
     final len = buffer.getInt16(offset);
+    // ignore: unused_local_variable
     final buffSize = buffer.buffer.lengthInBytes;
     final start = offset + 2;
     final end = offset + 2 + len;

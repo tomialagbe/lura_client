@@ -3,8 +3,6 @@ import 'dart:async';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lura_client/core/api/exceptions.dart';
-import 'package:lura_client/core/business/business_bloc.dart';
-import 'package:lura_client/core/business/model.dart';
 import 'package:lura_client/core/print_jobs/print_job.dart';
 import 'package:lura_client/core/print_jobs/print_job_repository.dart';
 import 'package:lura_client/locator.dart';

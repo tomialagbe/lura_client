@@ -25,7 +25,7 @@ class FeedbackScreen extends StatelessWidget {
             ),
           ),
           const Gap(10),
-          Text('We are currently working on this.'),
+          const Text('We are currently working on this.'),
         ],
       ),
     );

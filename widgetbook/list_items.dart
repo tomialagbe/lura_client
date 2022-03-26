@@ -26,38 +26,38 @@ List<WidgetbookUseCase> listItemUsecases() {
                 children: [
                   LuraListItem(
                     onTap: () {},
-                    title: Text('Printer one'),
+                    title: const Text('Printer one'),
                   ),
                   const SizedBox(height: 30),
                   LuraListItem(
                     onTap: () {},
-                    title: Text('Printer one'),
-                    subTitle: Text('about printer one'),
+                    title: const Text('Printer one'),
+                    subTitle: const Text('about printer one'),
                   ),
                   const SizedBox(height: 30),
                   LuraListItem(
                     onTap: () {},
-                    title: Text('Printer two'),
-                    subTitle: Icon(FontAwesomeIcons.microsoft),
+                    title: const Text('Printer two'),
+                    subTitle: const Icon(FontAwesomeIcons.microsoft),
                   ),
                   const SizedBox(height: 30),
                   LuraListItem(
                     onTap: () {},
-                    title: Text('Printer three'),
-                    subTitle: Icon(FontAwesomeIcons.android),
+                    title: const Text('Printer three'),
+                    subTitle: const Icon(FontAwesomeIcons.android),
                     trailing: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         Container(
                           margin: const EdgeInsets.only(right: 5),
-                          decoration: BoxDecoration(
+                          decoration: const BoxDecoration(
                             color: Colors.green,
                             shape: BoxShape.circle,
                           ),
                           width: 10,
                           height: 10,
                         ),
-                        Text('Online'),
+                        const Text('Online'),
                       ],
                     ),
                   ),
