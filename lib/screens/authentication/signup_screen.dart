@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
+import 'package:lura_client/ui/colors.dart';
 import 'package:lura_client/ui/typography.dart';
 import 'package:lura_client/ui/widgets/alerts.dart';
 import 'package:lura_client/ui/widgets/circular_icon_button.dart';
@@ -39,6 +40,7 @@ class _SignupScreenState extends State<SignupScreen> {
                     passwordController: _passwordController,
                     passwordConfirmController: _passwordConfirmController,
                     formKey: _formKey,
+                    isDesktop: true,
                   ),
                 ),
               );
@@ -86,6 +88,7 @@ class _SignupMobile extends StatelessWidget {
               passwordController: passwordController,
               passwordConfirmController: passwordConfirmController,
               formKey: formKey,
+              isDesktop: false,
             ),
           ],
         ),
@@ -100,6 +103,7 @@ class SignupForm extends StatelessWidget {
   final TextEditingController passwordController;
   final TextEditingController passwordConfirmController;
   final GlobalKey<FormState> formKey;
+  final bool isDesktop;
 
   SignupForm({
     Key? key,
@@ -107,6 +111,7 @@ class SignupForm extends StatelessWidget {
     required this.passwordController,
     required this.passwordConfirmController,
     required this.formKey,
+    this.isDesktop = false,
   }) : super(key: key);
 
   @override
@@ -126,63 +131,76 @@ class SignupForm extends StatelessWidget {
             height: 100,
           ),
           const Gap(20),
-          Text(
-            'Sign up',
-            style: LuraTextStyles.baseTextStyle
-                .copyWith(fontSize: 42, fontWeight: FontWeight.w400),
-          ),
-          const Gap(60),
           if (signupScreenBloc.state.error != null)
             Padding(
               padding: const EdgeInsets.only(bottom: 20),
               child: ErrorAlert(
                   error: signupScreenBloc.state.error!, showRetry: false),
             ),
-          LuraTextField(
-            hintText: 'Email',
-            keyboardType: TextInputType.emailAddress,
-            controller: emailController,
-            textInputValidator: _validateEmail,
-          ),
-          const Gap(20),
-          LuraTextField(
-            hintText: 'Password',
-            keyboardType: TextInputType.visiblePassword,
-            obscureText: true,
-            controller: passwordController,
-            textInputValidator: _validatePassword,
-          ),
-          const Gap(20),
-          LuraTextField(
-            hintText: 'Confirm your password',
-            keyboardType: TextInputType.visiblePassword,
-            obscureText: true,
-            controller: passwordConfirmController,
-            textInputValidator: _validateConfirmPassword,
-          ),
-          const Gap(20),
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              TextButton(
-                child: const Text('Sign in'),
-                onPressed: () {
-                  context.go('/signin');
-                },
-              ),
-            ],
-          ),
-          const Gap(40),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              LuraCircularIconButton(
-                icon: Icons.arrow_forward,
-                onTap: signupScreenBloc.state.isSubmitting
-                    ? null
-                    : () => _onSubmit(context),
-              ),
-            ],
+          Container(
+            margin: const EdgeInsets.only(top: 20),
+            padding: EdgeInsets.all(isDesktop ? 40 : 20),
+            decoration: BoxDecoration(
+                color: LuraColors.formBackground,
+                borderRadius: BorderRadius.circular(20)),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Sign up',
+                  style: Theme.of(context).textTheme.headline3,
+                ),
+                const Gap(60),
+                LuraTextField(
+                  hintText: 'Email',
+                  keyboardType: TextInputType.emailAddress,
+                  controller: emailController,
+                  textInputValidator: _validateEmail,
+                ),
+                Gap(isDesktop ? 30 : 20),
+                LuraTextField(
+                  hintText: 'Password',
+                  keyboardType: TextInputType.visiblePassword,
+                  obscureText: true,
+                  controller: passwordController,
+                  textInputValidator: _validatePassword,
+                ),
+                Gap(isDesktop ? 30 : 20),
+                LuraTextField(
+                  hintText: 'Confirm your password',
+                  keyboardType: TextInputType.visiblePassword,
+                  obscureText: true,
+                  controller: passwordConfirmController,
+                  textInputValidator: _validateConfirmPassword,
+                ),
+                const Gap(20),
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    TextButton(
+                      child: const Text('Sign in'),
+                      onPressed: () {
+                        context.go('/signin');
+                      },
+                    ),
+                  ],
+                ),
+                const Gap(40),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    LuraCircularIconButton(
+                      icon: Icons.arrow_forward,
+                      size: 30,
+                      onTap: signupScreenBloc.state.isSubmitting
+                          ? null
+                          : () => _onSubmit(context),
+                    ),
+                  ],
+                ),
+              ],
+            ),
           ),
         ],
       ),

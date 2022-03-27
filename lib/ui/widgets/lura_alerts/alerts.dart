@@ -82,7 +82,8 @@ class LuraErrorAlert extends StatelessWidget {
       bgColor: LuraColors.alertErrorBackground,
       borderColor: LuraColors.alertErrorBorder,
       iconColor: LuraColors.alertErrorIcon,
-      actionText: 'Try again',
+      actionText: actionText,
+      onAction: onAction,
     );
   }
 }

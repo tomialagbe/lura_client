@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../colors.dart';
 
-class LuraAlert extends StatelessWidget {
+class LuraAlert extends StatefulWidget {
   final String title;
   final String message;
   final VoidCallback? onClose;
@@ -26,23 +26,30 @@ class LuraAlert extends StatelessWidget {
     this.onAction,
   }) : super(key: key);
 
-  bool get hasAction => actionText != null;
+  @override
+  State<LuraAlert> createState() => _LuraAlertState();
+}
+
+class _LuraAlertState extends State<LuraAlert> {
+  bool get hasAction => widget.actionText != null;
+  bool _show = true;
 
   @override
   Widget build(BuildContext context) {
+    if (!_show) return const SizedBox.shrink();
     return Container(
       constraints: const BoxConstraints(maxWidth: 500),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(20),
-        color: bgColor,
-        border: Border.all(color: borderColor),
+        color: widget.bgColor,
+        border: Border.all(color: widget.borderColor),
       ),
       padding: const EdgeInsets.all(20),
       child: Row(
         mainAxisSize: MainAxisSize.max,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          _AlertIcon(icon: icon, iconColor: iconColor),
+          _AlertIcon(icon: widget.icon, iconColor: widget.iconColor),
           const SizedBox(width: 15),
           Expanded(
             flex: 3,
@@ -50,13 +57,13 @@ class LuraAlert extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisSize: MainAxisSize.min,
               children: [
-                Text(title,
+                Text(widget.title,
                     style: Theme.of(context).textTheme.subtitle1?.copyWith(
                         fontWeight: FontWeight.w700,
                         color: LuraColors.alertTextColor)),
                 const SizedBox(height: 5),
                 Text(
-                  message,
+                  widget.message,
                   style: Theme.of(context).textTheme.subtitle2?.copyWith(
                       fontWeight: FontWeight.w400,
                       color: LuraColors.alertTextColor),
@@ -67,14 +74,15 @@ class LuraAlert extends StatelessWidget {
                     child: MouseRegion(
                       cursor: SystemMouseCursors.click,
                       child: GestureDetector(
-                        onTap: onAction,
+                        onTap: widget.onAction,
                         child: Text(
-                          actionText!,
-                          style: Theme.of(context).textTheme.subtitle2?.copyWith(
-                                fontWeight: FontWeight.w400,
-                                color: LuraColors.alertTextColor,
-                                decoration: TextDecoration.underline,
-                              ),
+                          widget.actionText!,
+                          style:
+                              Theme.of(context).textTheme.subtitle2?.copyWith(
+                                    fontWeight: FontWeight.w400,
+                                    color: LuraColors.alertTextColor,
+                                    decoration: TextDecoration.underline,
+                                  ),
                         ),
                       ),
                     ),
@@ -83,7 +91,12 @@ class LuraAlert extends StatelessWidget {
             ),
           ),
           const Expanded(child: SizedBox(), flex: 1),
-          _AlertCloseButton(onTap: onClose),
+          _AlertCloseButton(onTap: () {
+            setState(() {
+              _show = false;
+            });
+            widget.onClose?.call();
+          }),
         ],
       ),
     );

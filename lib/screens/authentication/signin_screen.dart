@@ -5,6 +5,7 @@ import 'package:lura_client/ui/colors.dart';
 import 'package:lura_client/ui/typography.dart';
 import 'package:lura_client/ui/widgets/alerts.dart';
 import 'package:lura_client/ui/widgets/circular_icon_button.dart';
+import 'package:lura_client/ui/widgets/lura_alerts/alerts.dart';
 import 'package:lura_client/ui/widgets/lura_text_field.dart';
 import 'package:responsive_builder/responsive_builder.dart';
 import 'package:provider/provider.dart';
@@ -38,6 +39,7 @@ class _SigninScreenState extends State<SigninScreen> {
                     emailController: _emailController,
                     passwordController: _passwordController,
                     formKey: _formKey,
+                    isDesktop: true,
                   ),
                 ),
               );
@@ -81,6 +83,7 @@ class _SigninMobile extends StatelessWidget {
               emailController: emailController,
               passwordController: passwordController,
               formKey: formKey,
+              isDesktop: false,
             ),
           ],
         ),
@@ -93,12 +96,14 @@ class SigninForm extends StatelessWidget {
   final TextEditingController emailController;
   final TextEditingController passwordController;
   final GlobalKey<FormState> formKey;
+  final bool isDesktop;
 
   const SigninForm({
     Key? key,
     required this.emailController,
     required this.passwordController,
     required this.formKey,
+    this.isDesktop = false,
   }) : super(key: key);
 
   @override
@@ -117,69 +122,58 @@ class SigninForm extends StatelessWidget {
             height: 100,
           ),
           const Gap(20),
-          Text(
-            'Sign in',
-            style: LuraTextStyles.baseTextStyle
-                .copyWith(fontSize: 42, fontWeight: FontWeight.w400),
-          ),
-          const Gap(60),
           if (loginScreenBloc.state.error != null)
-            Padding(
-              padding: const EdgeInsets.only(bottom: 20),
-              child: ErrorAlert(
-                  error: loginScreenBloc.state.error!, showRetry: false),
+            LuraErrorAlert(
+              title: 'Login failed',
+              message: loginScreenBloc.state.error!,
+              onClose: () {},
             ),
-          LuraTextField(
-            hintText: 'Email',
-            keyboardType: TextInputType.emailAddress,
-            controller: emailController,
-            textInputValidator: _validateEmail,
-          ),
-          const Gap(20),
-          LuraTextField(
-            hintText: 'Password',
-            keyboardType: TextInputType.visiblePassword,
-            obscureText: true,
-            controller: passwordController,
-            textInputValidator: _validatePassword,
-          ),
-          const Gap(20),
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              TextButton(
-                onPressed: () {
-                  context.go('/forgot-password');
-                },
-                child: const Text('Forgot your password?'),
-              ),
-              const Gap(10),
-              Container(
-                width: 2.5,
-                height: 2.5,
-                decoration: const BoxDecoration(
-                    shape: BoxShape.circle, color: LuraColors.blue),
-              ),
-              const Gap(10),
-              TextButton(
-                child: const Text('Sign up for Lura'),
-                onPressed: () {
-                  context.go('/signup');
-                },
-              ),
-            ],
-          ),
-          const Gap(40),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              LuraCircularIconButton(
-                icon: Icons.arrow_forward,
-                onTap: loginScreenBloc.state.isSubmitting
-                    ? null
-                    : () => _onSubmit(context),
-              ),
-            ],
+          Container(
+            margin: const EdgeInsets.only(top: 20),
+            padding: EdgeInsets.all(isDesktop ? 40 : 20),
+            decoration: BoxDecoration(
+                color: LuraColors.formBackground,
+                borderRadius: BorderRadius.circular(20)),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Sign in',
+                  style: Theme.of(context).textTheme.headline3,
+                ),
+                const Gap(60),
+                LuraTextField(
+                  hintText: 'Email',
+                  keyboardType: TextInputType.emailAddress,
+                  controller: emailController,
+                  textInputValidator: _validateEmail,
+                ),
+                Gap(isDesktop ? 30 : 20),
+                LuraTextField(
+                  hintText: 'Password',
+                  keyboardType: TextInputType.visiblePassword,
+                  obscureText: true,
+                  controller: passwordController,
+                  textInputValidator: _validatePassword,
+                ),
+                const Gap(20),
+                const _LoginLinks(),
+                const Gap(40),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    LuraCircularIconButton(
+                      icon: Icons.arrow_forward,
+                      size: 30,
+                      onTap: loginScreenBloc.state.isSubmitting
+                          ? null
+                          : () => _onSubmit(context),
+                    ),
+                  ],
+                ),
+              ],
+            ),
           ),
         ],
       ),
@@ -219,5 +213,38 @@ class SigninForm extends StatelessWidget {
     }
 
     return null;
+  }
+}
+
+class _LoginLinks extends StatelessWidget {
+  const _LoginLinks({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        TextButton(
+          onPressed: () {
+            context.go('/forgot-password');
+          },
+          child: const Text('Forgot your password?'),
+        ),
+        const Gap(10),
+        Container(
+          width: 2.5,
+          height: 2.5,
+          decoration: const BoxDecoration(
+              shape: BoxShape.circle, color: LuraColors.blue),
+        ),
+        const Gap(10),
+        TextButton(
+          child: const Text('Sign up for Lura'),
+          onPressed: () {
+            context.go('/signup');
+          },
+        ),
+      ],
+    );
   }
 }
