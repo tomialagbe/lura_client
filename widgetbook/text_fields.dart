@@ -64,6 +64,17 @@ List<WidgetbookUseCase> textFormFields() {
         }),
       ),
     ),
+    WidgetbookUseCase(
+      name: 'Large text fields',
+      builder: (_) => _wrapForm(
+        LuraActionTextField(
+          hintText: 'Enter your email',
+          icon: Icons.arrow_forward,
+          onTap: () {},
+          large: true,
+        ),
+      ),
+    ),
   ];
 }
 
