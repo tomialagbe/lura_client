@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:lura_client/ui/widgets/buttons/lura_flat_button.dart';
+import 'package:lura_client/ui/widgets/buttons/lura_primary_button.dart';
 import 'package:lura_client/ui/widgets/circular_icon_button.dart';
-import 'package:lura_client/ui/widgets/lura_action_button.dart';
-import 'package:lura_client/ui/widgets/lura_primary_button.dart';
+import 'package:lura_client/ui/widgets/buttons/lura_action_button.dart';
 import 'package:widgetbook/widgetbook.dart';
 
 class ButtonsCategory extends WidgetbookCategory {
@@ -17,6 +18,7 @@ List<WidgetbookWidget> buttonWidgets() {
         useCases: circularIconButtonUseCases()),
     WidgetbookWidget(
         name: '$LuraPrimaryButton', useCases: primaryButtonUseCases()),
+    WidgetbookWidget(name: '$LuraFlatButton', useCases: flatButtonUseCases()),
     WidgetbookWidget(name: 'Text buttons', useCases: textButtonUseCases()),
   ];
 }
@@ -71,6 +73,21 @@ List<WidgetbookUseCase> circularIconButtonUseCases() {
         icon: Icons.arrow_forward,
         size: 55,
         onTap: () {},
+      ),
+    ),
+  ];
+}
+
+List<WidgetbookUseCase> flatButtonUseCases() {
+  return [
+    WidgetbookUseCase(
+      name: 'Default',
+      builder: (_) => Padding(
+        padding: const EdgeInsets.all(10),
+        child: LuraFlatButton(
+          text: 'Login',
+          onTap: () {},
+        ),
       ),
     ),
   ];

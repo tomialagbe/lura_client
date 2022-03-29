@@ -27,7 +27,8 @@ abstract class LuraColors {
 
   static const lightBlue = Color(0xFFBFCDE0);
   static const lighterBlue = Color(0xFFCED4DE);
-  static const inputColor = Colors.white;
+  static const inputColor = Color(0xFFf1f4f6);
+  static const selectedTileColor = Color(0xFFEEEEEE);
   static const divider = Color(0xFFEEEEEE);
   static const black = Color(0xFF000000);
   static const errorText = Color(0xFF9A3E3E);

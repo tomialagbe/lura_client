@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:lura_client/ui/typography.dart';
 
-import '../colors.dart';
+import '../../colors.dart';
 
 class LuraActionButton extends StatefulWidget {
   final VoidCallback? onTap;

@@ -36,9 +36,9 @@ class _LuraAlertState extends State<LuraAlert> {
 
   @override
   Widget build(BuildContext context) {
-    if (!_show) return const SizedBox.shrink();
+    if (!_show) return const SizedBox();
     return Container(
-      constraints: const BoxConstraints(maxWidth: 500),
+      // constraints: const BoxConstraints(maxWidth: 500),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(20),
         color: widget.bgColor,

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:lura_client/ui/colors.dart';
+import 'package:lura_client/ui/widgets/lura_rounded_text_field.dart';
 import 'package:lura_client/ui/widgets/lura_text_field.dart';
 import 'package:widgetbook/widgetbook.dart';
 
@@ -9,23 +10,66 @@ class TextFieldsCategory extends WidgetbookCategory {
           name: 'Text fields',
           widgets: [
             WidgetbookWidget(
-              name: 'Text form field',
-              useCases: textFormFields(),
+              name: '$LuraRoundedTextField',
+              useCases: roundedTextFields(),
+            ),
+            WidgetbookWidget(
+              name: '$LuraTextField',
+              useCases: textFields(),
             ),
           ],
         );
 }
 
-List<WidgetbookUseCase> textFormFields() {
+List<WidgetbookUseCase> textFields() {
+  return [
+    WidgetbookUseCase(
+      name: 'Default',
+      builder: (_) => const Padding(
+        padding: EdgeInsets.all(20),
+        child: LuraTextField(),
+      ),
+    ),
+    WidgetbookUseCase(
+      name: 'With hint',
+      builder: (_) => const Padding(
+        padding: EdgeInsets.all(20),
+        child: LuraTextField(hintText: 'Your email'),
+      ),
+    ),
+    WidgetbookUseCase(
+      name: 'With trailing icon',
+      builder: (_) => const Padding(
+        padding: EdgeInsets.all(20),
+        child: LuraTextField(
+          hintText: 'Your email',
+          trailing: Icon(Icons.alternate_email),
+        ),
+      ),
+    ),
+    WidgetbookUseCase(
+      name: 'Large',
+      builder: (_) => const Padding(
+        padding: EdgeInsets.all(20),
+        child: LuraTextField(
+          hintText: 'Your email',
+          large: true,
+        ),
+      ),
+    ),
+  ];
+}
+
+List<WidgetbookUseCase> roundedTextFields() {
   return [
     WidgetbookUseCase(
       name: 'Basic',
-      builder: (_) => _wrapForm(const LuraTextField()),
+      builder: (_) => _wrapForm(const LuraRoundedTextField()),
     ),
     WidgetbookUseCase(
       name: 'With hint',
       builder: (_) => _wrapForm(
-        const LuraTextField(
+        const LuraRoundedTextField(
           hintText: 'Enter your email',
         ),
       ),

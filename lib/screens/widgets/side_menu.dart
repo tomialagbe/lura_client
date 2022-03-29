@@ -99,7 +99,7 @@ class DrawerListTile extends StatelessWidget {
     return ListTile(
       onTap: press,
       selected: active,
-      selectedTileColor: LuraColors.inputColor,
+      selectedTileColor: LuraColors.selectedTileColor,
       horizontalTitleGap: 0.0,
       title: Text(
         title,

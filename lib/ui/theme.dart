@@ -7,7 +7,7 @@ class LuraTheme {
   static ThemeData get defaultTheme {
     return ThemeData(
       appBarTheme: _appBarTheme,
-      inputDecorationTheme: _inputDecorationTheme,
+      // inputDecorationTheme: _inputDecorationTheme,
       elevatedButtonTheme: _elevatedButtonTheme,
       textButtonTheme: _textButtonTheme,
       scaffoldBackgroundColor: Colors.white,
@@ -41,7 +41,7 @@ class LuraTheme {
   static InputDecorationTheme get _inputDecorationTheme {
     return InputDecorationTheme(
       filled: true,
-      fillColor: LuraColors.inputColor,
+      fillColor: Colors.white,
       border: OutlineInputBorder(
         borderRadius: BorderRadius.circular(30),
         borderSide: BorderSide.none,
@@ -54,7 +54,7 @@ class LuraTheme {
         borderRadius: BorderRadius.circular(30),
         borderSide: const BorderSide(color: LuraColors.inputBorderError),
       ),
-      hoverColor: LuraColors.inputColor,
+      hoverColor: Colors.white,
       hintStyle: LuraTextStyles.paragraph
           .copyWith(color: LuraColors.inputPlaceholderColor),
       contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
@@ -79,7 +79,8 @@ class LuraTheme {
     return TextButtonThemeData(
       style: TextButton.styleFrom(
         primary: LuraColors.blue,
-        padding: const EdgeInsets.symmetric(vertical: 10),
+        padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
+        textStyle: LuraTextStyles.paragraphSmall,
       ),
     );
   }

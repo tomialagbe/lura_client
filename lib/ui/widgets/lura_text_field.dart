@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:lura_client/ui/typography.dart';
 
 import '../colors.dart';
-import '../typography.dart';
-import 'circular_icon_button.dart';
-
-typedef TextInputValidator = String? Function(String? input);
+import 'text_input_validator.dart';
 
 class LuraTextField extends StatelessWidget {
   final String? hintText;
@@ -28,86 +26,53 @@ class LuraTextField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // final inputTheme = Theme.of(context).inputDecorationTheme;
-    final decoration = !large ? defaultInputDecoration : largeInputDecoration;
-    return TextFormField(
-      style: LuraTextStyles.paragraph,
-      // decoration: InputDecoration(
-      //   hintText: hintText,
-      //   suffixIcon: trailing,
-      // ),
-      decoration: decoration,
-      keyboardType: TextInputType.text,
-      obscureText: obscureText,
-      controller: controller,
-      validator: textInputValidator,
-    );
-  }
-
-  InputDecoration get defaultInputDecoration {
-    return InputDecoration(
-      hintText: hintText,
-      suffixIcon: trailing,
-    );
-  }
-
-  InputDecoration get largeInputDecoration {
-    return InputDecoration(
-      hintText: hintText,
-      suffixIcon: trailing,
-      contentPadding: const EdgeInsets.symmetric(vertical: 40, horizontal: 40),
-      border: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(50),
-        borderSide: BorderSide.none,
+    return Theme(
+      data: Theme.of(context)
+          .copyWith(inputDecorationTheme: _inputDecorationTheme),
+      child: TextFormField(
+        style: LuraTextStyles.paragraph.copyWith(fontSize: 14),
+        decoration: InputDecoration(
+          hintText: hintText,
+          suffixIcon: trailing,
+        ),
+        keyboardType: keyboardType ?? TextInputType.text,
+        obscureText: obscureText,
+        controller: controller,
+        validator: textInputValidator,
       ),
+    );
+  }
+
+  InputDecorationTheme get _inputDecorationTheme {
+    final defaultBorder = OutlineInputBorder(
+      borderRadius: BorderRadius.circular(3),
+      borderSide: const BorderSide(color: Color.fromRGBO(136, 136, 136, 0.15)),
+    );
+    return InputDecorationTheme(
+      filled: true,
+      fillColor: LuraColors.inputColor,
+      focusColor: Colors.white,
+      hoverColor: Colors.white,
+      border: defaultBorder,
+      enabledBorder: defaultBorder,
       focusedBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(50),
+        borderRadius: BorderRadius.circular(3),
         borderSide: const BorderSide(color: LuraColors.inputBorderBlue),
       ),
       errorBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(50),
+        borderRadius: BorderRadius.circular(3),
         borderSide: const BorderSide(color: LuraColors.inputBorderError),
       ),
-    );
-  }
-}
-
-class LuraActionTextField extends StatelessWidget {
-  final IconData icon;
-  final VoidCallback? onTap;
-  final String? hintText;
-  final TextInputType? keyboardType;
-  final bool obscureText;
-  final TextEditingController? controller;
-  final TextInputValidator? textInputValidator;
-  final bool large;
-
-  const LuraActionTextField({
-    Key? key,
-    required this.icon,
-    this.onTap,
-    this.hintText,
-    this.keyboardType,
-    this.obscureText = false,
-    this.controller,
-    this.textInputValidator,
-    this.large = false,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return LuraTextField(
-      hintText: hintText,
-      trailing: LuraCircularIconButton(
-        icon: icon,
-        onTap: onTap,
-        size: large ? 50 : null,
+      contentPadding: EdgeInsets.symmetric(
+        horizontal: large ? 30 : 20,
+        vertical: large ? 30 : 20,
       ),
-      keyboardType: keyboardType,
-      obscureText: obscureText,
-      controller: controller,
-      textInputValidator: textInputValidator,
-      large: large,
+      hintStyle: LuraTextStyles.paragraph.copyWith(
+        color: const Color(0xFFBBBBBB),
+        fontSize: 14,
+      ),
+      iconColor: LuraColors.blue,
+      suffixIconColor: LuraColors.blue,
     );
   }
 }

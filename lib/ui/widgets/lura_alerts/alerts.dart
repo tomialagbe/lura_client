@@ -34,12 +34,16 @@ class LuraInfoAlert extends StatelessWidget {
   final String title;
   final String message;
   final VoidCallback? onClose;
+  final String? actionText;
+  final VoidCallback? onAction;
 
   const LuraInfoAlert({
     Key? key,
     required this.title,
     required this.message,
     this.onClose,
+    this.actionText,
+    this.onAction,
   }) : super(key: key);
 
   @override
@@ -52,6 +56,8 @@ class LuraInfoAlert extends StatelessWidget {
       bgColor: LuraColors.alertInfoBackground,
       borderColor: LuraColors.alertInfoBorder,
       iconColor: LuraColors.alertInfoIcon,
+      actionText: actionText,
+      onAction: onAction,
     );
   }
 }

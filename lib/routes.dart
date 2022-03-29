@@ -6,10 +6,7 @@ import 'package:lura_client/core/business/business_bloc.dart';
 import 'package:lura_client/core/business/model.dart';
 import 'package:lura_client/core/printing/bloc/printer_emulation_bloc.dart';
 import 'package:lura_client/core/utils/platform_helper.dart';
-import 'package:lura_client/screens/authentication/bloc/forgot_password_screen_bloc.dart';
-import 'package:lura_client/screens/authentication/bloc/login_screen_bloc.dart';
 import 'package:lura_client/screens/authentication/bloc/onboarding_screen_bloc.dart';
-import 'package:lura_client/screens/authentication/bloc/signup_screen_bloc.dart';
 import 'package:lura_client/screens/printers/bloc/create_printer_screen_bloc.dart';
 import 'package:lura_client/screens/printers/bloc/printer_activation_screen_bloc.dart';
 import 'package:lura_client/screens/printers/bloc/printer_standby_screen_bloc.dart';
@@ -18,6 +15,7 @@ import 'package:lura_client/screens/printers/bloc/selected_printer_bloc.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:tuple/tuple.dart';
 
+import 'screens/authentication/bloc/auth_screen_bloc.dart';
 import 'screens/authentication/forgot_password_screen.dart';
 import 'screens/authentication/onboarding_screen.dart';
 import 'screens/authentication/signin_screen.dart';

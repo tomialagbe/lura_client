@@ -1,16 +1,16 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lura_client/ui/colors.dart';
-import 'package:lura_client/ui/typography.dart';
-import 'package:lura_client/ui/widgets/alerts.dart';
-import 'package:lura_client/ui/widgets/circular_icon_button.dart';
+import 'package:lura_client/ui/input_validator.dart';
+import 'package:lura_client/ui/widgets/buttons/lura_flat_button.dart';
 import 'package:lura_client/ui/widgets/lura_alerts/alerts.dart';
 import 'package:lura_client/ui/widgets/lura_text_field.dart';
 import 'package:responsive_builder/responsive_builder.dart';
 import 'package:provider/provider.dart';
 
-import 'bloc/login_screen_bloc.dart';
+import 'bloc/auth_screen_bloc.dart';
 
 class SigninScreen extends StatefulWidget {
   const SigninScreen({Key? key}) : super(key: key);
@@ -78,7 +78,7 @@ class _SigninMobile extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Gap(MediaQuery.of(context).size.height * 0.1),
+            Gap(0.1 * MediaQuery.of(context).size.height),
             SigninForm(
               emailController: emailController,
               passwordController: passwordController,
@@ -121,60 +121,76 @@ class SigninForm extends StatelessWidget {
             width: 100,
             height: 100,
           ),
-          const Gap(20),
-          if (loginScreenBloc.state.error != null)
-            LuraErrorAlert(
-              title: 'Login failed',
-              message: loginScreenBloc.state.error!,
-              onClose: () {},
-            ),
-          Container(
-            margin: const EdgeInsets.only(top: 20),
-            padding: EdgeInsets.all(isDesktop ? 40 : 20),
-            decoration: BoxDecoration(
-                color: LuraColors.formBackground,
-                borderRadius: BorderRadius.circular(20)),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'Sign in',
-                  style: Theme.of(context).textTheme.headline3,
-                ),
-                const Gap(60),
-                LuraTextField(
-                  hintText: 'Email',
-                  keyboardType: TextInputType.emailAddress,
-                  controller: emailController,
-                  textInputValidator: _validateEmail,
-                ),
-                Gap(isDesktop ? 30 : 20),
-                LuraTextField(
-                  hintText: 'Password',
-                  keyboardType: TextInputType.visiblePassword,
-                  obscureText: true,
-                  controller: passwordController,
-                  textInputValidator: _validatePassword,
-                ),
-                const Gap(20),
-                const _LoginLinks(),
-                const Gap(40),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    LuraCircularIconButton(
-                      icon: Icons.arrow_forward,
-                      size: 30,
-                      onTap: loginScreenBloc.state.isSubmitting
-                          ? null
-                          : () => _onSubmit(context),
-                    ),
-                  ],
-                ),
-              ],
-            ),
+          Text(
+            'Log in to Lura.',
+            style: Theme.of(context).textTheme.headline3,
           ),
+          const Gap(20),
+          RichText(
+            text: TextSpan(
+                text: 'Don\'t have an account yet? ',
+                style: Theme.of(context).textTheme.bodyText2,
+                children: [
+                  TextSpan(
+                    text: 'Sign up',
+                    style: const TextStyle(
+                      color: LuraColors.blue,
+                      fontWeight: FontWeight.w500,
+                    ),
+                    recognizer: TapGestureRecognizer()
+                      ..onTap = () {
+                        context.go('/signup');
+                      },
+                  ),
+                  const TextSpan(text: '.'),
+                ]),
+          ),
+          const Gap(40),
+          LuraTextField(
+            hintText: 'Your email',
+            large: true,
+            trailing: const Padding(
+              padding: EdgeInsets.only(right: 30),
+              child: Icon(Icons.alternate_email_outlined),
+            ),
+            keyboardType: TextInputType.emailAddress,
+            textInputValidator: InputValidator.validateEmail,
+            controller: emailController,
+          ),
+          const Gap(30),
+          LuraTextField(
+            hintText: 'Your password',
+            large: true,
+            trailing: const Padding(
+              padding: EdgeInsets.only(right: 30),
+              child: Icon(Icons.password),
+            ),
+            keyboardType: TextInputType.visiblePassword,
+            obscureText: true,
+            textInputValidator: InputValidator.validatePassword,
+            controller: passwordController,
+          ),
+          const Gap(30),
+          LuraFlatButton(
+            text: 'Login',
+            onTap: loginScreenBloc.state.isSubmitting
+                ? null
+                : () => _onSubmit(context),
+          ),
+          if (loginScreenBloc.state.error != null)
+            Padding(
+              padding: const EdgeInsets.only(top: 30),
+              child: LuraErrorAlert(
+                title: 'Login failed',
+                message: loginScreenBloc.state.error!,
+                onClose: () {
+                  loginScreenBloc.clearError();
+                },
+              ),
+            ),
+          const Gap(30),
+          const Divider(),
+          const _LoginLinks(),
         ],
       ),
     );
@@ -186,33 +202,6 @@ class SigninForm extends StatelessWidget {
       final password = passwordController.text.trim();
       context.read<LoginScreenBloc>().login(email, password);
     }
-  }
-
-  String? _validateEmail(String? email) {
-    if (email == null || email.trim().isEmpty) {
-      return 'Your email is required';
-    }
-
-    bool emailValid = RegExp(
-            r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
-        .hasMatch(email);
-    if (!emailValid) {
-      return 'Please enter a valid email';
-    }
-
-    return null;
-  }
-
-  String? _validatePassword(String? password) {
-    if (password == null || password.trim().isEmpty) {
-      return 'Your password is required';
-    }
-
-    if (password.length < 6) {
-      return 'Your password must be at least 6 characters long';
-    }
-
-    return null;
   }
 }
 
@@ -231,19 +220,6 @@ class _LoginLinks extends StatelessWidget {
           child: const Text('Forgot your password?'),
         ),
         const Gap(10),
-        Container(
-          width: 2.5,
-          height: 2.5,
-          decoration: const BoxDecoration(
-              shape: BoxShape.circle, color: LuraColors.blue),
-        ),
-        const Gap(10),
-        TextButton(
-          child: const Text('Sign up for Lura'),
-          onPressed: () {
-            context.go('/signup');
-          },
-        ),
       ],
     );
   }
