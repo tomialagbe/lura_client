@@ -3,12 +3,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lura_client/screens/printers/bloc/create_printer_screen_bloc.dart';
-import 'package:lura_client/ui/widgets/alerts.dart';
 import 'package:lura_client/ui/widgets/lura_alerts/alerts.dart';
 import 'package:lura_client/ui/widgets/lura_rounded_text_field.dart';
 import '../widgets/app_bars.dart';
 import 'package:lura_client/ui/colors.dart';
-import 'package:lura_client/ui/typography.dart';
 import 'package:responsive_builder/responsive_builder.dart';
 import 'package:rxdart/rxdart.dart';
 
@@ -177,31 +175,3 @@ class _CreatePrinterFormState extends State<_CreatePrinterForm> {
   }
 }
 
-class _SubmitButton extends StatelessWidget {
-  final VoidCallback? onTap;
-
-  const _SubmitButton({Key? key, this.onTap}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Theme(
-      data: Theme.of(context).copyWith(
-        elevatedButtonTheme: ElevatedButtonThemeData(
-          style: ElevatedButton.styleFrom(
-            elevation: 0,
-            shape: const CircleBorder(),
-            padding: const EdgeInsets.all(20),
-            primary: LuraColors.blue,
-          ),
-        ),
-      ),
-      child: ElevatedButton(
-        onPressed: onTap,
-        child: const Icon(
-          Icons.arrow_forward,
-          color: Colors.white,
-        ),
-      ),
-    );
-  }
-}

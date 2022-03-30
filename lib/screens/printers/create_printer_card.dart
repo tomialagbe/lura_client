@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:lura_client/ui/colors.dart';
 import 'package:lura_client/ui/typography.dart';
-import 'package:lura_client/ui/widgets/buttons/lura_primary_button.dart';
 import 'package:responsive_builder/responsive_builder.dart';
 
 class CreatePrinterCard extends StatelessWidget {

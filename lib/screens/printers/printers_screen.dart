@@ -1,13 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:gap/gap.dart';
 import 'package:lura_client/core/printers/printer.dart';
 import 'package:lura_client/core/utils/platform_helper.dart';
 import 'package:lura_client/screens/printers/bloc/selected_printer_bloc.dart';
-import 'package:lura_client/ui/colors.dart';
-import 'package:lura_client/ui/typography.dart';
 import 'package:lura_client/ui/widgets/alerts.dart';
-import 'package:lura_client/ui/widgets/circular_icon_button.dart';
 import 'package:lura_client/ui/widgets/loading_display.dart';
 import 'package:lura_client/ui/widgets/lura_list_item.dart';
 import 'package:provider/provider.dart';
@@ -17,7 +13,6 @@ import 'package:go_router/go_router.dart';
 import '../../ui/widgets/buttons/lura_primary_button.dart';
 import 'add_printer_button.dart';
 import 'bloc/printers_screen_bloc.dart';
-import 'create_printer_card.dart';
 
 class PrintersScreen extends StatefulWidget {
   const PrintersScreen({Key? key}) : super(key: key);
