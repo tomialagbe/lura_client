@@ -1,15 +1,17 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
+import 'package:lura_client/screens/authentication/lura_logo.dart';
 import 'package:lura_client/ui/colors.dart';
-import 'package:lura_client/ui/typography.dart';
-import 'package:lura_client/ui/widgets/alerts.dart';
-import 'package:lura_client/ui/widgets/circular_icon_button.dart';
-import 'package:lura_client/ui/widgets/lura_text_field.dart';
+import 'package:lura_client/ui/input_validator.dart';
 import 'package:responsive_builder/responsive_builder.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'bloc/signup_screen_bloc.dart';
+import '../../ui/widgets/buttons/lura_flat_button.dart';
+import '../../ui/widgets/lura_alerts/alerts.dart';
+import '../../ui/widgets/lura_text_field.dart';
+import 'bloc/auth_screen_bloc.dart';
 
 class SignupScreen extends StatefulWidget {
   const SignupScreen({Key? key}) : super(key: key);
@@ -40,6 +42,7 @@ class _SignupScreenState extends State<SignupScreen> {
                     passwordController: _passwordController,
                     passwordConfirmController: _passwordConfirmController,
                     formKey: _formKey,
+                    isDesktop: true,
                   ),
                 ),
               );
@@ -87,6 +90,7 @@ class _SignupMobile extends StatelessWidget {
               passwordController: passwordController,
               passwordConfirmController: passwordConfirmController,
               formKey: formKey,
+              isDesktop: false,
             ),
           ],
         ),
@@ -100,13 +104,15 @@ class SignupForm extends StatelessWidget {
   final TextEditingController passwordController;
   final TextEditingController passwordConfirmController;
   final GlobalKey<FormState> formKey;
+  final bool isDesktop;
 
-  SignupForm({
+  const SignupForm({
     Key? key,
     required this.emailController,
     required this.passwordController,
     required this.passwordConfirmController,
     required this.formKey,
+    this.isDesktop = false,
   }) : super(key: key);
 
   @override
@@ -119,71 +125,89 @@ class SignupForm extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Image.asset(
-            'images/lura_logo_icon_alt.png',
-            fit: BoxFit.cover,
-            width: 100,
-            height: 100,
-          ),
+          const LuraLogo(),
           const Gap(20),
           Text(
-            'Sign up',
-            style: LuraTextStyles.baseTextStyle
-                .copyWith(fontSize: 42, fontWeight: FontWeight.w400),
-          ),
-          const Gap(60),
-          if (signupScreenBloc.state.error != null)
-            Padding(
-              padding: const EdgeInsets.only(bottom: 20),
-              child: ErrorAlert(
-                  error: signupScreenBloc.state.error!, showRetry: false),
-            ),
-          LuraTextField(
-            hintText: 'Email',
-            keyboardType: TextInputType.emailAddress,
-            controller: emailController,
-            textInputValidator: _validateEmail,
+            'Sign up to Lura.',
+            style: Theme.of(context).textTheme.headline3,
           ),
           const Gap(20),
-          LuraTextField(
-            hintText: 'Password',
-            keyboardType: TextInputType.visiblePassword,
-            obscureText: true,
-            controller: passwordController,
-            textInputValidator: _validatePassword,
-          ),
-          const Gap(20),
-          LuraTextField(
-            hintText: 'Confirm your password',
-            keyboardType: TextInputType.visiblePassword,
-            obscureText: true,
-            controller: passwordConfirmController,
-            textInputValidator: _validateConfirmPassword,
-          ),
-          const Gap(20),
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              TextButton(
-                child: const Text('Sign in'),
-                onPressed: () {
-                  context.go('/signin');
-                },
-              ),
-            ],
+          RichText(
+            text: TextSpan(
+                text: 'Already have an account? ',
+                style: Theme.of(context).textTheme.bodyText2,
+                children: [
+                  TextSpan(
+                    text: 'Log in',
+                    style: const TextStyle(
+                      color: LuraColors.blue,
+                      fontWeight: FontWeight.w500,
+                    ),
+                    recognizer: TapGestureRecognizer()
+                      ..onTap = () {
+                        context.go('/signin');
+                      },
+                  ),
+                  const TextSpan(text: '.'),
+                ]),
           ),
           const Gap(40),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              CircularIconButton(
-                icon: const Icon(Icons.arrow_forward),
-                onTap: signupScreenBloc.state.isSubmitting
-                    ? null
-                    : () => _onSubmit(context),
-              ),
-            ],
+          LuraTextField(
+            hintText: 'Your email',
+            large: true,
+            trailing: const Padding(
+              padding: EdgeInsets.only(right: 30),
+              child: Icon(Icons.alternate_email_outlined),
+            ),
+            keyboardType: TextInputType.emailAddress,
+            textInputValidator: InputValidator.validateEmail,
+            controller: emailController,
           ),
+          const Gap(30),
+          LuraTextField(
+            hintText: 'Your password',
+            large: true,
+            trailing: const Padding(
+              padding: EdgeInsets.only(right: 30),
+              child: Icon(Icons.password),
+            ),
+            keyboardType: TextInputType.visiblePassword,
+            obscureText: true,
+            textInputValidator: InputValidator.validatePassword,
+            controller: passwordController,
+          ),
+          const Gap(30),
+          LuraTextField(
+            hintText: 'Confirm your password',
+            large: true,
+            trailing: const Padding(
+              padding: EdgeInsets.only(right: 30),
+              child: Icon(Icons.password),
+            ),
+            keyboardType: TextInputType.visiblePassword,
+            obscureText: true,
+            textInputValidator: InputValidator.validateConfirmPassword,
+            controller: passwordConfirmController,
+          ),
+          const Gap(30),
+          LuraFlatButton(
+            text: 'Sign up',
+            onTap: signupScreenBloc.state.isSubmitting
+                ? null
+                : () => _onSubmit(context),
+          ),
+          if (signupScreenBloc.state.error != null)
+            Padding(
+              padding: const EdgeInsets.only(top: 30),
+              child: LuraErrorAlert(
+                title: 'Signup failed!',
+                message: signupScreenBloc.state.error!,
+                onClose: () {
+                  signupScreenBloc.clearError();
+                },
+              ),
+            ),
+          const Gap(30),
         ],
       ),
     );
@@ -195,47 +219,5 @@ class SignupForm extends StatelessWidget {
       final password = passwordController.text.trim();
       context.read<SignupScreenBloc>().signup(email, password);
     }
-  }
-
-  String? _validateEmail(String? email) {
-    if (email == null || email.trim().isEmpty) {
-      return 'Your email is required';
-    }
-
-    bool emailValid = RegExp(
-            r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
-        .hasMatch(email);
-    if (!emailValid) {
-      return 'Please enter a valid email';
-    }
-
-    return null;
-  }
-
-  String? _password;
-
-  String? _validatePassword(String? password) {
-    if (password == null || password.trim().isEmpty) {
-      return 'Your password is required';
-    }
-
-    if (password.length < 6) {
-      return 'Your password must be at least 6 characters long';
-    }
-
-    _password = password;
-
-    return null;
-  }
-
-  String? _validateConfirmPassword(String? passwordConfirm) {
-    if (passwordConfirm == null || passwordConfirm.trim().isEmpty) {
-      return 'Your password is required';
-    }
-
-    if (passwordConfirm.length < 6 || passwordConfirm != _password) {
-      return 'The two passwords must match';
-    }
-    return null;
   }
 }

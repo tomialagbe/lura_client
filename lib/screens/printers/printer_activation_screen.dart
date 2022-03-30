@@ -59,11 +59,8 @@ class PrinterActivationScreen extends StatelessWidget {
                               ),
                             ),
                             const Gap(20),
-                            CircularIconButton(
-                              icon: const Icon(
-                                Icons.arrow_forward,
-                                color: Colors.white,
-                              ),
+                            LuraCircularIconButton(
+                              icon: Icons.arrow_forward,
                               onTap: () {
                                 context
                                     .read<PrinterEmulationBloc>()

@@ -42,6 +42,7 @@ FullCommand? getFullCommand(int command, ByteData buffer, int startOffset) {
   );
 
   if (matchingCommand.isEmpty) {
+    // ignore: avoid_print
     print(
         'Empty matching command for $command found at $currOffset with neighbouring bytes ${buffer.buffer.asUint8List(currOffset, 10).join(', ')}');
     return null;

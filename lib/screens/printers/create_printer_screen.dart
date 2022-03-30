@@ -4,6 +4,8 @@ import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lura_client/screens/printers/bloc/create_printer_screen_bloc.dart';
 import 'package:lura_client/ui/widgets/alerts.dart';
+import 'package:lura_client/ui/widgets/lura_alerts/alerts.dart';
+import 'package:lura_client/ui/widgets/lura_rounded_text_field.dart';
 import '../widgets/app_bars.dart';
 import 'package:lura_client/ui/colors.dart';
 import 'package:lura_client/ui/typography.dart';
@@ -28,10 +30,12 @@ class CreatePrinterScreen extends StatelessWidget {
                   ? SingleChildScrollView(
                       child: _CreatePrinterForm(
                           sizingInformation: sizingInformation))
-                  : Container(
-                      constraints: const BoxConstraints(maxWidth: 700),
-                      child: _CreatePrinterForm(
-                          sizingInformation: sizingInformation),
+                  : Center(
+                      child: SizedBox(
+                        width: 700,
+                        child: _CreatePrinterForm(
+                            sizingInformation: sizingInformation),
+                      ),
                     ),
             ),
           ),
@@ -59,6 +63,8 @@ class _CreatePrinterFormState extends State<_CreatePrinterForm> {
   static const _initialPlatform = 'windows';
   String _selectedPlatform = _initialPlatform;
 
+  final _formKey = GlobalKey<FormState>();
+
   @override
   void initState() {
     super.initState();
@@ -78,101 +84,93 @@ class _CreatePrinterFormState extends State<_CreatePrinterForm> {
       });
     }
 
+    final isSubmitting = createPrinterBloc.state.isSubmitting;
     return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisSize: MainAxisSize.min,
+      mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Gap(sizingInformation.isDesktop ? 100 : 20),
-        Text(
-          'Create a printer',
-          style: LuraTextStyles.baseTextStyle.copyWith(
-              color: LuraColors.blue,
-              fontSize: 36,
-              fontWeight: FontWeight.w400),
-        ),
-        const Gap(70),
-        Form(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              TextFormField(
-                controller: _printerNameController,
-                style: const TextStyle(fontSize: 18, color: LuraColors.blue),
-                decoration: const InputDecoration(
-                  filled: false,
-                  hintText: 'Printer name',
-                  hintStyle: TextStyle(
-                    color: LuraColors.blue,
-                    fontSize: 20,
-                  ),
-                  enabledBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(color: LuraColors.blue, width: 1),
-                  ),
-                  border: UnderlineInputBorder(
-                    borderSide: BorderSide(color: LuraColors.blue, width: 1),
-                  ),
-                ),
-                validator: (name) {
-                  if (name == null || name.trim().isEmpty) {
-                    return 'The printer name is required';
-                  }
-                  return null;
-                },
-                keyboardType: TextInputType.text,
-              ),
-              const Gap(30),
-              Text(
-                'On what platform does your POS run?',
-                style: LuraTextStyles.baseTextStyle.copyWith(
-                  color: LuraColors.blue,
-                  fontSize: 20,
-                  fontWeight: FontWeight.w400,
-                ),
-              ),
-              const Gap(20),
-              PlatformSelector(
-                initialValue: 'windows',
-                onChange: (selectedPlatform) {
-                  setState(() {
-                    _selectedPlatform = selectedPlatform.toLowerCase();
-                  });
-                },
-              ),
-              if (createPrinterBloc.state.error != null)
-                Padding(
-                  padding: const EdgeInsets.only(top: 20),
-                  child: ErrorAlert(
-                    error: createPrinterBloc.state.error!,
-                    showRetry: false,
-                  ),
-                ),
-              const Gap(60),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  StreamBuilder<bool>(
-                    stream: _formCompleteStream,
-                    builder: (context, snapshot) {
-                      final formComplete = snapshot.data ?? false;
-                      final isSubmitting = createPrinterBloc.state.isSubmitting;
-                      return _SubmitButton(
-                        onTap: formComplete && !isSubmitting
-                            ? () {
-                                final name = _printerNameController.text.trim();
-                                createPrinterBloc.savePrinter(
-                                    name, _selectedPlatform.toLowerCase());
-                                // context.goNamed('new-printer-created');
-                              }
-                            : null,
-                      );
-                    },
-                  ),
-                ],
-              ),
-            ],
+        Container(
+          margin: widget.sizingInformation.isMobile
+              ? EdgeInsets.only(
+                  top: 0.1 * widget.sizingInformation.screenSize.height)
+              : null,
+          padding: EdgeInsets.all(widget.sizingInformation.isDesktop ? 40 : 20),
+          decoration: BoxDecoration(
+            color: LuraColors.formBackground,
+            borderRadius: BorderRadius.circular(20),
           ),
+          child: Form(
+            key: _formKey,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                // Gap(sizingInformation.isDesktop ? 100 : 20),
+                Text(
+                  'Create a printer',
+                  style: widget.sizingInformation.isDesktop
+                      ? Theme.of(context).textTheme.headline3
+                      : Theme.of(context).textTheme.headline4,
+                ),
+                const Gap(30),
+                Text(
+                  'On what platform does your POS run?',
+                  style: Theme.of(context).textTheme.bodyText2,
+                ),
+                const Gap(20),
+                PlatformSelector(
+                  initialValue: 'windows',
+                  onChange: (selectedPlatform) {
+                    setState(() {
+                      _selectedPlatform = selectedPlatform.toLowerCase();
+                    });
+                  },
+                ),
+                const Gap(30),
+                LuraActionTextField(
+                  large: widget.sizingInformation.isDesktop,
+                  icon: Icons.arrow_forward,
+                  hintText: 'Printer name',
+                  controller: _printerNameController,
+                  textInputValidator: (name) {
+                    if (name == null || name.trim().isEmpty) {
+                      return 'The printer name is required';
+                    }
+                    return null;
+                  },
+                  keyboardType: TextInputType.text,
+                  onTap: !isSubmitting
+                      ? () {
+                          if (_formKey.currentState?.validate() == true) {
+                            final name = _printerNameController.text.trim();
+                            createPrinterBloc.savePrinter(
+                                name, _selectedPlatform.toLowerCase());
+                          }
+                        }
+                      : null,
+                ),
+                if (createPrinterBloc.state.error != null)
+                  Padding(
+                    padding: const EdgeInsets.only(top: 20),
+                    child: LuraErrorAlert(
+                      title: 'Error!',
+                      message: createPrinterBloc.state.error!,
+                      onClose: () {
+                        createPrinterBloc.clearError();
+                      },
+                    ),
+                  ),
+              ],
+            ),
+          ),
+        ),
+        const Gap(10),
+        TextButton(
+          onPressed: () {
+            context.pop();
+          },
+          child: const Text('Cancel'),
         ),
       ],
     );

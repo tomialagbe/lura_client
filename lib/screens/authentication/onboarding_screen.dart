@@ -3,11 +3,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:lura_client/screens/authentication/bloc/onboarding_screen_bloc.dart';
 import 'package:lura_client/screens/widgets/app_bars.dart';
-import 'package:lura_client/ui/colors.dart';
-import 'package:lura_client/ui/typography.dart';
-import 'package:lura_client/ui/widgets/circular_icon_button.dart';
 import 'package:responsive_builder/responsive_builder.dart';
 import 'package:rxdart/rxdart.dart';
+
+import '../../ui/widgets/buttons/lura_flat_button.dart';
+import '../../ui/widgets/lura_text_field.dart';
 
 class OnboardingScreen extends StatelessWidget {
   const OnboardingScreen({Key? key}) : super(key: key);
@@ -24,10 +24,12 @@ class OnboardingScreen extends StatelessWidget {
                 ? SingleChildScrollView(
                     child:
                         _OnboardingForm(sizingInformation: sizingInformation))
-                : Container(
-                    constraints: const BoxConstraints(maxWidth: 700),
-                    child:
-                        _OnboardingForm(sizingInformation: sizingInformation),
+                : Center(
+                    child: SizedBox(
+                      width: 700,
+                      child:
+                          _OnboardingForm(sizingInformation: sizingInformation),
+                    ),
                   ),
           ),
         ),
@@ -64,79 +66,49 @@ class _OnboardingFormState extends State<_OnboardingForm> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Gap(widget.sizingInformation.isDesktop ? 100 : 20),
-        Text(
-          'What\'s your organization name?',
-          style: LuraTextStyles.baseTextStyle.copyWith(
-              color: LuraColors.blue,
-              fontSize: 36,
-              fontWeight: FontWeight.w400),
-        ),
-        const Gap(40),
-        Form(
-          key: _formKey,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              TextFormField(
-                controller: _orgNameController,
-                style: const TextStyle(fontSize: 18, color: LuraColors.blue),
-                decoration: const InputDecoration(
-                  filled: false,
-                  hintText: 'Organization name',
-                  hintStyle: TextStyle(
-                    color: LuraColors.blue,
-                    fontSize: 20,
-                  ),
-                  enabledBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(color: LuraColors.blue, width: 1),
-                  ),
-                  border: UnderlineInputBorder(
-                    borderSide: BorderSide(color: LuraColors.blue, width: 1),
-                  ),
-                ),
-                validator: (name) {
-                  if (name == null || name.trim().isEmpty) {
-                    return 'Your organization name is required';
-                  }
-                  return null;
-                },
-                keyboardType: TextInputType.text,
-              ),
-              const Gap(30),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  StreamBuilder<bool>(
-                    stream: _formCompleteStream,
-                    builder: (context, snapshot) {
-                      final isFormComplete = (snapshot.data ?? false);
-                      final isSubmitting = context
-                          .watch<OnboardingScreenBloc>()
-                          .state
-                          .isSubmitting;
-                      return CircularIconButton(
-                        icon: const Icon(
-                          Icons.arrow_forward,
-                          color: Colors.white,
-                        ),
-                        onTap:
-                            isFormComplete && !isSubmitting ? _onSubmit : null,
-                      );
-                    },
-                  ),
-                ],
-              ),
-            ],
+    final screenBloc = context.watch<OnboardingScreenBloc>();
+    final isSubmitting = screenBloc.state.isSubmitting;
+    final isComplete = screenBloc.state.completed;
+
+    return Form(
+      key: _formKey,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          if (widget.sizingInformation.isMobile)
+            Gap(0.1 * MediaQuery.of(context).size.height),
+          Text(
+            'Onboarding',
+            style: widget.sizingInformation.isDesktop
+                ? Theme.of(context).textTheme.headline3
+                : Theme.of(context).textTheme.headline4,
           ),
-        ),
-      ],
+          const Gap(20),
+          Text(
+            'What\'s your business name?',
+            style: Theme.of(context).textTheme.bodyText2,
+          ),
+          const Gap(40),
+          LuraTextField(
+            large: true,
+            controller: _orgNameController,
+            textInputValidator: (name) {
+              if (name == null || name.trim().isEmpty) {
+                return 'Your organization name is required';
+              }
+              return null;
+            },
+            keyboardType: TextInputType.text,
+            hintText: 'Your business name',
+          ),
+          const Gap(30),
+          LuraFlatButton(
+            text: 'Save',
+            onTap: !isSubmitting && !isComplete ? _onSubmit : null,
+          ),
+        ],
+      ),
     );
   }
 

@@ -1,5 +1,7 @@
 // ignore_for_file = constant_identifier_names
 
+// ignore_for_file: constant_identifier_names
+
 abstract class IppConstants {
   // Values
   static const int FALSE = 0x00;

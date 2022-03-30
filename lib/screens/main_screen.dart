@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:lura_client/core/business/business_bloc.dart';
+import 'package:lura_client/core/utils/string_utils.dart';
 import 'package:responsive_builder/responsive_builder.dart';
 
+import 'printers/add_printer_button.dart';
 import 'receipts/bloc/receipts_screen_bloc.dart';
 import 'widgets/app_bars.dart';
 import 'feedback_screen.dart';
@@ -21,6 +24,7 @@ class MainScreen extends StatefulWidget {
 
 class _MainScreenState extends State<MainScreen> {
   int _selectedIndex = 0;
+  String? _currentTitle;
 
   static const _pageIndices = {
     'printers': 0,
@@ -33,6 +37,7 @@ class _MainScreenState extends State<MainScreen> {
     super.initState();
     setState(() {
       _selectedIndex = _pageIndices[widget.page] ?? 0;
+      _currentTitle = widget.page.capitalize();
     });
   }
 
@@ -42,6 +47,7 @@ class _MainScreenState extends State<MainScreen> {
     if (_selectedIndex != (_pageIndices[widget.page] ?? 0)) {
       setState(() {
         _selectedIndex = _pageIndices[widget.page] ?? 0;
+        _currentTitle = widget.page.capitalize();
       });
     }
   }
@@ -51,6 +57,7 @@ class _MainScreenState extends State<MainScreen> {
     super.didChangeDependencies();
     setState(() {
       _selectedIndex = _pageIndices[widget.page] ?? 0;
+      _currentTitle = widget.page.capitalize();
     });
   }
 
@@ -60,7 +67,11 @@ class _MainScreenState extends State<MainScreen> {
       builder: (context, sizingInfo) {
         return Scaffold(
           drawer: SideMenu(currentPage: _selectedIndex),
-          appBar: sizingInfo.isDesktop ? null : luraAppBar(context),
+          appBar: sizingInfo.isDesktop
+              ? null
+              : luraAppBar(context,
+                  title: _currentTitle,
+                  actions: pageActions(context, widget.page)),
           body: SafeArea(
             child: Builder(
               builder: (context) {
@@ -87,6 +98,20 @@ class _MainScreenState extends State<MainScreen> {
       },
     );
   }
+
+  List<Widget> pageActions(BuildContext context, String page) {
+    switch (page.toLowerCase()) {
+      case 'printers':
+        return [
+          const AddPrinterButton(),
+        ];
+      case 'receipts':
+        return [];
+      case 'feedback':
+      default:
+        return [];
+    }
+  }
 }
 
 class _ContentSlot extends StatelessWidget {
@@ -97,17 +122,17 @@ class _ContentSlot extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final business = context.read<BusinessBloc>().state!;
-    /*return IndexedStack(
-      index: selectedIndex,
-      children: [
-        const PrintersScreen(),
-        BlocProvider(
-          create: (ctx) => ReceiptsScreenBloc(businessId: business.id),
-          child: const ReceiptsScreen(),
-        ),
-        const FeedbackScreen(),
-      ],
-    );*/
+    // return IndexedStack(
+    //   index: selectedIndex,
+    //   children: [
+    //     const PrintersScreen(),
+    //     BlocProvider(
+    //       create: (ctx) => ReceiptsScreenBloc(businessId: business.id),
+    //       child: const ReceiptsScreen(),
+    //     ),
+    //     const FeedbackScreen(),
+    //   ],
+    // );
     if (selectedIndex == 0) {
       return const PrintersScreen();
     } else if (selectedIndex == 1) {

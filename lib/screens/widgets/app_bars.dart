@@ -1,18 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:lura_client/core/utils/platform_helper.dart';
 
-PreferredSizeWidget? luraAppBar(BuildContext context) {
+PreferredSizeWidget? luraAppBar(BuildContext context, {String? title, List<Widget>? actions}) {
   if (PlatformHelper.isWeb) {
     return null;
   }
 
   return AppBar(
-    title: Image.asset(
-      'images/lura_logo_icon_alt.png',
-      height: 50,
-    ),
-    // backgroundColor: Theme.of(context).drawerTheme.backgroundColor,
+    elevation: 0,
+    title: title != null ? Text(title, style: Theme.of(context).textTheme.headline5) : null,
     automaticallyImplyLeading: true,
+    actions: actions,
   );
 }
 

@@ -1,15 +1,17 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
+import 'package:lura_client/screens/authentication/lura_logo.dart';
 import 'package:lura_client/ui/colors.dart';
-import 'package:lura_client/ui/typography.dart';
-import 'package:lura_client/ui/widgets/alerts.dart';
-import 'package:lura_client/ui/widgets/circular_icon_button.dart';
+import 'package:lura_client/ui/input_validator.dart';
+import 'package:lura_client/ui/widgets/buttons/lura_flat_button.dart';
+import 'package:lura_client/ui/widgets/lura_alerts/alerts.dart';
 import 'package:lura_client/ui/widgets/lura_text_field.dart';
 import 'package:responsive_builder/responsive_builder.dart';
 import 'package:provider/provider.dart';
 
-import 'bloc/login_screen_bloc.dart';
+import 'bloc/auth_screen_bloc.dart';
 
 class SigninScreen extends StatefulWidget {
   const SigninScreen({Key? key}) : super(key: key);
@@ -38,6 +40,7 @@ class _SigninScreenState extends State<SigninScreen> {
                     emailController: _emailController,
                     passwordController: _passwordController,
                     formKey: _formKey,
+                    isDesktop: true,
                   ),
                 ),
               );
@@ -76,11 +79,12 @@ class _SigninMobile extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Gap(MediaQuery.of(context).size.height * 0.1),
+            Gap(0.1 * MediaQuery.of(context).size.height),
             SigninForm(
               emailController: emailController,
               passwordController: passwordController,
               formKey: formKey,
+              isDesktop: false,
             ),
           ],
         ),
@@ -93,12 +97,14 @@ class SigninForm extends StatelessWidget {
   final TextEditingController emailController;
   final TextEditingController passwordController;
   final GlobalKey<FormState> formKey;
+  final bool isDesktop;
 
   const SigninForm({
     Key? key,
     required this.emailController,
     required this.passwordController,
     required this.formKey,
+    this.isDesktop = false,
   }) : super(key: key);
 
   @override
@@ -110,77 +116,78 @@ class SigninForm extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Image.asset(
-            'images/lura_logo_icon_alt.png',
-            fit: BoxFit.cover,
-            width: 100,
-            height: 100,
-          ),
+          const LuraLogo(),
           const Gap(20),
           Text(
-            'Sign in',
-            style: LuraTextStyles.baseTextStyle
-                .copyWith(fontSize: 42, fontWeight: FontWeight.w400),
-          ),
-          const Gap(60),
-          if (loginScreenBloc.state.error != null)
-            Padding(
-              padding: const EdgeInsets.only(bottom: 20),
-              child: ErrorAlert(
-                  error: loginScreenBloc.state.error!, showRetry: false),
-            ),
-          LuraTextField(
-            hintText: 'Email',
-            keyboardType: TextInputType.emailAddress,
-            controller: emailController,
-            textInputValidator: _validateEmail,
+            'Log in to Lura.',
+            style: Theme.of(context).textTheme.headline3,
           ),
           const Gap(20),
-          LuraTextField(
-            hintText: 'Password',
-            keyboardType: TextInputType.visiblePassword,
-            obscureText: true,
-            controller: passwordController,
-            textInputValidator: _validatePassword,
-          ),
-          const Gap(20),
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              TextButton(
-                onPressed: () {
-                  context.go('/forgot-password');
-                },
-                child: const Text('Forgot your password?'),
-              ),
-              const Gap(10),
-              Container(
-                width: 2.5,
-                height: 2.5,
-                decoration: const BoxDecoration(
-                    shape: BoxShape.circle, color: LuraColors.blue),
-              ),
-              const Gap(10),
-              TextButton(
-                child: const Text('Sign up for Lura'),
-                onPressed: () {
-                  context.go('/signup');
-                },
-              ),
-            ],
+          RichText(
+            text: TextSpan(
+                text: 'Don\'t have an account yet? ',
+                style: Theme.of(context).textTheme.bodyText2,
+                children: [
+                  TextSpan(
+                    text: 'Sign up',
+                    style: const TextStyle(
+                      color: LuraColors.blue,
+                      fontWeight: FontWeight.w500,
+                    ),
+                    recognizer: TapGestureRecognizer()
+                      ..onTap = () {
+                        context.go('/signup');
+                      },
+                  ),
+                  const TextSpan(text: '.'),
+                ]),
           ),
           const Gap(40),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              CircularIconButton(
-                icon: const Icon(Icons.arrow_forward),
-                onTap: loginScreenBloc.state.isSubmitting
-                    ? null
-                    : () => _onSubmit(context),
-              ),
-            ],
+          LuraTextField(
+            hintText: 'Your email',
+            large: true,
+            trailing: const Padding(
+              padding: EdgeInsets.only(right: 30),
+              child: Icon(Icons.alternate_email_outlined),
+            ),
+            keyboardType: TextInputType.emailAddress,
+            textInputValidator: InputValidator.validateEmail,
+            controller: emailController,
           ),
+          const Gap(30),
+          LuraTextField(
+            hintText: 'Your password',
+            large: true,
+            trailing: const Padding(
+              padding: EdgeInsets.only(right: 30),
+              child: Icon(Icons.password),
+            ),
+            keyboardType: TextInputType.visiblePassword,
+            obscureText: true,
+            textInputValidator: InputValidator.validatePassword,
+            controller: passwordController,
+          ),
+          const Gap(30),
+          LuraFlatButton(
+            text: 'Login',
+            onTap: loginScreenBloc.state.isSubmitting
+                ? null
+                : () => _onSubmit(context),
+          ),
+          if (loginScreenBloc.state.error != null)
+            Padding(
+              padding: const EdgeInsets.only(top: 30),
+              child: LuraErrorAlert(
+                title: 'Login failed',
+                message: loginScreenBloc.state.error!,
+                onClose: () {
+                  loginScreenBloc.clearError();
+                },
+              ),
+            ),
+          const Gap(30),
+          const Divider(),
+          const _LoginLinks(),
         ],
       ),
     );
@@ -193,31 +200,24 @@ class SigninForm extends StatelessWidget {
       context.read<LoginScreenBloc>().login(email, password);
     }
   }
+}
 
-  String? _validateEmail(String? email) {
-    if (email == null || email.trim().isEmpty) {
-      return 'Your email is required';
-    }
+class _LoginLinks extends StatelessWidget {
+  const _LoginLinks({Key? key}) : super(key: key);
 
-    bool emailValid = RegExp(
-            r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
-        .hasMatch(email);
-    if (!emailValid) {
-      return 'Please enter a valid email';
-    }
-
-    return null;
-  }
-
-  String? _validatePassword(String? password) {
-    if (password == null || password.trim().isEmpty) {
-      return 'Your password is required';
-    }
-
-    if (password.length < 6) {
-      return 'Your password must be at least 6 characters long';
-    }
-
-    return null;
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        TextButton(
+          onPressed: () {
+            context.go('/forgot-password');
+          },
+          child: const Text('Forgot your password?'),
+        ),
+        const Gap(10),
+      ],
+    );
   }
 }

@@ -183,6 +183,8 @@ abstract class Utils {
           ? '${(attribute.value[0] as int)}'
           : attribute.value[0] as String;
     }
+
+    return null;
   }
 
   static List<String> concat(List<dynamic> a, List<dynamic> b) {

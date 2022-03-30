@@ -3,7 +3,6 @@ import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:equatable/equatable.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lura_client/core/printers/printers_repository.dart';
 import 'package:lura_client/core/printing/esc/esc_pos_printer_emulator.dart';
@@ -131,7 +130,7 @@ class PrinterEmulationBloc extends Cubit<PrinterEmulationState> {
     PrintersRepository? printersRepo,
     required this.selectedPrinterBloc,
   })  : printersRepository = printersRepo ?? locator.get<PrintersRepository>(),
-        super(const PrinterEmulationState.stopped()) {}
+        super(const PrinterEmulationState.stopped());
 
   void startEmulation() async {
     if (selectedPrinterBloc.state == null) {
