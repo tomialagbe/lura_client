@@ -2,6 +2,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
+import 'package:lura_client/screens/authentication/lura_logo.dart';
 import 'package:lura_client/ui/colors.dart';
 import 'package:lura_client/ui/input_validator.dart';
 import 'package:lura_client/ui/widgets/buttons/lura_flat_button.dart';
@@ -115,12 +116,8 @@ class SigninForm extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Image.asset(
-            'images/lura_logo_icon_alt.png',
-            fit: BoxFit.cover,
-            width: 100,
-            height: 100,
-          ),
+          const LuraLogo(),
+          const Gap(20),
           Text(
             'Log in to Lura.',
             style: Theme.of(context).textTheme.headline3,

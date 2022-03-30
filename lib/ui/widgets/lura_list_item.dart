@@ -22,7 +22,7 @@ class LuraListItem extends StatelessWidget {
     return Material(
       color: LuraColors.blue,
       clipBehavior: Clip.antiAlias,
-      borderRadius: BorderRadius.circular(20),
+      borderRadius: BorderRadius.circular(10),
       child: InkWell(
         onTap: onTap,
         child: Padding(

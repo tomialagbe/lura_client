@@ -16,6 +16,7 @@ class SideMenu extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Drawer(
+      elevation: 0,
       child: Column(
         children: [
           ListView(
@@ -30,7 +31,7 @@ class SideMenu extends StatelessWidget {
                   ),
                 ),
                 child: DrawerHeader(
-                  child: Image.asset('images/lura_logo_icon_alt.png'),
+                  child: Image.asset('images/lura_logo.png'),
                   padding: const EdgeInsets.all(10),
                 ),
               ),

@@ -11,6 +11,7 @@ import 'package:rxdart/rxdart.dart';
 
 import '../../ui/widgets/buttons/lura_flat_button.dart';
 import 'bloc/auth_screen_bloc.dart';
+import 'lura_logo.dart';
 
 class ForgotPasswordScreen extends StatelessWidget {
   const ForgotPasswordScreen({Key? key}) : super(key: key);
@@ -81,12 +82,8 @@ class _ForgotPasswordFormState extends State<_ForgotPasswordForm> {
         children: [
           if (widget.sizingInformation.isMobile)
             Gap(0.1 * MediaQuery.of(context).size.height),
-          Image.asset(
-            'images/lura_logo_icon_alt.png',
-            fit: BoxFit.cover,
-            width: 100,
-            height: 100,
-          ),
+          const LuraLogo(),
+          const Gap(20),
           Text(
             'Reset your password',
             style: widget.sizingInformation.isDesktop

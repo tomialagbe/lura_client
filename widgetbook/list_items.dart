@@ -61,6 +61,13 @@ List<WidgetbookUseCase> listItemUsecases() {
                       ],
                     ),
                   ),
+                  const SizedBox(height: 30),
+                  LuraListItem(
+                    onTap: () {},
+                    title: const Text('Printer two'),
+                    subTitle: const Icon(FontAwesomeIcons.microsoft),
+                    trailing: Text('lorem ipsum dolor sit amet lorem ipsum'),
+                  ),
                 ],
               ),
             ),

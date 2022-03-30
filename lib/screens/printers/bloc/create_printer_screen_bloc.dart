@@ -67,4 +67,8 @@ class CreatePrinterScreenBloc extends Cubit<CreatePrinterScreenState> {
       emit(state.failed('An unknown error occurred'));
     }
   }
+
+  void clearError() {
+    emit(const CreatePrinterScreenState.initial());
+  }
 }

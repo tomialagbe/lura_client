@@ -1,13 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:gap/gap.dart';
 import 'package:lura_client/core/print_jobs/print_job.dart';
 import 'package:lura_client/screens/receipts/bloc/receipts_screen_bloc.dart';
-import 'package:lura_client/ui/colors.dart';
-import 'package:lura_client/ui/typography.dart';
 import 'package:lura_client/ui/widgets/alerts.dart';
 import 'package:lura_client/ui/widgets/loading_display.dart';
 import 'package:provider/provider.dart';
 import 'package:responsive_builder/responsive_builder.dart';
+import '../../ui/widgets/lura_list_item.dart';
 import '../../utils/link_opener.dart' as link_opener;
 
 class ReceiptsScreen extends StatelessWidget {
@@ -22,20 +20,22 @@ class ReceiptsScreen extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Text(
-                'Receipts',
-                style: LuraTextStyles.baseTextStyle.copyWith(
-                  fontSize: 40,
-                  color: LuraColors.blue,
-                  fontWeight: FontWeight.w400,
-                ),
-              ),
-              const Expanded(child: SizedBox()),
-            ],
-          ),
+          ResponsiveBuilder(builder: (context, sizingInfo) {
+            if (sizingInfo.isDesktop) {
+              return Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Text(
+                    'Receipts',
+                    style: Theme.of(context).textTheme.headline3,
+                  ),
+                  const Expanded(child: SizedBox()),
+                ],
+              );
+            }
+
+            return const SizedBox();
+          }),
           if (screenBloc.state.loading)
             const Expanded(child: Center(child: LoadingDisplay()))
           else if (screenBloc.state.loadError != null)
@@ -66,6 +66,7 @@ class ReceiptList extends StatefulWidget {
 
 class _ReceiptListState extends State<ReceiptList> {
   final _scrollController = ScrollController();
+
   @override
   Widget build(BuildContext context) {
     return ResponsiveBuilder(
@@ -94,7 +95,7 @@ class _ReceiptListState extends State<ReceiptList> {
 
         return Center(
           child: SizedBox(
-            width: sizingInformation.screenSize.width * 0.6,
+            width: 700,
             height: double.infinity,
             child: Center(
               child: listView,
@@ -120,63 +121,22 @@ class _ReceiptListItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final textStyle = LuraTextStyles.baseTextStyle.copyWith(
-      color: LuraColors.black,
-      fontSize: 20,
-      fontWeight: FontWeight.w400,
-    );
     return Padding(
-      padding: const EdgeInsets.only(bottom: 10),
-      child: SizedBox(
-        height: 120,
-        width: double.infinity,
-        child: Card(
-          elevation: 0,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(5),
-          ),
-          child: Material(
-            clipBehavior: Clip.antiAlias,
-            color: LuraColors.lightBlue,
-            borderRadius: BorderRadius.circular(5),
-            child: InkWell(
-              splashColor: LuraColors.lighterBlue,
-              focusColor: LuraColors.lighterBlue,
-              onTap: onTap,
-              child: Container(
-                height: double.infinity,
-                width: double.infinity,
-                padding:
-                    const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Text(
-                          'Receipt #${receipt.id}',
-                          style: textStyle,
-                        ),
-                        const Gap(10),
-                        Text(
-                          receipt.printerName,
-                          style: textStyle.copyWith(fontSize: 16),
-                        ),
-                      ],
-                    ),
-                    Expanded(child: Container()),
-                    Text(
-                      receipt.createdAt,
-                      style: textStyle.copyWith(fontSize: 14),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ),
+      padding: const EdgeInsets.only(bottom: 20),
+      child: LuraListItem(
+        title: SelectableText('Receipt #${receipt.id}'),
+        trailing: sizingInformation.isDesktop
+            ? SelectableText(receipt.createdAt)
+            : null,
+        subTitle: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            SelectableText(receipt.printerName),
+            if (sizingInformation.isMobile) SelectableText(receipt.createdAt),
+          ],
         ),
+        onTap: onTap,
       ),
     );
   }
