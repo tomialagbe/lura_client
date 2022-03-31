@@ -25,7 +25,7 @@ class AddPrinterButton extends StatelessWidget {
               },
             ),
             if (sizingInformation.isDesktop)
-              Text(
+              SelectableText(
                 'Add new',
                 style: Theme.of(context).textTheme.bodyText2,
               ),

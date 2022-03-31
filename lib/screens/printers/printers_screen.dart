@@ -44,9 +44,10 @@ class _PrintersScreenState extends State<PrintersScreen> {
                 return Row(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    Text(
+                    SelectableText(
                       'Printers',
                       style: Theme.of(context).textTheme.headline3,
+                      toolbarOptions: const ToolbarOptions(copy: true),
                     ),
                     const Expanded(child: SizedBox()),
                     const AddPrinterButton(),

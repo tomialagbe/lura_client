@@ -127,13 +127,13 @@ class SignupForm extends StatelessWidget {
         children: [
           const LuraLogo(),
           const Gap(20),
-          Text(
+          SelectableText(
             'Sign up to Lura.',
             style: Theme.of(context).textTheme.headline3,
           ),
           const Gap(20),
-          RichText(
-            text: TextSpan(
+          SelectableText.rich(
+            TextSpan(
                 text: 'Already have an account? ',
                 style: Theme.of(context).textTheme.bodyText2,
                 children: [
@@ -150,6 +150,7 @@ class SignupForm extends StatelessWidget {
                   ),
                   const TextSpan(text: '.'),
                 ]),
+            toolbarOptions: const ToolbarOptions(copy: true),
           ),
           const Gap(40),
           LuraTextField(
