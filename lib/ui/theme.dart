@@ -38,6 +38,7 @@ class LuraTheme {
     );
   }
 
+  // ignore: unused_element
   static InputDecorationTheme get _inputDecorationTheme {
     return InputDecorationTheme(
       filled: true,
