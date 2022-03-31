@@ -57,13 +57,12 @@ jobs:
       - name: Install dependencies
         run: flutter pub get
       - name: Build web
-        run: flutter build web --release
+        run: flutter build web --release -t lib/main_staging.dart
       - name: Deploy to S3
         uses: reggionick/s3-deploy@v3
         with:
           folder: build/web
           bucket: staging.lura.so
-          dist-id: ${{ secrets.CLOUDFRONT_DIST_ID }}
           bucket-region: eu-central-1
           no-cache: true
           delete-removed: true
