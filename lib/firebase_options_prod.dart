@@ -58,7 +58,8 @@ class ProdFirebaseOptions {
     messagingSenderId: '376445519523',
     projectId: 'lura-33bc9',
     storageBucket: 'lura-33bc9.appspot.com',
-    iosClientId: '376445519523-3415gpg8prjmihqe0iqvi11lfakv0qi3.apps.googleusercontent.com',
+    iosClientId:
+        '376445519523-3415gpg8prjmihqe0iqvi11lfakv0qi3.apps.googleusercontent.com',
     iosBundleId: 'so.lura',
   );
 
@@ -68,7 +69,8 @@ class ProdFirebaseOptions {
     messagingSenderId: '376445519523',
     projectId: 'lura-33bc9',
     storageBucket: 'lura-33bc9.appspot.com',
-    iosClientId: '376445519523-3415gpg8prjmihqe0iqvi11lfakv0qi3.apps.googleusercontent.com',
+    iosClientId:
+        '376445519523-3415gpg8prjmihqe0iqvi11lfakv0qi3.apps.googleusercontent.com',
     iosBundleId: 'so.lura',
   );
 }

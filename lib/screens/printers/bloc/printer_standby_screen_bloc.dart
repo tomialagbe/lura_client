@@ -11,7 +11,8 @@ class PrinterStandbyScreenState extends Equatable {
 
   bool get hasJob => currentJobUrl != null;
 
-  const PrinterStandbyScreenState({required this.isWaiting, this.currentJobUrl});
+  const PrinterStandbyScreenState(
+      {required this.isWaiting, this.currentJobUrl});
 
   @override
   bool get stringify => true;
@@ -29,11 +30,12 @@ class PrinterStandbyScreenBloc extends Cubit<PrinterStandbyScreenState> {
       : super(const PrinterStandbyScreenState(isWaiting: true)) {
     _emulationStateSubscription =
         printerEmulationBloc.stream.listen((emulationState) {
-          final isWaiting = !emulationState.hasJob;
-          final newState = PrinterStandbyScreenState(isWaiting: isWaiting, currentJobUrl: emulationState.currentJobUrl);
-          debugPrint('Printer standby state changed to $newState');
-          emit(newState);
-        });
+      final isWaiting = !emulationState.hasJob;
+      final newState = PrinterStandbyScreenState(
+          isWaiting: isWaiting, currentJobUrl: emulationState.currentJobUrl);
+      debugPrint('Printer standby state changed to $newState');
+      emit(newState);
+    });
   }
 
   @override

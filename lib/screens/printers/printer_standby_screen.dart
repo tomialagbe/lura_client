@@ -18,7 +18,6 @@ class PrinterStandbyScreen extends StatefulWidget {
 }
 
 class _PrinterStandbyScreenState extends State<PrinterStandbyScreen> {
-
   @override
   void initState() {
     super.initState();
@@ -50,8 +49,8 @@ class _PrinterStandbyScreenState extends State<PrinterStandbyScreen> {
                     TextButton(
                       child: const Text(
                         'Exit',
-                        style:
-                            TextStyle(fontSize: 20, fontWeight: FontWeight.w400),
+                        style: TextStyle(
+                            fontSize: 20, fontWeight: FontWeight.w400),
                       ),
                       onPressed: () {
                         context.read<PrinterEmulationBloc>().stopEmulation();

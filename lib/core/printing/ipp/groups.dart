@@ -39,8 +39,8 @@ abstract class Groups {
 
   static AttributeGroup jobAttributesTag(List<Attribute> attributes) {
     return AttributeGroup()
-        ..tag = IppConstants.JOB_ATTRIBUTES_TAG
-        ..attributes = attributes;
+      ..tag = IppConstants.JOB_ATTRIBUTES_TAG
+      ..attributes = attributes;
   }
 
   static List<Attribute> _unsupportedAttributes(

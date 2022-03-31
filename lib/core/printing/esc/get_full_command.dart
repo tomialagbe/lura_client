@@ -15,7 +15,7 @@ FullCommand? getFullCommand(int command, ByteData buffer, int startOffset) {
   for (final comm in commands) {
     final clen = comm.length;
     final len =
-    clen + currOffset > buffer.lengthInBytes ? buffer.lengthInBytes : clen;
+        clen + currOffset > buffer.lengthInBytes ? buffer.lengthInBytes : clen;
     final bytes = buffer.buffer.asUint8List(currOffset, len);
     // currOffset += len;
     if (bytes.length != clen) {
@@ -37,7 +37,7 @@ FullCommand? getFullCommand(int command, ByteData buffer, int startOffset) {
 
   // we've found the command, now get the args
   final en = filtered.entries.firstWhere(
-        (entry) => entry.key == matchingCommand,
+    (entry) => entry.key == matchingCommand,
     orElse: () => const MapEntry(<int>[], 0),
   );
 

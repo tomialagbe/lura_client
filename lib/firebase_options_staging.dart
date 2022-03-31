@@ -57,7 +57,8 @@ class StagingFirebaseOptions {
     messagingSenderId: '781371618532',
     projectId: 'lura-staging',
     storageBucket: 'lura-staging.appspot.com',
-    iosClientId: '781371618532-6k6gib0drf5qp9tggmvkr39i3q5vl0mn.apps.googleusercontent.com',
+    iosClientId:
+        '781371618532-6k6gib0drf5qp9tggmvkr39i3q5vl0mn.apps.googleusercontent.com',
     iosBundleId: 'so.lura',
   );
 
@@ -67,7 +68,8 @@ class StagingFirebaseOptions {
     messagingSenderId: '781371618532',
     projectId: 'lura-staging',
     storageBucket: 'lura-staging.appspot.com',
-    iosClientId: '781371618532-6k6gib0drf5qp9tggmvkr39i3q5vl0mn.apps.googleusercontent.com',
+    iosClientId:
+        '781371618532-6k6gib0drf5qp9tggmvkr39i3q5vl0mn.apps.googleusercontent.com',
     iosBundleId: 'so.lura',
   );
 }
