@@ -197,8 +197,7 @@ class PrinterEmulationBloc extends Cubit<PrinterEmulationState> {
     emit(state.clearJob());
     final isPdf = isIppJobPdf(printData);
     final jobType = isPdf ? 'IPP_PDF' : 'IPP_POSTSCRIPT';
-    final job =
-        await printersRepository.createPrintJob(printer.id, jobType);
+    final job = await printersRepository.createPrintJob(printer.id, jobType);
     emit(state.jobReceived(job!.jobDownloadUrl));
     _startJobTimer();
     printersRepository.uploadPostscriptPrintJob(

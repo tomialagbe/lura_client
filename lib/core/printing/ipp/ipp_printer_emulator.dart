@@ -78,7 +78,7 @@ class IppPrinterEmulator implements PrinterEmulator {
       debugPrint('IppPrinter: printer $name changed state to idle');
 
       _httpServer =
-      await HttpServer.bind('0.0.0.0', port!); // test with shared=true
+          await HttpServer.bind('0.0.0.0', port!); // test with shared=true
       _statusStream.add(true);
 
       _httpRequestSubscription = _httpServer?.listen((request) {
