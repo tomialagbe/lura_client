@@ -80,7 +80,7 @@ class LuraTheme {
     return TextButtonThemeData(
       style: TextButton.styleFrom(
         primary: LuraColors.blue,
-        padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
+        padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 0),
         textStyle: LuraTextStyles.paragraphSmall,
       ),
     );

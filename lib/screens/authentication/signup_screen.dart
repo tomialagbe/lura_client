@@ -152,10 +152,10 @@ class SignupForm extends StatelessWidget {
                 ]),
             toolbarOptions: const ToolbarOptions(copy: true),
           ),
-          const Gap(40),
+          Gap(isDesktop ? 40 : 30),
           LuraTextField(
             hintText: 'Your email',
-            large: true,
+            large: isDesktop,
             trailing: const Padding(
               padding: EdgeInsets.only(right: 30),
               child: Icon(Icons.alternate_email_outlined),
@@ -164,10 +164,10 @@ class SignupForm extends StatelessWidget {
             textInputValidator: InputValidator.validateEmail,
             controller: emailController,
           ),
-          const Gap(30),
+          Gap(isDesktop ? 30 : 20),
           LuraTextField(
             hintText: 'Your password',
-            large: true,
+            large: isDesktop,
             trailing: const Padding(
               padding: EdgeInsets.only(right: 30),
               child: Icon(Icons.password),
@@ -177,10 +177,10 @@ class SignupForm extends StatelessWidget {
             textInputValidator: InputValidator.validatePassword,
             controller: passwordController,
           ),
-          const Gap(30),
+          Gap(isDesktop ? 30 : 20),
           LuraTextField(
             hintText: 'Confirm your password',
-            large: true,
+            large: isDesktop,
             trailing: const Padding(
               padding: EdgeInsets.only(right: 30),
               child: Icon(Icons.password),
@@ -190,7 +190,7 @@ class SignupForm extends StatelessWidget {
             textInputValidator: InputValidator.validateConfirmPassword,
             controller: passwordConfirmController,
           ),
-          const Gap(30),
+          Gap(isDesktop ? 30 : 20),
           LuraFlatButton(
             text: 'Sign up',
             onTap: signupScreenBloc.state.isSubmitting
@@ -208,7 +208,7 @@ class SignupForm extends StatelessWidget {
                 },
               ),
             ),
-          const Gap(30),
+          Gap(isDesktop ? 30 : 20),
         ],
       ),
     );

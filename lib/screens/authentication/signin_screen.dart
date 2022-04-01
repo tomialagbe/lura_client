@@ -143,10 +143,10 @@ class SigninForm extends StatelessWidget {
                 ]),
             toolbarOptions: const ToolbarOptions(copy: true),
           ),
-          const Gap(40),
+          Gap(isDesktop ? 40 : 30),
           LuraTextField(
             hintText: 'Your email',
-            large: true,
+            large: isDesktop,
             trailing: const Padding(
               padding: EdgeInsets.only(right: 30),
               child: Icon(Icons.alternate_email_outlined),
@@ -155,10 +155,10 @@ class SigninForm extends StatelessWidget {
             textInputValidator: InputValidator.validateEmail,
             controller: emailController,
           ),
-          const Gap(30),
+          Gap(isDesktop ? 30 : 20),
           LuraTextField(
             hintText: 'Your password',
-            large: true,
+            large: isDesktop,
             trailing: const Padding(
               padding: EdgeInsets.only(right: 30),
               child: Icon(Icons.password),
@@ -168,7 +168,7 @@ class SigninForm extends StatelessWidget {
             textInputValidator: InputValidator.validatePassword,
             controller: passwordController,
           ),
-          const Gap(30),
+          Gap(isDesktop ? 30 : 20),
           LuraFlatButton(
             text: 'Login',
             onTap: loginScreenBloc.state.isSubmitting
@@ -186,7 +186,7 @@ class SigninForm extends StatelessWidget {
                 },
               ),
             ),
-          const Gap(30),
+          Gap(isDesktop ? 30 : 20),
           const Divider(),
           const _LoginLinks(),
         ],
