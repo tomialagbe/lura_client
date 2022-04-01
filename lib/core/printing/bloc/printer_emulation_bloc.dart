@@ -195,8 +195,10 @@ class PrinterEmulationBloc extends Cubit<PrinterEmulationState> {
   void _handleIppPrintJob(Uint8List printData) async {
     final printer = selectedPrinterBloc.state!;
     emit(state.clearJob());
+    final isPdf = isIppJobPdf(printData);
+    final jobType = isPdf ? 'IPP_PDF' : 'IPP_POSTSCRIPT';
     final job =
-        await printersRepository.createPrintJob(printer.id, 'POSTSCRIPT');
+        await printersRepository.createPrintJob(printer.id, jobType);
     emit(state.jobReceived(job!.jobDownloadUrl));
     _startJobTimer();
     printersRepository.uploadPostscriptPrintJob(
@@ -204,6 +206,14 @@ class PrinterEmulationBloc extends Cubit<PrinterEmulationState> {
       job.jobDataUploadUrl,
       printData,
     ); // TODO: we need to make sure that this does not fail
+  }
+
+  bool isIppJobPdf(Uint8List printData) {
+    // PDFs start with ASCII %PDF
+    return printData[0] == 0x25 &&
+        printData[1] == 0x50 &&
+        printData[2] == 0x44 &&
+        printData[3] == 0x46;
   }
 
   void _handleEscPosPrintJob(List<PrintToken> tokens) async {

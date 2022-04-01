@@ -73,18 +73,23 @@ class IppPrinterEmulator implements PrinterEmulator {
   }
 
   Future _startServer() async {
-    state = IppConstants.PRINTER_IDLE;
-    debugPrint('IppPrinter: printer $name changed state to idle');
+    try {
+      state = IppConstants.PRINTER_IDLE;
+      debugPrint('IppPrinter: printer $name changed state to idle');
 
-    _httpServer =
-        await HttpServer.bind('0.0.0.0', port!); // test with shared=true
-    _statusStream.add(true);
+      _httpServer =
+      await HttpServer.bind('0.0.0.0', port!); // test with shared=true
+      _statusStream.add(true);
 
-    _httpRequestSubscription = _httpServer?.listen((request) {
-      handleHttpRequest(request);
-    }, onError: (err, stackTrace) {
-      debugPrint('http server error: ${err.toString()}');
-    });
+      _httpRequestSubscription = _httpServer?.listen((request) {
+        handleHttpRequest(request);
+      }, onError: (err, stackTrace) {
+        debugPrint('http server error: ${err.toString()}');
+      });
+    } catch (err) {
+      debugPrint('Failed to start server');
+      debugPrint(err.toString());
+    }
   }
 
   Future _broadcastIppService() async {
@@ -481,7 +486,7 @@ class IppPrinterEmulator implements PrinterEmulator {
       return jobB.completedAt!.compareTo(jobA.completedAt!);
     });
     debugPrint('LIMIT IS: $limit');
-    var limitInt = int.parse(limit!);
+    var limitInt = int.parse(limit ?? '${filteredJobs.length}');
     limitInt = limitInt > filteredJobs.length ? filteredJobs.length : limitInt;
     final _groups = filteredJobs.sublist(0, limitInt).map((job) {
       final attrs = job.attributes(requested);
