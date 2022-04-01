@@ -73,6 +73,7 @@ class _ForgotPasswordFormState extends State<_ForgotPasswordForm> {
     final screenBloc = context.watch<ForgotPasswordScreenBloc>();
     final isSubmitting = screenBloc.state.isSubmitting;
     final isComplete = screenBloc.state.completed;
+    final isDesktop = widget.sizingInformation.isDesktop;
 
     return Form(
       key: _formKey,
@@ -95,7 +96,7 @@ class _ForgotPasswordFormState extends State<_ForgotPasswordForm> {
             'Enter the email address for your Lura account',
             style: Theme.of(context).textTheme.bodyText2,
           ),
-          const Gap(40),
+          Gap(isDesktop ? 40 : 30),
           if (screenBloc.state.error != null)
             Padding(
               padding: const EdgeInsets.only(bottom: 30),
@@ -117,13 +118,13 @@ class _ForgotPasswordFormState extends State<_ForgotPasswordForm> {
               },
             ),
           LuraTextField(
-            large: true,
+            large: isDesktop,
             controller: _emailController,
             textInputValidator: InputValidator.validateEmail,
             keyboardType: TextInputType.text,
             hintText: 'Your email address',
           ),
-          const Gap(30),
+          Gap(isDesktop ? 30 : 20),
           LuraFlatButton(
             text: 'Send reset email',
             onTap: !isSubmitting && !isComplete ? _onSubmit : null,

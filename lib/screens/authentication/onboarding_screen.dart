@@ -69,6 +69,7 @@ class _OnboardingFormState extends State<_OnboardingForm> {
     final screenBloc = context.watch<OnboardingScreenBloc>();
     final isSubmitting = screenBloc.state.isSubmitting;
     final isComplete = screenBloc.state.completed;
+    final isDesktop = widget.sizingInformation.isDesktop;
 
     return Form(
       key: _formKey,
@@ -89,9 +90,9 @@ class _OnboardingFormState extends State<_OnboardingForm> {
             'What\'s your business name?',
             style: Theme.of(context).textTheme.bodyText2,
           ),
-          const Gap(40),
+          Gap(isDesktop ? 40 : 30),
           LuraTextField(
-            large: true,
+            large: isDesktop,
             controller: _orgNameController,
             textInputValidator: (name) {
               if (name == null || name.trim().isEmpty) {
@@ -102,7 +103,7 @@ class _OnboardingFormState extends State<_OnboardingForm> {
             keyboardType: TextInputType.text,
             hintText: 'Your business name',
           ),
-          const Gap(30),
+          Gap(isDesktop ? 30 : 20),
           LuraFlatButton(
             text: 'Save',
             onTap: !isSubmitting && !isComplete ? _onSubmit : null,
