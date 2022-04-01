@@ -26,7 +26,10 @@ Future<void> main({LuraConfig? config}) async {
       await setupLocator(config: config);
       runApp(const LuraApp());
     },
-    (err, stackTrace) async {},
+    (err, stackTrace) async {
+      debugPrintStack(stackTrace: stackTrace);
+      debugPrint(err.toString());
+    },
   );
 }
 

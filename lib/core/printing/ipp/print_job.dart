@@ -20,7 +20,7 @@ class PrintJob {
   Uint8List? data;
 
   Function(int statusCode)? onAbort;
-  Function(Uint8List, List<Attribute>)? onEnd;
+  Function(PrintJob self, Uint8List, List<Attribute>)? onEnd;
   Function? onCancel;
   Function(dynamic)? onError;
 
@@ -180,7 +180,7 @@ class PrintJob {
     if ((decodedBytes?.length ?? 0) > 0) {
       completedAt = DateTime.now().toUtc();
       onEnd?.call(
-          decodedBytes!, attributes(['job-uri', 'job-id', 'job-state']));
+          this, decodedBytes!, attributes(['job-uri', 'job-id', 'job-state']));
       state = IppConstants.JOB_COMPLETED;
     }
   }

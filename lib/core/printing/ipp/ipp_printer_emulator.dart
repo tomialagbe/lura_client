@@ -397,7 +397,7 @@ class IppPrinterEmulator implements PrinterEmulator {
       });
     }
 
-    void onEnd(Uint8List data, List<Attribute> attributes) {
+    void onEnd(PrintJob job, Uint8List data, List<Attribute> attributes) {
       debugPrint('PRINT JOB ENDED: SENDING RESPONSE');
       once(() {
         _sendResponse(request, requestMessage, groups: [
@@ -406,6 +406,7 @@ class IppPrinterEmulator implements PrinterEmulator {
             ..attributes = attributes
         ]);
       });
+      jobs.removeWhere((j) => j.id == job.id);
       onPrintEnd?.call(data);
     }
 

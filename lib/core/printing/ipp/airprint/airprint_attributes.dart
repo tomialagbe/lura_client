@@ -10,7 +10,9 @@ Map<String, String> airPrintAttributes() => {
       // 'pdl': ['image/urf'],
       'rp': 'ipp/print',
       'TLS': '',
-      'UUID': const Uuid().v4(),
+      // 'UUID': const Uuid().v4(),
+      'UUID': '2cb091b7-8118-411e-85d8-2b16a3099c47',
+      // This needs to be static, or else, the client OS won't be able to find the printer after consecutive restarts
 
       //Deprecated Options
       'adminurl': '',
