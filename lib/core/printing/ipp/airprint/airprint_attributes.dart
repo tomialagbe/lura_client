@@ -1,5 +1,3 @@
-import 'package:uuid/uuid.dart';
-
 // See https://wiki.debian.org/CUPSAirPrint
 Map<String, String> airPrintAttributes() => {
       'air': 'none',

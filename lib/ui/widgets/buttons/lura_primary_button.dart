@@ -40,10 +40,15 @@ class LuraPrimaryButton extends StatelessWidget {
                     size: 30,
                   ),
                 ),
-              Text(
-                text,
-                style:
-                    LuraTextStyles.actionButton.copyWith(color: Colors.white),
+              Expanded(
+                child: Text(
+                  text,
+                  style: isDesktop
+                      ? LuraTextStyles.actionButton
+                          .copyWith(color: Colors.white)
+                      : LuraTextStyles.actionButton
+                          .copyWith(color: Colors.white, fontSize: 20),
+                ),
               ),
             ],
           ),
