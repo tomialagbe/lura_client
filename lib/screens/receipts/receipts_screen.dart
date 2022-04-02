@@ -25,46 +25,6 @@ class ReceiptsScreen extends StatelessWidget {
         return _DesktopReceiptsScreen(sizingInformation: sizingInformation);
       }),
     );
-    /*final screenBloc = context.watch<ReceiptsScreenBloc>();
-    return Padding(
-      padding: const EdgeInsets.all(20),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          ResponsiveBuilder(builder: (context, sizingInfo) {
-            if (sizingInfo.isDesktop) {
-              return Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  SelectableText(
-                    'Receipts',
-                    style: Theme.of(context).textTheme.headline3,
-                    toolbarOptions: const ToolbarOptions(copy: true),
-                  ),
-                  const Expanded(child: SizedBox()),
-                ],
-              );
-            }
-
-            return const SizedBox();
-          }),
-          if (screenBloc.state.loading)
-            const Expanded(child: Center(child: LoadingDisplay()))
-          else if (screenBloc.state.loadError != null)
-            Expanded(
-              child: Center(
-                child: ErrorAlert(
-                  error: screenBloc.state.loadError!,
-                  onTap: () => screenBloc.loadReceipts(),
-                ),
-              ),
-            )
-          else
-            Expanded(child: ReceiptList(receipts: screenBloc.state.receipts)),
-        ],
-      ),
-    );*/
   }
 }
 
