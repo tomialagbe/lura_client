@@ -39,7 +39,10 @@ class _RefreshWidgetState extends State<RefreshWidget> {
       key: _refreshIndicatorKey,
       shrinkWrap: true,
       slivers: [
-        CupertinoSliverRefreshControl(onRefresh: widget.onRefresh),
+        CupertinoSliverRefreshControl(
+          onRefresh: widget.onRefresh,
+          refreshTriggerPullDistance: 200,
+        ),
         widget.child,
       ],
     );

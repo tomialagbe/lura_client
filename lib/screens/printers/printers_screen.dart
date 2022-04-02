@@ -31,7 +31,6 @@ class _PrintersScreenState extends State<PrintersScreen> {
 
   @override
   Widget build(BuildContext context) {
-    // final printersScreenBloc = context.watch<PrintersScreenBloc>();
     return Padding(
       padding: const EdgeInsets.all(20),
       child: ResponsiveBuilder(builder: (context, sizingInformation) {
@@ -79,15 +78,15 @@ class _MobilePrintersScreen extends StatelessWidget {
           leadingIcon: Icons.add,
         ),
       );
-    } else {
-      return PrinterList(
-        printers: printersScreenBloc.state.printers,
-        isMobile: sizingInformation.isMobile,
-        onRefresh: () async {
-          return printersScreenBloc.loadPrinters();
-        },
-      );
     }
+
+    return PrinterList(
+      printers: printersScreenBloc.state.printers,
+      isMobile: sizingInformation.isMobile,
+      onRefresh: () async {
+        return printersScreenBloc.loadPrinters();
+      },
+    );
   }
 }
 
