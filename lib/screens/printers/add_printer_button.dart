@@ -18,8 +18,8 @@ class AddPrinterButton extends StatelessWidget {
           children: [
             LuraCircularIconButton(
               icon: Icons.add,
-              size: 25,
-              padding: const EdgeInsets.all(10),
+              size: 20,
+              padding: const EdgeInsets.all(0),
               onTap: () {
                 context.pushNamed('new-printer');
               },
