@@ -133,12 +133,15 @@ class _DesktopPrintersScreen extends StatelessWidget {
               width: double.infinity,
               height: double.infinity,
               alignment: Alignment.center,
-              child: LuraPrimaryButton(
-                text: 'Create your first printer',
-                onTap: () {
-                  context.pushNamed('new-printer');
-                },
-                leadingIcon: Icons.add,
+              child: SizedBox(
+                width: 700,
+                child: LuraPrimaryButton(
+                  text: 'Create your first printer',
+                  onTap: () {
+                    context.pushNamed('new-printer');
+                  },
+                  leadingIcon: Icons.add,
+                ),
               ),
             ),
           )
