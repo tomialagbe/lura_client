@@ -114,7 +114,7 @@ final fullCommands = <List<int>, int>{
   // ESC = n - select peripheral device
   [ESC, 0x3D]: 1,
 
-  // ESC ? n - delete dpwnload characters
+  // ESC ? n - delete download characters
   [ESC, 0x3F]: 1,
 
   //ESC @ - initialize printer
@@ -278,9 +278,6 @@ final fullCommands = <List<int>, int>{
   // GS E n - Set printing speed
   [GS, 0x45]: 1,
 
-  // GS H n - Select HRI character print position
-  [GS, 0x48]: 1,
-
   // GS I n - Transmission of printer id
   [GS, 0x49]: 1,
 
@@ -317,23 +314,11 @@ final fullCommands = <List<int>, int>{
   // GS c - Print counter
   [GS, 0x63]: 0,
 
-  // GS f n - Set HRI character font
-  [GS, 0x66]: 1,
-
-  // GS h n - Set bar code height
-  [GS, 0x68]: 1,
-
-  // GS k m d1...dk NUL or GS k m n d1...dk - print bar code command.
-  const [GS, 0x6B]: -1,
-
   // GS r n - Transmission of status
   [GS, 0x72]: 1,
 
   // GS v O m xL xH yL yH ... - Print raster bit images
   const [GS, 0x76, 0x30]: -1,
-
-  // GS w n - set bar code horizontal size
-  [GS, 0x77]: 1,
 
   // unknown
   [US]: 0,
@@ -343,6 +328,28 @@ final fullCommands = <List<int>, int>{
 
   // unknown
   [DC2]: 0,
+
+  // GS H n - Select HRI character print position
+  [GS, 0x48]: 1,
+
+  // GS f n - Set HRI character font
+  [GS, 0x66]: 1,
+
+  // GS h n - Set bar code height
+  [GS, 0x68]: 1,
+
+  // GS k m d1...dk NUL or GS k m n d1...dk - print bar code command.
+  const [GS, 0x6B]: -1,
+
+  // GS w n - set bar code horizontal size
+  [GS, 0x77]: 1,
+
+  // FS } % k d1...dk - 2D barcode generator
+  const [FS, 0x7D, 0x25]: -1,
+
+  // GS ( k pL pH cn fn [parameters] - Encode and prints a
+  // string of up to 26 characters
+  const [GS, 0x28, 0x6B]: -1,
 };
 
 /// Extracts the arg len and data length for commands that take variable length args
@@ -406,4 +413,19 @@ final variableArgCommands = <List<int>, DataLenGenerator>{
     }
     return Tuple2(argLen, dataLen);
   },
+  // FS } % k d1...dk - 2D barcode generator
+  const [FS, 0x7D, 0x25]: (ByteData buffer, int offset) {
+    int argLen = 1;
+    int currOffset = offset;
+
+    final k = buffer.getUint8(currOffset);
+    return Tuple2(argLen, k);
+  },
+  // GS ( k pL pH cn fn [parameters] - Encode and prints a string of up to
+  // 26 characters
+  // const [GS, 0x28, 0x6B]: (ByteData buffer, int offset) {
+  //   int argLen = 4;
+  //   int currOffset = offset;
+  //
+  // },
 };
