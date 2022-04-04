@@ -1,9 +1,9 @@
-name: release
+name: staging
 
 on:
-  release:
-    types:
-      - created
+  push:
+    tags:
+      - 'staging-**'
 
 jobs:
   cancel:
@@ -57,12 +57,12 @@ jobs:
       - name: Install dependencies
         run: flutter pub get
       - name: Build web
-        run: flutter build web --release -t lib/main_prod.dart
+        run: flutter build web --release -t lib/main_staging.dart
       - name: Deploy to S3
         uses: reggionick/s3-deploy@v3
         with:
           folder: build/web
-          bucket: app.lura.so
+          bucket: staging.lura.so
           bucket-region: eu-central-1
           no-cache: true
           delete-removed: true
