@@ -61,10 +61,10 @@ class SignupScreenBloc extends AuthScreenBloc {
     }
   }
 
-  Future _trackSignupFailed(String email, String error) {
+  /*Future _trackSignupFailed(String email, String error) {
     return trackingService.trackEvent('SIGNUP_FAILED',
         properties: {'\$email': email, '\$error': error});
-  }
+  }*/
 }
 
 class LoginScreenBloc extends AuthScreenBloc {
@@ -84,10 +84,10 @@ class LoginScreenBloc extends AuthScreenBloc {
     }
   }
 
-  Future _trackLoginFailed(String email, String error) {
+  /*Future _trackLoginFailed(String email, String error) {
     return trackingService.trackEvent('LOGIN_FAILED',
         properties: {'\$email': email, '\$error': error});
-  }
+  }*/
 }
 
 class ForgotPasswordScreenBloc extends AuthScreenBloc {
@@ -107,8 +107,8 @@ class ForgotPasswordScreenBloc extends AuthScreenBloc {
     }
   }
 
-  Future _trackPasswordResetFailed(String email, String error) {
+  /*Future _trackPasswordResetFailed(String email, String error) {
     return trackingService.trackEvent('PASSWORD_RESET_FAILED',
         properties: {'\$email': email, '\$error': error});
-  }
+  }*/
 }
