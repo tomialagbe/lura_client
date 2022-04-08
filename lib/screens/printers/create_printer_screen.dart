@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
+import 'package:lura_client/core/utils/platform_helper.dart';
 import 'package:lura_client/screens/printers/bloc/create_printer_screen_bloc.dart';
 import 'package:lura_client/ui/widgets/lura_alerts/alerts.dart';
 import 'package:lura_client/ui/widgets/lura_rounded_text_field.dart';
@@ -9,6 +10,7 @@ import '../widgets/app_bars.dart';
 import 'package:lura_client/ui/colors.dart';
 import 'package:responsive_builder/responsive_builder.dart';
 import 'package:rxdart/rxdart.dart';
+import '../../utils/link_opener.dart' as link_opener;
 
 import 'platform_selector.dart';
 
@@ -78,7 +80,12 @@ class _CreatePrinterFormState extends State<_CreatePrinterForm> {
     final createPrinterBloc = context.watch<CreatePrinterScreenBloc>();
     if (createPrinterBloc.state.completed) {
       WidgetsBinding.instance?.addPostFrameCallback((_) {
-        context.goNamed('new-printer-created');
+        if (PlatformHelper.isWeb) {
+          link_opener.openLinkInNewWindow(context, 'https://www.lura.so/connect-to-lura-mac');
+          context.pop();
+        } else {
+          context.goNamed('new-printer-created');
+        }
       });
     }
 
