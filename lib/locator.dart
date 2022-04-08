@@ -19,7 +19,8 @@ Future setupLocator({required LuraConfig config}) async {
   final firebaseAuth = FirebaseAuth.instance;
 
   final mixpanel = Mixpanel('');
-  locator.registerSingleton<TrackingService>(TrackingService(mixpanel: mixpanel, env: config.env));
+  locator.registerSingleton<TrackingService>(
+      TrackingService(mixpanel: mixpanel, env: config.env));
   locator.registerLazySingleton<SharedPreferences>(() => sharedPrefs);
 
   locator.registerLazySingleton<ApiClient>(
