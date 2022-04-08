@@ -1,5 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:lura_client/core/tracking/tracking_service.dart';
 import 'package:lura_client/locator.dart';
 
 import '../../../core/authentication/authentication_repository.dart';
@@ -29,10 +30,13 @@ class AuthScreenState extends Equatable {
 
 abstract class AuthScreenBloc extends Cubit<AuthScreenState> {
   final AuthenticationRepository authenticationRepository;
+  final TrackingService trackingService;
 
-  AuthScreenBloc({AuthenticationRepository? authRepo})
+  AuthScreenBloc(
+      {AuthenticationRepository? authRepo, TrackingService? trackingService})
       : authenticationRepository =
             authRepo ?? locator.get<AuthenticationRepository>(),
+        trackingService = trackingService ?? locator.get<TrackingService>(),
         super(const AuthScreenState.initial());
 
   void clearError() {
@@ -46,12 +50,20 @@ class SignupScreenBloc extends AuthScreenBloc {
       emit(state.submitting());
       await authenticationRepository.signUpWithEmailAndPassword(
           email: email, password: password);
+      trackingService.trackSignup(email);
       emit(state.success());
     } on SignupFailedException catch (e) {
+      // _trackSignupFailed(email, e.message);
       emit(state.failed(e.message));
     } catch (e) {
+      // _trackSignupFailed(email, 'Unknown');
       emit(state.failed('An unknown error occurred'));
     }
+  }
+
+  Future _trackSignupFailed(String email, String error) {
+    return trackingService.trackEvent('SIGNUP_FAILED',
+        properties: {'\$email': email, '\$error': error});
   }
 }
 
@@ -61,12 +73,20 @@ class LoginScreenBloc extends AuthScreenBloc {
       emit(state.submitting());
       await authenticationRepository.loginWithEmail(
           email: email, password: password);
+      trackingService.trackLogin(email);
       emit(state.success());
     } on LoginFailedException catch (e) {
+      // _trackLoginFailed(email, e.message);
       emit(state.failed(e.message));
     } catch (e) {
+      // _trackLoginFailed(email, 'Unknown');
       emit(state.failed('An unknown error occurred'));
     }
+  }
+
+  Future _trackLoginFailed(String email, String error) {
+    return trackingService.trackEvent('LOGIN_FAILED',
+        properties: {'\$email': email, '\$error': error});
   }
 }
 
@@ -75,11 +95,20 @@ class ForgotPasswordScreenBloc extends AuthScreenBloc {
     try {
       emit(state.submitting());
       await authenticationRepository.sendPasswordResetEmail(emailAddress);
+      trackingService
+          .trackEvent('PASSWORD_RESET', properties: {'\$email': emailAddress});
       emit(state.success());
     } on ResetPasswordException catch (e) {
+      // _trackPasswordResetFailed(emailAddress, e.message);
       emit(state.failed(e.message));
     } catch (e) {
+      // _trackPasswordResetFailed(emailAddress, 'Unknown');
       emit(state.failed('An unknown error occurred'));
     }
+  }
+
+  Future _trackPasswordResetFailed(String email, String error) {
+    return trackingService.trackEvent('PASSWORD_RESET_FAILED',
+        properties: {'\$email': email, '\$error': error});
   }
 }

@@ -4,6 +4,7 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lura_client/locator.dart';
 
+import '../../tracking/tracking_service.dart';
 import '../authentication_repository.dart';
 import '../lura_user.dart';
 
@@ -48,17 +49,18 @@ class AuthenticationBloc
     extends Bloc<AuthenticationEvent, AuthenticationState> {
   final AuthenticationRepository authenticationRepository;
 
-  // final TrackingService trackingService;
+  final TrackingService trackingService;
+
   // final DeviceBloc deviceBloc;
   late final StreamSubscription<LuraUser> _userSubscription;
 
   AuthenticationBloc({
     AuthenticationRepository? authRepo,
-    // TrackingService? trackingService,
+    TrackingService? trackingService,
     // required this.deviceBloc,
   })  : authenticationRepository =
             authRepo ?? locator.get<AuthenticationRepository>(),
-        // trackingService = trackingService ?? locator.get<TrackingService>(),
+        trackingService = trackingService ?? locator.get<TrackingService>(),
         super(const AuthenticationState.unauthenticated()) {
     on<UserChanged>(_onUserChanged);
     on<LogoutRequested>(_onLogoutRequested);
@@ -71,7 +73,7 @@ class AuthenticationBloc
     if (event.user == LuraUser.empty) {
       emit(const AuthenticationState.unauthenticated());
     } else {
-      // trackingService.setUser(event.user);
+      trackingService.setUser(event.user);
       emit(AuthenticationState.authenticated(event.user));
     }
   }
@@ -79,6 +81,7 @@ class AuthenticationBloc
   void _onLogoutRequested(
       LogoutRequested event, Emitter<AuthenticationState> emit) {
     // unawaited(deviceBloc.unregisterDeviceInfo());
+    trackingService.trackLogout();
     unawaited(authenticationRepository.logout());
   }
 
